@@ -3,11 +3,12 @@ package org.pesho.judge;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.pesho.grader.SubmissionScore;
+import org.pesho.grader.step.StepResult;
 import org.pesho.judge.repositories.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,7 @@ public class GradeScheduledTask {
 	@Autowired
 	private WorkersQueue queue;
 	
-    @Scheduled(fixedDelay = 5000)
+    @Scheduled(fixedDelay = 1000)
 	public void gradeTask() throws IOException {
     	List<Map<String, Object>> submissions = repository.submissionsToGrade();
     	for (Map<String, Object> submission: submissions) {
@@ -52,19 +53,40 @@ public class GradeScheduledTask {
 			int problemNumber = (int) problem.get("number");
 			
 			if (!file.isPresent() || file.get().isDirectory()) {
-				repository.addScore(submissionId, problemNumber, "not solved");
+				repository.addScore(submissionId, problemNumber, "not solved", 0);
 				continue;
 			}
 			
 			if (submission.get("problem"+problemNumber) != null) continue;
-			repository.addScore(submissionId, problemNumber, "judging");
+			repository.addScore(submissionId, problemNumber, "judging", 0);
 			
 			worker.get().setFree(false);
 			Runnable runnable = () -> {
-				String result = worker.get().grade(problem, submission, file.get());
-				System.out.println("Judging " + worker.get().getUrl() + " " + result + " " + submissionId + " " + problemNumber);
-				repository.addScore(submissionId, problemNumber, result);
-				worker.get().setFree(true);
+				String result = "";
+				int points = 0;
+				try {
+					SubmissionScore score = worker.get().grade(problem, submission, file.get());
+					points = (int) Math.round(score.getScore());
+					StepResult[] values = score.getScoreSteps().values().toArray(new StepResult[0]);
+					if (values.length > 1) {
+						for (int i = 1; i < values.length; i++) {
+							StepResult step = values[i];
+							if (i != 1)
+								result += ",";
+							result += step.getVerdict();
+						}
+					} else {
+						result = values[0].getVerdict().toString();
+						System.out.println("Submission <" + submissionId + "> failed with " + values[0].getReason());
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					result = "system error";
+				} finally {
+					worker.get().setFree(true);
+					System.out.println("Judging " + worker.get().getUrl() + " " + result + " " + submissionId + " " + problemNumber);
+					repository.addScore(submissionId, problemNumber, result, points);
+				}
 			};
 			
 			new Thread(runnable).start();

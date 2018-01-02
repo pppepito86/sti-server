@@ -45,10 +45,13 @@ public class Repository {
 				"select * from submissions where problem1 is NULL OR problem2 is NULL OR problem3 is NULL");
 	}
 
-	public void addScore(int id, int number, String result) {
-		template.update("UPDATE submissions SET problem" + number + "=? WHERE id=?",
-                result,
-                id);
+	public synchronized void addScore(int id, int number, String result, int points) {
+		String queryTemplate = "UPDATE submissions SET %s=?, %s=? WHERE id=?";
+		String query = String.format(queryTemplate, "problem" + number, "points" + number);
+		template.update(query, result, points, id);
+		Map<String,Object> submission = template.queryForList("SELECT points1, points2, points3 from submissions where id=?", id).stream().findFirst().get();
+		int totalPoints = submission.values().stream().filter(s -> s != null).mapToInt(s -> (int) s).sum();
+		template.update("UPDATE submissions SET points=? WHERE id=?", totalPoints, id);
 	}
 	
 	public void addWorker(String url) {

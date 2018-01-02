@@ -20,6 +20,9 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   `problem1` varchar(1000) DEFAULT NULL,
   `problem2` varchar(1000) DEFAULT NULL,
   `problem3` varchar(1000) DEFAULT NULL,
+  `points1` int(11) DEFAULT NULL,
+  `points2` int(11) DEFAULT NULL,
+  `points3` int(11) DEFAULT NULL,
   `points` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
