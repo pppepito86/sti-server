@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import javax.print.DocFlavor.URL;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
@@ -65,16 +66,30 @@ public class RestService {
 
 		int problemId = repository.addProblem(name, group, number, points, zipFile.getName());
 
+		workersQueue.getAll().stream()
+			.parallel()
+			.forEach(worker -> {
+				String endpointURL = worker.getUrl() + "/api/v1/problems/" + problemId;
+				sendProblemToWorker(endpointURL, zipFile.getAbsolutePath());
+			});
+
+		try {
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+	}
+
+	private void sendProblemToWorker(String endpointURL, String zipFilePath) {
+		
 		RestTemplate rest = new RestTemplate();
 		MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<String, Object>();
-		parameters.add("file", new FileSystemResource(zipFile.getCanonicalPath()));
+		parameters.add("file", new FileSystemResource(zipFilePath));
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Content-Type", "multipart/form-data");
-
-		String endpointURL = "http://35.158.88.137:8089/api/v1/problems/" + problemId;
-		boolean exists;
 		
+		boolean exists;
 		try {
 			exists = HttpStatus.OK == rest.getForEntity(endpointURL, String.class).getStatusCode();
 		} catch (HttpClientErrorException e) {
@@ -88,13 +103,11 @@ public class RestService {
 		} else {
 			rest.postForLocation(endpointURL, params);
 		}
-
-		try {
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
-		}
 	}
+	
+//	private void sendProblemToWorker() {
+//		
+//	}
 
 	@PostMapping("/grade")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)

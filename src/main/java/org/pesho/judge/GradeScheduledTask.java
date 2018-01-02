@@ -3,6 +3,7 @@ package org.pesho.judge;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public class GradeScheduledTask {
 	@Autowired
 	private WorkersQueue queue;
 	
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 5000)
 	public void gradeTask() throws IOException {
     	List<Map<String, Object>> submissions = repository.submissionsToGrade();
     	for (Map<String, Object> submission: submissions) {
@@ -34,39 +35,39 @@ public class GradeScheduledTask {
     }
 
 	private void grade(Map<String, Object> submission) throws IOException {
-//		Optional<Worker> worker = queue.take();
-//		if (!worker.isPresent()) return;
 		
 		String group = (String) submission.get("group");
 		String directory = (String) submission.get("directory");
 		
 		List<Map<String, Object>> groupProblems = repository.getGroupProblems(group);
 		for (Map<String, Object> problem: groupProblems) {
+			Optional<Worker> worker = queue.take();
+			if (!worker.isPresent()) return;
+			
 			Optional<File> file = Arrays.stream(new File(directory).listFiles())
 				.filter(f -> f.getName().equalsIgnoreCase(problem.get("name") + ".cpp"))
 				.findFirst();
 			
+			int submissionId = (int) submission.get("id");
+			int problemNumber = (int) problem.get("number");
+			
 			if (!file.isPresent() || file.get().isDirectory()) {
-				repository.addScore((int) submission.get("id"), (int) problem.get("number"), "not solved");
+				repository.addScore(submissionId, problemNumber, "not solved");
 				continue;
 			}
 			
-			int problemNumber = (int) problem.get("number");
 			if (submission.get("problem"+problemNumber) != null) continue;
+			repository.addScore(submissionId, problemNumber, "judging");
 			
-			//Worker worker = new Worker("http://35.158.88.137:8089");
-//			worker.get().setFree(false);
-//			Runnable runnable = () -> {
-//				String result = worker.get().grade(problem, submission, file.get());
-//				repository.addScore((int) submission.get("id"), problemNumber, result);
-//				worker.get().setFree(true);
-//			};
-//			new Thread(runnable).start();
-			Worker worker = new Worker("http://35.158.88.137:8089");
-			String result = worker.grade(problem, submission, file.get());
-			repository.addScore((int) submission.get("id"), problemNumber, result);
-		}
-		
+			worker.get().setFree(false);
+			Runnable runnable = () -> {
+				String result = worker.get().grade(problem, submission, file.get());
+				System.out.println("Judging " + worker.get().getUrl() + " " + result + " " + submissionId + " " + problemNumber);
+				repository.addScore(submissionId, problemNumber, result);
+				worker.get().setFree(true);
+			};
+			
+			new Thread(runnable).start();
+		}	
 	}
-    
 }

@@ -18,14 +18,14 @@ import org.springframework.web.client.RestTemplate;
 public class Worker {
 
 	private String url;
-	private boolean isFree;
+	private boolean isFree = true;
 
 	public Worker(String url) {
-		this.url = url;
 		if (!url.startsWith("http"))
 			url = "http://" + url;
 		if (url.endsWith("/"))
 			url = url.substring(0, url.length() - 1);
+		this.url = url;
 	}
 
 	public String grade(Map<String, Object> problem, Map<String, Object> submission, File file) {
@@ -49,7 +49,7 @@ public class Worker {
 			HttpHeaders multipartHeaders = new HttpHeaders();
 			multipartHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-			ResponseEntity<SubmissionScore> response = rest.postForEntity(url + "api/v1/submissions/" + submissionId,
+			ResponseEntity<SubmissionScore> response = rest.postForEntity(url + "/api/v1/submissions/" + submissionId,
 					new HttpEntity<>(parameters, multipartHeaders), SubmissionScore.class);
 
 			System.out.println(response.getStatusCode());

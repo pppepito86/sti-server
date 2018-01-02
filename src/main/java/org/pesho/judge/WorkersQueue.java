@@ -43,4 +43,7 @@ public class WorkersQueue {
 		return workers.stream().filter(w -> w.isFree()).findFirst();
 	}
 	
+	public LinkedHashSet<Worker> getAll() {
+		return workers;
+	}
 }
