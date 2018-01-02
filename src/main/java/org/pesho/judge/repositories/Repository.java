@@ -51,4 +51,16 @@ public class Repository {
                 id);
 	}
 	
+	public void addWorker(String url) {
+        template.update("INSERT INTO workers(url) VALUES(?)", url);
+	}
+	
+	public void deleteWorker(String url) {
+        template.update("DELETE from workers where url=?", url);
+	}
+
+	public List<Map<String, Object>> listWorkers() {
+		return template.queryForList("select * from workers");
+	}
+	
 }

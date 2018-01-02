@@ -1,7 +1,8 @@
-DROP TABLE IF EXISTS `submissions`;
-DROP TABLE IF EXISTS `problems`;
+--DROP TABLE IF EXISTS `submissions`;
+--DROP TABLE IF EXISTS `problems`;
+--DROP TABLE IF EXISTS `workers`;
 
-CREATE TABLE `problems` (
+CREATE TABLE IF NOT EXISTS `problems` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `group` varchar(50) NOT NULL,
@@ -11,7 +12,7 @@ CREATE TABLE `problems` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-CREATE TABLE `submissions` (
+CREATE TABLE IF NOT EXISTS `submissions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `city` varchar(50) NOT NULL,
   `group` varchar(50) NOT NULL,
@@ -20,5 +21,11 @@ CREATE TABLE `submissions` (
   `problem2` varchar(1000) DEFAULT NULL,
   `problem3` varchar(1000) DEFAULT NULL,
   `points` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `workers`(
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `url` varchar(1000) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

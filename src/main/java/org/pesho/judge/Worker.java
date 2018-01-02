@@ -82,4 +82,8 @@ public class Worker {
 		return isFree;
 	}
 	
+	public String getUrl() {
+		return url;
+	}
+	
 }
