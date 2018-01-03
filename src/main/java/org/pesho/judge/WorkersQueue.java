@@ -18,7 +18,6 @@ public class WorkersQueue {
 	Repository repository;
 	
 	public WorkersQueue() {	
-		//put(new Worker("http://35.158.88.137:8089"));
 	}
 	
 	@PostConstruct
@@ -40,7 +39,7 @@ public class WorkersQueue {
 	}
 	
 	public synchronized Optional<Worker> take() {
-		return workers.stream().filter(w -> w.isFree() && w.isAlive()).findFirst();
+		return workers.parallelStream().filter(w -> w.isFree() && w.isAlive()).findFirst();
 	}
 	
 	public synchronized LinkedHashSet<Worker> getAll() {

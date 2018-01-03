@@ -1,20 +1,25 @@
 package org.pesho.judge;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.pesho.grader.SubmissionScore;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Worker {
 
@@ -41,32 +46,54 @@ public class Worker {
 			throws Exception {
 		int problemId = (int) problem.get("id");
 
-		MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<String, Object>();
-
-		HttpHeaders metadataHeader = new HttpHeaders();
-		metadataHeader.setContentType(MediaType.APPLICATION_JSON);
-		parameters.add("metadata", new HttpEntity<>("{\"problemId\":" + problemId + "}", metadataHeader));
-
-		HttpHeaders fileHeader = new HttpHeaders();
-		fileHeader.setContentType(MediaType.TEXT_PLAIN);
-		fileHeader.add(HttpHeaders.CONTENT_DISPOSITION,
-				String.format("form-data; name=\"file\"; filename=\"%s\"", file.getName()));
-		parameters.add("file", new HttpEntity<>(FileUtils.readFileToByteArray(file), fileHeader));
 		String submissionId = submission.get("id") + "_" + problem.get("name") + "_" + new Random().nextInt(100);
 
-		HttpHeaders multipartHeaders = new HttpHeaders();
-		multipartHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+        HttpEntity entity = MultipartEntityBuilder.create()
+                .addBinaryBody("file", file, ContentType.TEXT_PLAIN, file.getName())
+                .addTextBody("metadata", "{\"problemId\":" + problemId + "}", ContentType.APPLICATION_JSON)
+                .build();
+		
+		HttpPost post = new HttpPost(url + "/api/v1/submissions/" + submissionId);
+		post.setEntity(entity);
 
-		ResponseEntity<SubmissionScore> response = restTemplate.postForEntity(url + "/api/v1/submissions/" + submissionId,
-				new HttpEntity<>(parameters, multipartHeaders), SubmissionScore.class);
-		System.out.println("Response for " + submissionId + " is: " + response.getStatusCode() + ", points are: " + response.getBody().getScore());
-		return response.getBody();
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		CloseableHttpResponse response = httpclient.execute(post);
+		httpclient.close();
+		
+		for (int i = 0; i < 600; i++) {
+			if (isRunning(submissionId)) Thread.sleep(1000);
+			else return getScore(submissionId);
+		}
+		throw new IllegalStateException("time out");
+	}
+
+	private boolean isRunning(String submissionId) throws IOException {
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		HttpGet get = new HttpGet(url + "/api/v1/submissions/" + submissionId + "/status");
+		CloseableHttpResponse response = httpclient.execute(get);
+		String responseString = EntityUtils.toString(response.getEntity());
+		httpclient.close();
+		return "running".equals(responseString);
+	}
+	
+	private SubmissionScore getScore(String submissionId) throws IOException {
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		HttpGet get = new HttpGet(url + "/api/v1/submissions/" + submissionId + "/score");
+		CloseableHttpResponse response = httpclient.execute(get);
+		String responseString = EntityUtils.toString(response.getEntity());
+		httpclient.close();
+		ObjectMapper mapper = new ObjectMapper();
+		SubmissionScore score = mapper.readValue(responseString, SubmissionScore.class);
+		
+		System.out.println("Response for " + submissionId + " is: " + response.getStatusLine() + ", points are: " + score.getScore());
+		return score;
 	}
 	
 	public boolean isAlive() {
-		try {
-			ResponseEntity<String> entity = restTemplateIsAlive.getForEntity(url + "/api/v1/health-check", String.class);
-			return entity.getStatusCode() == HttpStatus.OK;
+		try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+			HttpGet httpGet = new HttpGet(url + "/api/v1/health-check");
+			CloseableHttpResponse response = httpclient.execute(httpGet);
+			return response.getStatusLine().getStatusCode() == HttpStatus.OK.value();
 		} catch (Exception e) {
 			System.out.println("Cannot connect to worker " + url);
 			return false;
