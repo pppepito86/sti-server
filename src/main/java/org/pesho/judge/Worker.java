@@ -6,11 +6,12 @@ import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 import org.pesho.grader.SubmissionScore;
-import org.pesho.grader.step.StepResult;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -54,6 +55,21 @@ public class Worker {
 
 		System.out.println(response.getStatusCode());
 		return response.getBody();
+	}
+	
+	public boolean isAlive() {
+		try {
+			RestTemplate rest = new RestTemplate();
+	        rest.setRequestFactory(new SimpleClientHttpRequestFactory());
+	        SimpleClientHttpRequestFactory rf = (SimpleClientHttpRequestFactory) rest.getRequestFactory();
+	        rf.setReadTimeout(1000);
+	        rf.setConnectTimeout(1000);
+			ResponseEntity<String> entity = rest.getForEntity(url + "/api/v1/health-check", String.class);
+			return entity.getStatusCode() == HttpStatus.OK;
+		} catch (Exception e) {
+			System.out.println("Cannot connect to worker " + url);
+			return false;
+		}
 	}
 
 	public void setFree(boolean isFree) {

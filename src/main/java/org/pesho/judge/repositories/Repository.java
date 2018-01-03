@@ -49,9 +49,9 @@ public class Repository {
 		String queryTemplate = "UPDATE submissions SET %s=?, %s=? WHERE id=?";
 		String query = String.format(queryTemplate, "problem" + number, "points" + number);
 		template.update(query, result, points, id);
-		Map<String,Object> submission = template.queryForList("SELECT points1, points2, points3 from submissions where id=?", id).stream().findFirst().get();
-		int totalPoints = submission.values().stream().filter(s -> s != null).mapToInt(s -> (int) s).sum();
-		template.update("UPDATE submissions SET points=? WHERE id=?", totalPoints, id);
+//		Map<String,Object> submission = template.queryForList("SELECT points1, points2, points3 from submissions where id=?", id).stream().findFirst().get();
+//		int totalPoints = submission.values().stream().filter(s -> s != null).mapToInt(s -> (int) s).sum();
+//		template.update("UPDATE submissions SET points=? WHERE id=?", totalPoints, id);
 	}
 	
 	public void addWorker(String url) {

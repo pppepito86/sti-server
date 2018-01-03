@@ -36,15 +36,11 @@ public class GradeScheduledTask {
     }
 
 	private void grade(Map<String, Object> submission) throws IOException {
-		
 		String group = (String) submission.get("group");
 		String directory = (String) submission.get("directory");
 		
 		List<Map<String, Object>> groupProblems = repository.getGroupProblems(group);
 		for (Map<String, Object> problem: groupProblems) {
-			Optional<Worker> worker = queue.take();
-			if (!worker.isPresent()) return;
-			
 			Optional<File> file = Arrays.stream(new File(directory).listFiles())
 				.filter(f -> f.getName().equalsIgnoreCase(problem.get("name") + ".cpp"))
 				.findFirst();
@@ -57,9 +53,15 @@ public class GradeScheduledTask {
 				continue;
 			}
 			
+			Optional<Worker> worker = queue.take();
+			if (!worker.isPresent()) return;
+			
 			if (submission.get("problem"+problemNumber) != null) continue;
 			repository.addScore(submissionId, problemNumber, "judging", 0);
 			
+			long sTime = System.currentTimeMillis();
+			System.out.println("Starting " + worker.get().getUrl() + " for " + submission.get("id") + ", " + problem.get("id"));
+
 			worker.get().setFree(false);
 			Runnable runnable = () -> {
 				String result = "";
@@ -83,8 +85,10 @@ public class GradeScheduledTask {
 					e.printStackTrace();
 					result = "system error";
 				} finally {
+					System.out.println("Finishing " + worker.get().getUrl() + " " + submission.get("id") + ", " + problem.get("id") + " time - " + (System.currentTimeMillis() - sTime)/1000);
 					worker.get().setFree(true);
 					System.out.println("Judging " + worker.get().getUrl() + " " + result + " " + submissionId + " " + problemNumber);
+					System.out.println("Scoring " + worker.get().getUrl() + " " + submissionId + " " + problemNumber);
 					repository.addScore(submissionId, problemNumber, result, points);
 				}
 			};

@@ -40,10 +40,10 @@ public class WorkersQueue {
 	}
 	
 	public synchronized Optional<Worker> take() {
-		return workers.stream().filter(w -> w.isFree()).findFirst();
+		return workers.stream().filter(w -> w.isFree() && w.isAlive()).findFirst();
 	}
 	
-	public LinkedHashSet<Worker> getAll() {
+	public synchronized LinkedHashSet<Worker> getAll() {
 		return workers;
 	}
 }
