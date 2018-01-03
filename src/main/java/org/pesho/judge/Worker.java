@@ -18,6 +18,9 @@ import org.springframework.web.client.RestTemplate;
 
 public class Worker {
 
+	private RestTemplate restTemplate = new RestTemplate();
+	private RestTemplate restTemplateIsAlive = new RestTemplate();
+	
 	private String url;
 	private boolean isFree = true;
 
@@ -27,13 +30,17 @@ public class Worker {
 		if (url.endsWith("/"))
 			url = url.substring(0, url.length() - 1);
 		this.url = url;
+
+		restTemplateIsAlive.setRequestFactory(new SimpleClientHttpRequestFactory());
+        SimpleClientHttpRequestFactory rf = (SimpleClientHttpRequestFactory) restTemplateIsAlive.getRequestFactory();
+        rf.setReadTimeout(1000);
+        rf.setConnectTimeout(1000);
 	}
 
 	public SubmissionScore grade(Map<String, Object> problem, Map<String, Object> submission, File file)
 			throws Exception {
 		int problemId = (int) problem.get("id");
 
-		RestTemplate rest = new RestTemplate();
 		MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<String, Object>();
 
 		HttpHeaders metadataHeader = new HttpHeaders();
@@ -50,21 +57,15 @@ public class Worker {
 		HttpHeaders multipartHeaders = new HttpHeaders();
 		multipartHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
 
-		ResponseEntity<SubmissionScore> response = rest.postForEntity(url + "/api/v1/submissions/" + submissionId,
+		ResponseEntity<SubmissionScore> response = restTemplate.postForEntity(url + "/api/v1/submissions/" + submissionId,
 				new HttpEntity<>(parameters, multipartHeaders), SubmissionScore.class);
-
-		System.out.println(response.getStatusCode());
+		System.out.println("Response for " + submissionId + " is: " + response.getStatusCode() + ", points are: " + response.getBody().getScore());
 		return response.getBody();
 	}
 	
 	public boolean isAlive() {
 		try {
-			RestTemplate rest = new RestTemplate();
-	        rest.setRequestFactory(new SimpleClientHttpRequestFactory());
-	        SimpleClientHttpRequestFactory rf = (SimpleClientHttpRequestFactory) rest.getRequestFactory();
-	        rf.setReadTimeout(1000);
-	        rf.setConnectTimeout(1000);
-			ResponseEntity<String> entity = rest.getForEntity(url + "/api/v1/health-check", String.class);
+			ResponseEntity<String> entity = restTemplateIsAlive.getForEntity(url + "/api/v1/health-check", String.class);
 			return entity.getStatusCode() == HttpStatus.OK;
 		} catch (Exception e) {
 			System.out.println("Cannot connect to worker " + url);

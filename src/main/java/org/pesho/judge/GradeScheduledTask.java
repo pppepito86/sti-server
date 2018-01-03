@@ -31,22 +31,26 @@ public class GradeScheduledTask {
 	public void gradeTask() throws IOException {
     	List<Map<String, Object>> submissions = repository.submissionsToGrade();
     	for (Map<String, Object> submission: submissions) {
-    		grade(submission);
+    		boolean graded = grade(submission);
+    		if (!graded) return;
     	}
     }
 
-	private void grade(Map<String, Object> submission) throws IOException {
+	private boolean grade(Map<String, Object> submission) throws IOException {
 		String group = (String) submission.get("group");
 		String directory = (String) submission.get("directory");
 		
 		List<Map<String, Object>> groupProblems = repository.getGroupProblems(group);
 		for (Map<String, Object> problem: groupProblems) {
+			int problemNumber = (int) problem.get("number");
+			if (submission.get("problem"+problemNumber) != null) continue;
+
+			
 			Optional<File> file = Arrays.stream(new File(directory).listFiles())
 				.filter(f -> f.getName().equalsIgnoreCase(problem.get("name") + ".cpp"))
 				.findFirst();
 			
 			int submissionId = (int) submission.get("id");
-			int problemNumber = (int) problem.get("number");
 			
 			if (!file.isPresent() || file.get().isDirectory()) {
 				repository.addScore(submissionId, problemNumber, "not solved", 0);
@@ -54,13 +58,12 @@ public class GradeScheduledTask {
 			}
 			
 			Optional<Worker> worker = queue.take();
-			if (!worker.isPresent()) return;
-			
-			if (submission.get("problem"+problemNumber) != null) continue;
+			if (!worker.isPresent()) return false;
+
+			System.out.println("Starting " + worker.get().getUrl() + " for " + submission.get("id") + ", " + problem.get("id"));
 			repository.addScore(submissionId, problemNumber, "judging", 0);
 			
 			long sTime = System.currentTimeMillis();
-			System.out.println("Starting " + worker.get().getUrl() + " for " + submission.get("id") + ", " + problem.get("id"));
 
 			worker.get().setFree(false);
 			Runnable runnable = () -> {
@@ -94,6 +97,7 @@ public class GradeScheduledTask {
 			};
 			
 			new Thread(runnable).start();
-		}	
+		}
+		return true;
 	}
 }
