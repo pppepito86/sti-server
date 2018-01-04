@@ -23,6 +23,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Worker {
 
+	private ObjectMapper mapper = new ObjectMapper();
+	
 	private String url;
 	private boolean isFree = true;
 
@@ -74,7 +76,6 @@ public class Worker {
 		CloseableHttpResponse response = httpclient.execute(get);
 		String responseString = EntityUtils.toString(response.getEntity());
 		httpclient.close();
-		ObjectMapper mapper = new ObjectMapper();
 		SubmissionScore score = mapper.readValue(responseString, SubmissionScore.class);
 		
 		System.out.println("Response for " + submissionId + " is: " + response.getStatusLine() + ", points are: " + score.getScore());
