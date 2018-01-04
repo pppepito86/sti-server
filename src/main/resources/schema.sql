@@ -32,3 +32,7 @@ CREATE TABLE IF NOT EXISTS `workers`(
   `url` varchar(1000) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+UPDATE submissions set problem1='waiting' where problem1='judging';
+UPDATE submissions set problem2='waiting' where problem2='judging';
+UPDATE submissions set problem3='waiting' where problem3='judging';

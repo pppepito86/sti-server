@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:dt="http://www.thymeleaf.org/dandelion/datatables">
+<head>
+	<meta charset="utf-8" />
+	<title>NOI Grader</title>
+	
+	<style>
+		table, th, td {
+		    border: 1px solid black;
+		    border-collapse: collapse;
+		    padding: 5px;
+		}
+	</style>
+</head>
+<body>
+<div class="span12">
+	<span>Group A</span>
+    <table dt:table="true">
+        <thead>
+            <tr>
+                <th>group</th>
+                <th>problem 1</th>
+                <th>problem 2</th>
+                <th>problem 3</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="group : ${groups}">
+                <td th:text="${group.get('id')}"></td>
+                <td th:text="${group.get('1')}"></td>
+                <td th:text="${group.get('2')}"></td>
+                <td th:text="${group.get('3')}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>NOI Grader</title>
+	</head>
+	<body>
+		<form action="/grade" method="post" enctype="multipart/form-data">
+			Качете един .zip файл със следната структура:<br />
+			<pre>
+A
+    PESHO
+        crypto.cpp
+        colorgraph.cpp
+        clubs.cpp
+    MARIN
+        crypto.cpp
+B
+    BOYAN
+        b1.cpp
+        b2.cpp
+    DENI	
+        b3.cpp
+C
+  ..
+D
+  ..
+E
+  ..</pre>
+			Важно е имената на програмите да са според изискванията в задачите!<br /><br />
+			<label>Архив: </label><br />
+			<input type="file" name="file" /><br /><br />
+			
+			<input type="submit" value="Качи" />
+			<input type="hidden" name="city" th:value="${city}" /><br />
+		</form>
+	</body>
+</html>

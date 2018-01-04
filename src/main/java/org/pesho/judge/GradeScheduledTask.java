@@ -43,7 +43,7 @@ public class GradeScheduledTask {
 		List<Map<String, Object>> groupProblems = repository.getGroupProblems(group);
 		for (Map<String, Object> problem: groupProblems) {
 			int problemNumber = (int) problem.get("number");
-			if (submission.get("problem"+problemNumber) != null) continue;
+			if (!"waiting".equals(submission.get("problem"+problemNumber))) continue;
 
 			
 			Optional<File> file = Arrays.stream(new File(directory).listFiles())
@@ -61,7 +61,7 @@ public class GradeScheduledTask {
 			if (!worker.isPresent()) return false;
 
 			System.out.println("Starting " + worker.get().getUrl() + " for " + submission.get("id") + ", " + problem.get("id"));
-			repository.addScore(submissionId, problemNumber, "judging", 0);
+			repository.addStatus(submissionId, problemNumber, "judging");
 			
 			long sTime = System.currentTimeMillis();
 
