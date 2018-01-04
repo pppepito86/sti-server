@@ -185,6 +185,8 @@ public class HtmlService {
 		unzip(zipFile, zipFolder);
 
 		for (File group: zipFolder.listFiles()) {
+			if (!group.isDirectory()) continue;
+			
 			File upperCaseGroup = new File(zipFolder, group.getName().toUpperCase());
 			group.renameTo(upperCaseGroup);
 			for (File dir : upperCaseGroup.listFiles()) {
