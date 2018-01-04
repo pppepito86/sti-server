@@ -6,26 +6,23 @@ import java.util.Map;
 import java.util.Random;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.pesho.grader.SubmissionScore;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Worker {
 
-	private RestTemplate restTemplate = new RestTemplate();
-	private RestTemplate restTemplateIsAlive = new RestTemplate();
-	
 	private String url;
 	private boolean isFree = true;
 
@@ -35,11 +32,6 @@ public class Worker {
 		if (url.endsWith("/"))
 			url = url.substring(0, url.length() - 1);
 		this.url = url;
-
-		restTemplateIsAlive.setRequestFactory(new SimpleClientHttpRequestFactory());
-        SimpleClientHttpRequestFactory rf = (SimpleClientHttpRequestFactory) restTemplateIsAlive.getRequestFactory();
-        rf.setReadTimeout(1000);
-        rf.setConnectTimeout(1000);
 	}
 
 	public SubmissionScore grade(Map<String, Object> problem, Map<String, Object> submission, File file)
@@ -57,7 +49,7 @@ public class Worker {
 		post.setEntity(entity);
 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
-		CloseableHttpResponse response = httpclient.execute(post);
+		httpclient.execute(post);
 		httpclient.close();
 		
 		for (int i = 0; i < 600; i++) {
@@ -90,7 +82,11 @@ public class Worker {
 	}
 	
 	public boolean isAlive() {
-		try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+		RequestConfig config = RequestConfig.custom()
+				  .setConnectTimeout(1000)
+				  .setConnectionRequestTimeout(1000)
+				  .setSocketTimeout(1000).build();
+		try (CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultRequestConfig(config).build()) {
 			HttpGet httpGet = new HttpGet(url + "/api/v1/health-check");
 			CloseableHttpResponse response = httpclient.execute(httpGet);
 			return response.getStatusLine().getStatusCode() == HttpStatus.OK.value();
