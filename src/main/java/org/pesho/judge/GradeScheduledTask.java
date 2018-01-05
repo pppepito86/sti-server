@@ -85,8 +85,9 @@ public class GradeScheduledTask {
 						System.out.println("Submission <" + submissionId + "> failed with " + values[0].getReason());
 					}
 				} catch (Exception e) {
+					System.out.println("Failed judging for submission: " + submissionId);
 					e.printStackTrace();
-					result = "system error";
+					result = "waiting";
 				} finally {
 					System.out.println("Finishing " + worker.get().getUrl() + " " + submission.get("id") + ", " + problem.get("id") + " time - " + (System.currentTimeMillis() - sTime)/1000);
 					worker.get().setFree(true);
