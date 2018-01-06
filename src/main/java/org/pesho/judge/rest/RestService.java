@@ -6,6 +6,8 @@ import java.util.Map;
 import org.pesho.judge.Worker;
 import org.pesho.judge.WorkersQueue;
 import org.pesho.judge.repositories.Repository;
+import org.pesho.workermanager.Configuration;
+import org.pesho.workermanager.WorkerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -35,6 +37,20 @@ public class RestService {
 		return repository.listWorkers();
 	}
 
+	@GetMapping("/workers/ensure/{count}")
+	public ResponseEntity<?> ensureWorkers(@PathVariable("count") int count) {
+		Configuration configuration = new Configuration()
+				.setImageId("ami-099a0966")
+				.setSecurityGroup("All")
+				.setNewInstanceKeyName("pesho")
+				.setWorkerRegistryEndpoint("http://localhost:8889/workers")
+				.setRegisterInstances(true);
+
+		WorkerManager manager = new WorkerManager(configuration);
+		manager.ensureNumberOfInstances(count);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
 	@PostMapping("/workers/{url}")
 	public ResponseEntity<?> addWorker(@PathVariable("url") String url) {
 		boolean isDuplicate = repository.listWorkers()
