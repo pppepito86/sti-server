@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.amazonaws.services.ec2.model.InstanceType;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/admin")
 public class RestService {
 
 	@Value("${work.dir}")
