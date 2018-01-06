@@ -41,7 +41,7 @@ public class RestService {
 		return repository.listWorkers();
 	}
 
-	@GetMapping("/workers/ensure/{count}")
+	@GetMapping("/admin/workers/ensure/{count}")
 	public ResponseEntity<?> ensureWorkers(@PathVariable("count") int count,
 			@RequestParam("type") Optional<String> maybeType) {
 		InstanceType type = InstanceType.valueOf(maybeType.orElse("T2Micro"));
