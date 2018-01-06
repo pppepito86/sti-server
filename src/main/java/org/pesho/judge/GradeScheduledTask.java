@@ -45,7 +45,10 @@ public class GradeScheduledTask {
 			int problemNumber = (int) problem.get("number");
 			if (!"waiting".equals(submission.get("problem"+problemNumber))) continue;
 
-			Optional<File> cFile = Arrays.stream(new File(directory).listFiles())
+			File[] allFiles = new File(directory).listFiles();
+			if (allFiles == null) allFiles = new File[0];
+
+			Optional<File> cFile = Arrays.stream(allFiles)
 					.filter(f -> f.getName().equalsIgnoreCase(problem.get("name") + ".c"))
 					.findFirst();
 			if (cFile.isPresent()) {
@@ -54,7 +57,7 @@ public class GradeScheduledTask {
 				oldFile.renameTo(newFile);
 			}
 			
-			Optional<File> file = Arrays.stream(new File(directory).listFiles())
+			Optional<File> file = Arrays.stream(allFiles)
 				.filter(f -> f.getName().equalsIgnoreCase(problem.get("name") + ".cpp"))
 				.findFirst();
 			
