@@ -13,10 +13,6 @@ echo "LANG=en_US.UTF-8" >> /etc/environment
 echo "LANGUAGE=en_US.UTF-8" >> /etc/environment
 source /etc/environment
 
-#docker
-wget -qO- https://get.docker.com/ | sh
-docker pull pppepito86/judge
-
 #mysql
 echo "mysql-server mysql-server/root_password password password" | sudo debconf-set-selections
 echo "mysql-server mysql-server/root_password_again password password" | sudo debconf-set-selections
@@ -33,8 +29,10 @@ sudo apt-get install -y maven
 #noi project
 git clone https://github.com/pppepito86/sandbox.git /vagrant/sandbox
 git clone https://github.com/pppepito86/grader.git /vagrant/grader
+git clone https://github.com/MarinShalamanov/worker-manager.git /vagrant/worker-manager
 git clone https://github.com/pppepito86/noi.git /vagrant/noi
 mvn install -f /vagrant/sandbox/pom.xml
 mvn install -f /vagrant/grader/pom.xml
+mvn install -f /vagrant/worker-manager/pom.xml
 mvn install -f /vagrant/noi/pom.xml
 mvn spring-boot:run -f /vagrant/noi/pom.xml >/vagrant/noi/stdout 2> /vagrant/noi/stderr &
