@@ -44,6 +44,15 @@ public class GradeScheduledTask {
 		for (Map<String, Object> problem: groupProblems) {
 			int problemNumber = (int) problem.get("number");
 			if (!"waiting".equals(submission.get("problem"+problemNumber))) continue;
+
+			Optional<File> cFile = Arrays.stream(new File(directory).listFiles())
+					.filter(f -> f.getName().equalsIgnoreCase(problem.get("name") + ".c"))
+					.findFirst();
+			if (cFile.isPresent()) {
+				File oldFile = cFile.get();
+				File newFile = new File(cFile.get().getAbsolutePath()+"pp");
+				oldFile.renameTo(newFile);
+			}
 			
 			Optional<File> file = Arrays.stream(new File(directory).listFiles())
 				.filter(f -> f.getName().equalsIgnoreCase(problem.get("name") + ".cpp"))
