@@ -139,14 +139,15 @@ public class HtmlService {
 			@RequestParam("city") String city, Model model)
 			throws Exception {
     	city = city.toUpperCase();
-
     	String cityEncoded = URLEncoder.encode(city, "UTF-8");
     	
     	if (repository.hasCitySubmissions(city)) {
     		return "redirect:/home?city="+cityEncoded;
     	}
     	
+    	System.out.println("Adding submission for city " + city);
 		File zipFile = getFile("submission", city, file.getOriginalFilename().toLowerCase());
+		System.out.println("Zip file is " + zipFile.getAbsolutePath());
 		zipFile.getParentFile().mkdirs();
 		FileUtils.copyInputStreamToFile(file.getInputStream(), zipFile);
 		File zipFolder = new File(zipFile.getAbsolutePath().replace(".zip", ""));
@@ -165,6 +166,7 @@ public class HtmlService {
 		
 		for (File group: zipFolder.listFiles()) {
 			if (!group.isDirectory()) continue;
+			System.out.println("Group is " + group.getAbsolutePath());
 			
 			File upperCaseGroup = new File(zipFolder, group.getName().toUpperCase());
 			group.renameTo(upperCaseGroup);
@@ -172,9 +174,11 @@ public class HtmlService {
 			for (File dir : upperCaseGroup.listFiles()) {
 				if (!dir.isDirectory())
 					continue;
+				System.out.println("dir is " + dir.getAbsolutePath());
 				String dirName = dir.getCanonicalPath().replace(new File(workDir).getCanonicalPath(), "");
 				if (dirName.startsWith(File.separator))
 					dirName = dirName.substring(1);
+				System.out.println("adding submissions for " + city + " " + group.getName() + " " + dirName);
 				repository.addSubmission(city, group.getName(), dirName);
 			}
 		}
