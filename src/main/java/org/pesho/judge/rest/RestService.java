@@ -44,7 +44,7 @@ public class RestService {
 	@GetMapping("/workers/ensure/{count}")
 	public ResponseEntity<?> ensureWorkers(@PathVariable("count") int count,
 			@RequestParam("type") Optional<String> maybeType) {
-		InstanceType type = InstanceType.valueOf(maybeType.orElse(InstanceType.T2Micro.toString()));
+		InstanceType type = InstanceType.valueOf(maybeType.orElse("T2Micro"));
 		Configuration configuration = new Configuration()
 				.setImageId("ami-099a0966")
 				.setInstanceType(type)
