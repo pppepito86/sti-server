@@ -3,13 +3,10 @@ package org.pesho.judge.rest;
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
@@ -17,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.io.FileUtils;
 import org.pesho.judge.WorkersQueue;
 import org.pesho.judge.repositories.Repository;
+import org.pesho.sandbox.SandboxExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -182,20 +180,8 @@ public class HtmlService {
 
 	public void unzip(File file, File folder) {
 		try {
-			folder.mkdirs();
-
-			try (ZipFile zipFile = new ZipFile(file)) {
-				Enumeration<? extends ZipEntry> entries = zipFile.entries();
-				while (entries.hasMoreElements()) {
-					ZipEntry entry = entries.nextElement();
-					File test = new File(folder, entry.getName());
-					if (entry.isDirectory()) {
-						test.mkdirs();
-					} else {
-						FileUtils.copyInputStreamToFile(zipFile.getInputStream(entry), test);
-					}
-				}
-			}
+			String command = String.format("unzip \"%s\" -d \"%s\"", file.getCanonicalPath(), folder.getCanonicalPath());
+			new SandboxExecutor().command(command).execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
