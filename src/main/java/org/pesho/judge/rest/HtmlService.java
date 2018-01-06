@@ -3,10 +3,12 @@ package org.pesho.judge.rest;
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
@@ -149,6 +151,15 @@ public class HtmlService {
 		FileUtils.copyInputStreamToFile(file.getInputStream(), zipFile);
 		File zipFolder = new File(zipFile.getAbsolutePath().replace(".zip", ""));
 		unzip(zipFile, zipFolder);
+		
+		List<File> firstLevelFiles = Arrays.stream(zipFolder.listFiles()).filter(x -> x.isDirectory()).collect(Collectors.toList());
+		if (firstLevelFiles.size() == 1) {
+			String name = firstLevelFiles.get(0).getName();
+			if (!name.equals("A") && !name.equals("B") && !name.equals("C") && !name.equals("D") && !name.equals("E")) {
+				zipFolder = firstLevelFiles.get(0);
+			}
+		}
+		
 
 		for (File group: zipFolder.listFiles()) {
 			if (!group.isDirectory()) continue;
