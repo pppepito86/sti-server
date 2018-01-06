@@ -37,6 +37,12 @@ public class RestService {
 
 	@PostMapping("/workers/{url}")
 	public ResponseEntity<?> addWorker(@PathVariable("url") String url) {
+		boolean isDuplicate = repository.listWorkers()
+				.stream()
+				.anyMatch(worker -> worker.get("url").equals(url));
+		
+		if (isDuplicate) return new ResponseEntity<>(HttpStatus.CONFLICT); 
+			
 		workersQueue.put(new Worker(url));
 		repository.addWorker(url);
 		return new ResponseEntity<>(HttpStatus.OK);
