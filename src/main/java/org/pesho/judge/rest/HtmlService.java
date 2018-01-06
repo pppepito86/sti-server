@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
+import org.zeroturnaround.exec.ProcessExecutor;
 
 @Controller
 public class HtmlService {
@@ -180,8 +181,7 @@ public class HtmlService {
 
 	public void unzip(File file, File folder) {
 		try {
-			String command = String.format("unzip \"%s\" -d \"%s\"", file.getCanonicalPath(), folder.getCanonicalPath());
-			new SandboxExecutor().command(command).execute();
+			new ProcessExecutor().command("unzip", file.getCanonicalPath(), "-d", folder.getCanonicalPath()).execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
