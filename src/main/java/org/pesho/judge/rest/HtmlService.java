@@ -160,12 +160,13 @@ public class HtmlService {
 			}
 		}
 		
-
+		
 		for (File group: zipFolder.listFiles()) {
 			if (!group.isDirectory()) continue;
 			
 			File upperCaseGroup = new File(zipFolder, group.getName().toUpperCase());
 			group.renameTo(upperCaseGroup);
+			if (upperCaseGroup.listFiles() == null) continue;
 			for (File dir : upperCaseGroup.listFiles()) {
 				if (!dir.isDirectory())
 					continue;
