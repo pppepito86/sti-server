@@ -5,7 +5,6 @@
 		<title>NOI Grader</title>
 	</head>
 	<body>
-		<form action="/grade" method="post" enctype="multipart/form-data">
 			Еднокатно качете един .zip файл със структура подобна на следната:<br />
 			<pre>
 A
@@ -32,6 +31,7 @@ E
 			<b>Програмите се компилират с "g++ -O2 -std=c++11" под Ubuntu 16.04.3 LTS. Ако програвата даде CE (compilation error) може допълнително да видите проблема.</b><br />
 			<b>Ако промените файла и искате да качите нанова използвайте друго име за град/училище</b><br />
 			<br />
+		<form action="/grade" method="post" enctype="multipart/form-data">
 			<label>Архив: </label><br />
 			<input type="file" name="file" /><br /><br />
 			
