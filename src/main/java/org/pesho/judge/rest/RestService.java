@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.amazonaws.services.ec2.model.InstanceType;
+
 @RestController
 @RequestMapping("")
 public class RestService {
@@ -41,6 +43,7 @@ public class RestService {
 	public ResponseEntity<?> ensureWorkers(@PathVariable("count") int count) {
 		Configuration configuration = new Configuration()
 				.setImageId("ami-099a0966")
+				.setInstanceType(InstanceType.T2Micro)
 				.setSecurityGroup("All")
 				.setNewInstanceKeyName("pesho")
 				.setWorkerRegistryEndpoint("http://localhost:8889/workers")
