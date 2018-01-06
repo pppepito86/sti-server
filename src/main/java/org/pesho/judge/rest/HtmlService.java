@@ -107,38 +107,13 @@ public class HtmlService {
 
 		final int problemIdFinal = problemId;
 		workersQueue.getAll().stream().parallel().forEach(worker -> {
-			String endpointURL = worker.getUrl() + "/api/v1/problems/" + problemIdFinal;
-			sendProblemToWorker(endpointURL, zipFile.getAbsolutePath());
+			worker.sendProblemToWorker(problemIdFinal, zipFile.getAbsolutePath());
 		});
 
 		return "redirect:/admin/problems";
 	}
 
-	private void sendProblemToWorker(String endpointURL, String zipFilePath) {
-		RestTemplate rest = new RestTemplate();
-		MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<String, Object>();
-		parameters.add("file", new FileSystemResource(zipFilePath));
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Content-Type", "multipart/form-data");
-
-		boolean exists;
-		try {
-			exists = HttpStatus.OK == rest.getForEntity(endpointURL, String.class).getStatusCode();
-		} catch (HttpClientErrorException e) {
-			exists = false;
-		}
-
-		HttpEntity<MultiValueMap<String, Object>> params = new HttpEntity<MultiValueMap<String, Object>>(parameters,
-				headers);
-		if (exists) {
-			rest.put(endpointURL, params);
-		} else {
-			rest.postForLocation(endpointURL, params);
-		}
-	}
-
-    @GetMapping("/home")
+	@GetMapping("/home")
     public String table(@RequestParam(value = "city") String city, Model model) {
     	city = city.toUpperCase();
     	

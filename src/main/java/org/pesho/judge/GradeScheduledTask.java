@@ -44,7 +44,6 @@ public class GradeScheduledTask {
 		for (Map<String, Object> problem: groupProblems) {
 			int problemNumber = (int) problem.get("number");
 			if (!"waiting".equals(submission.get("problem"+problemNumber))) continue;
-
 			
 			Optional<File> file = Arrays.stream(new File(directory).listFiles())
 				.filter(f -> f.getName().equalsIgnoreCase(problem.get("name") + ".cpp"))
@@ -70,7 +69,7 @@ public class GradeScheduledTask {
 				String result = "";
 				int points = 0;
 				try {
-					SubmissionScore score = worker.get().grade(problem, submission, file.get());
+					SubmissionScore score = worker.get().grade(problem, submission, file.get(), workDir);
 					points = (int) Math.round(score.getScore());
 					StepResult[] values = score.getScoreSteps().values().toArray(new StepResult[0]);
 					if (values.length > 1) {

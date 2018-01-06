@@ -17,7 +17,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.pesho.grader.SubmissionScore;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,9 +42,17 @@ public class Worker {
 		this.url = url;
 	}
 
-	public SubmissionScore grade(Map<String, Object> problem, Map<String, Object> submission, File file)
+	public SubmissionScore grade(Map<String, Object> problem, Map<String, Object> submission, File file, String workDir)
 			throws Exception {
 		int problemId = (int) problem.get("id");
+		
+		if (!isProblemUploaded(problemId)) {
+			String group = (String) problem.get("group");
+			int number = (int) problem.get("number");
+			String fileName = (String) problem.get("file");
+			File zipFile = getFile(workDir, "problem", group, String.valueOf(number), fileName.toLowerCase());
+			sendProblemToWorker(problemId, zipFile.getAbsolutePath());
+		}
 
 		String submissionId = submission.get("id") + "_" + problem.get("name") + "_" + new Random().nextInt(100);
 
@@ -59,6 +73,12 @@ public class Worker {
 			else return getScore(submissionId);
 		}
 		throw new IllegalStateException("time out");
+	}
+	
+	private File getFile(String workDir, String type, String city, String group, String fileName) {
+		String path = new File(workDir).getAbsolutePath() + File.separator + type + File.separator + city
+				+ File.separator + group + File.separator + fileName;
+		return new File(path);
 	}
 
 	private boolean isRunning(String submissionId) throws IOException {
@@ -96,7 +116,40 @@ public class Worker {
 			return false;
 		}
 	}
+	
+	public boolean isProblemUploaded(int problemId) throws IOException {
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		HttpGet get = new HttpGet(url + "/problems/" + problemId);
+		CloseableHttpResponse response = httpclient.execute(get);
+		httpclient.close();
+		return response.getStatusLine().getStatusCode() == 200;
+	}
 
+	public void sendProblemToWorker(int problemId, String zipFilePath) {
+		RestTemplate rest = new RestTemplate();
+		MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<String, Object>();
+		parameters.add("file", new FileSystemResource(zipFilePath));
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Content-Type", "multipart/form-data");
+
+		String endpointURL = url + "/api/v1/problems/" + problemId;
+		boolean exists;
+		try {
+			exists = HttpStatus.OK == rest.getForEntity(endpointURL, String.class).getStatusCode();
+		} catch (HttpClientErrorException e) {
+			exists = false;
+		}
+
+		org.springframework.http.HttpEntity<MultiValueMap<String, Object>> params = new org.springframework.http.HttpEntity<MultiValueMap<String, Object>>(parameters,
+				headers);
+		if (exists) {
+			rest.put(endpointURL, params);
+		} else {
+			rest.postForLocation(endpointURL, params);
+		}
+	}
+	
 	public void setFree(boolean isFree) {
 		this.isFree = isFree;
 	}
