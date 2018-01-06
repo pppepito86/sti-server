@@ -152,6 +152,8 @@ public class HtmlService {
 		File zipFolder = new File(zipFile.getAbsolutePath().replace(".zip", ""));
 		unzip(zipFile, zipFolder);
 		
+		System.out.println("zipfolder: " + zipFolder.getAbsolutePath());
+		
 		List<File> firstLevelFiles = Arrays.stream(zipFolder.listFiles()).filter(x -> x.isDirectory()).collect(Collectors.toList());
 		if (firstLevelFiles.size() == 1) {
 			String name = firstLevelFiles.get(0).getName();
@@ -159,7 +161,7 @@ public class HtmlService {
 				zipFolder = firstLevelFiles.get(0);
 			}
 		}
-		
+		System.out.println("zipfolder2: " + zipFolder.getAbsolutePath());
 		
 		for (File group: zipFolder.listFiles()) {
 			if (!group.isDirectory()) continue;
