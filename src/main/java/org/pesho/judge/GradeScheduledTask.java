@@ -67,6 +67,14 @@ public class GradeScheduledTask {
 				repository.addScore(submissionId, problemNumber, "not solved", 0);
 				continue;
 			}
+
+			String fileName = file.get().getName();
+			if (!fileName.endsWith(".cpp")) {
+				fileName = fileName.substring(0, fileName.length()-4) + ".cpp";
+				File newFile = new File(file.get().getParentFile(), fileName);
+				file.get().renameTo(newFile);
+				file = Optional.of(newFile);
+			}
 			
 			Optional<Worker> worker = queue.take();
 			if (!worker.isPresent()) return false;
@@ -77,11 +85,12 @@ public class GradeScheduledTask {
 			long sTime = System.currentTimeMillis();
 
 			worker.get().setFree(false);
+			File fileToJudge = file.get();
 			Runnable runnable = () -> {
 				String result = "";
 				int points = 0;
 				try {
-					SubmissionScore score = worker.get().grade(problem, submission, file.get(), workDir);
+					SubmissionScore score = worker.get().grade(problem, submission, fileToJudge, workDir);
 					points = (int) Math.round(score.getScore());
 					StepResult[] values = score.getScoreSteps().values().toArray(new StepResult[0]);
 					if (values.length > 1) {
