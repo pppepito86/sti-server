@@ -115,7 +115,7 @@ public class HtmlService {
     	List<Map<String,Object>> submissionsC = repository.listGroupSubmissions(city, "C");
     	List<Map<String,Object>> submissionsD = repository.listGroupSubmissions(city, "D");
     	List<Map<String,Object>> submissionsE = repository.listGroupSubmissions(city, "E");
-        if (submissionsA.size() + submissionsB.size() + submissionsC.size() + submissionsD.size() + submissionsE.size() > 0) {
+        if (repository.hasGroupSubmissions(city)) {
         	List<Map<String, Object>> problems = repository.listProblems();
         	for (Map<String, Object> problem: problems) {
         		model.addAttribute(problem.get("group").toString()+problem.get("number"), problem.get("name"));

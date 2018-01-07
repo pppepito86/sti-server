@@ -59,6 +59,10 @@ public class Repository {
         template.update("INSERT INTO submissions(city, `group`, directory, problem1, problem2, problem3) VALUES(?, ?, ?, ?, ?, ?)",
                 city, group, directory, "waiting", "waiting", "waiting");
 	}
+
+	public boolean hasGroupSubmissions(String city) {
+		return template.queryForList("SELECT id from submissions where city=?", city).stream().findAny().isPresent();
+	}
 	
 	public List<Map<String, Object>> listGroupSubmissions(String city, String group) {
         List<Map<String, Object>> submissions = template.queryForList("SELECT id, problem1, problem2, problem3, points1, points2, points3, points1+points2+points3 as points, directory from submissions where city=? AND `group`=?",
