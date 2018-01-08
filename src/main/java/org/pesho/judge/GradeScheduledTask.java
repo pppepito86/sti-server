@@ -56,6 +56,9 @@ public class GradeScheduledTask {
 				File newFile = new File(cFile.get().getAbsolutePath()+"pp");
 				oldFile.renameTo(newFile);
 			}
+
+			allFiles = new File(directory).listFiles();
+			if (allFiles == null) allFiles = new File[0];
 			
 			Optional<File> file = Arrays.stream(allFiles)
 				.filter(f -> f.getName().equalsIgnoreCase(problem.get("name") + ".cpp"))
