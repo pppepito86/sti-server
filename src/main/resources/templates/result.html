@@ -14,147 +14,29 @@
 	</style>
 </head>
 <body>
-<div class="span12" th:if="${submissionsA.size() != 0}">
-	<span>Group A</span>
+<div class="span12" th:each="contest: ${contests}">
+	<span th:text="${contest.key}"></span>
     <table dt:table="true">
         <thead>
             <tr>
-                <th>id</th>
-                <th th:text="${A1}" />
-                <th th:text="${A2}" />
-                <th th:text="${A3}" />
-                <th>total</th>
-                <th th:text="${A1}" />
-                <th th:text="${A2}" />
-                <th th:text="${A3}" />
+                <th>user</th>
+                <th>points 1</th>
+                <th>points 2</th>
+                <th>points 3</th>
+                <th>problem 1</th>
+                <th>problem 2</th>
+                <th>problem 3</th>
             </tr>
         </thead>
         <tbody>
-            <tr th:each="submission : ${submissionsA}">
-                <td th:text="${submission.get('directory')}"></td>
-                <td th:text="${submission.get('points1')}"></td>
-                <td th:text="${submission.get('points2')}"></td>
-                <td th:text="${submission.get('points3')}"></td>
-                <td th:text="${submission.get('points')}"></td>
-                <td th:text="${submission.get('problem1')}"></td>
-                <td th:text="${submission.get('problem2')}"></td>
-                <td th:text="${submission.get('problem3')}"></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<div class="span12" th:if="${submissionsB.size() != 0}">
-	<span>Group B</span>
-    <table id="myTableId" dt:table="true">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th th:text="${B1}" />
-                <th th:text="${B2}" />
-                <th th:text="${B3}" />
-                <th>total</th>
-                <th th:text="${B1}" />
-                <th th:text="${B2}" />
-                <th th:text="${B3}" />
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="submission : ${submissionsB}">
-                <td th:text="${submission.get('directory')}"></td>
-                <td th:text="${submission.get('points1')}"></td>
-                <td th:text="${submission.get('points2')}"></td>
-                <td th:text="${submission.get('points3')}"></td>
-                <td th:text="${submission.get('points')}"></td>
-                <td th:text="${submission.get('problem1')}"></td>
-                <td th:text="${submission.get('problem2')}"></td>
-                <td th:text="${submission.get('problem3')}"></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<div class="span12" th:if="${submissionsC.size() != 0}">
-	<span>Group C</span>
-    <table dt:table="true">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th th:text="${C1}" />
-                <th th:text="${C2}" />
-                <th th:text="${C3}" />
-                <th>total</th>
-                <th th:text="${C1}" />
-                <th th:text="${C2}" />
-                <th th:text="${C3}" />
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="submission : ${submissionsC}">
-                <td th:text="${submission.get('directory')}"></td>
-                <td th:text="${submission.get('points1')}"></td>
-                <td th:text="${submission.get('points2')}"></td>
-                <td th:text="${submission.get('points3')}"></td>
-                <td th:text="${submission.get('points')}"></td>
-                <td th:text="${submission.get('problem1')}"></td>
-                <td th:text="${submission.get('problem2')}"></td>
-                <td th:text="${submission.get('problem3')}"></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<div class="span12" th:if="${submissionsD.size() != 0}">
-	<span>Group D</span>
-    <table dt:table="true">
-        <thead>
-            <tr>
-                <th>Id</th>
-              	<th th:text="${D1}" />
-                <th th:text="${D2}" />
-                <th th:text="${D3}" />
-                <th>total</th>
-              	<th th:text="${D1}" />
-                <th th:text="${D2}" />
-                <th th:text="${D3}" />
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="submission : ${submissionsD}">
-                <td th:text="${submission.get('directory')}"></td>
-                <td th:text="${submission.get('points1')}"></td>
-                <td th:text="${submission.get('points2')}"></td>
-                <td th:text="${submission.get('points3')}"></td>
-                <td th:text="${submission.get('points')}"></td>
-                <td th:text="${submission.get('problem1')}"></td>
-                <td th:text="${submission.get('problem2')}"></td>
-                <td th:text="${submission.get('problem3')}"></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<div class="span12" th:if="${submissionsE.size() != 0}">
-	<span>Group E</span>
-    <table dt:table="true">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th th:text="${E1}" />
-                <th th:text="${E2}" />
-                <th th:text="${E3}" />
-                <th>total</th>
-                <th th:text="${E1}" />
-                <th th:text="${E2}" />
-                <th th:text="${E3}" />
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="submission : ${submissionsE}">
-                <td th:text="${submission.get('directory')}"></td>
-                <td th:text="${submission.get('points1')}"></td>
-                <td th:text="${submission.get('points2')}"></td>
-                <td th:text="${submission.get('points3')}"></td>
-                <td th:text="${submission.get('points')}"></td>
-                <td th:text="${submission.get('problem1')}"></td>
-                <td th:text="${submission.get('problem2')}"></td>
-                <td th:text="${submission.get('problem3')}"></td>
+            <tr th:each="user : ${contest.value}">
+                <td th:text="${user.key}"></td>
+                <td th:text="${user.value[0].get('points')}"></td>
+                <td th:text="${user.value[1].get('points')}"></td>
+                <td th:text="${user.value[2].get('points')}"></td>
+                <td th:text="${user.value[0].get('details')}"></td>
+                <td th:text="${user.value[1].get('details')}"></td>
+                <td th:text="${user.value[2].get('details')}"></td>
             </tr>
         </tbody>
     </table>

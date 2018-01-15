@@ -108,6 +108,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-solr</artifactId>
 		</dependency>
+		<dependency>
+    		<groupId>org.zeroturnaround</groupId>
+    		<artifactId>zt-zip</artifactId>
+    		<version>1.12</version>
+    		<type>jar</type>
+		</dependency>
 	</dependencies>
 
 	<build>

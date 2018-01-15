@@ -15,22 +15,21 @@
 </head>
 <body>
 <div class="span12">
-	<span>Group A</span>
     <table dt:table="true">
         <thead>
             <tr>
-                <th>group</th>
+                <th>contest</th>
                 <th>problem 1</th>
                 <th>problem 2</th>
                 <th>problem 3</th>
             </tr>
         </thead>
         <tbody>
-            <tr th:each="group : ${groups}">
-                <td th:text="${group.get('id')}"></td>
-                <td th:text="${group.get('1')}"></td>
-                <td th:text="${group.get('2')}"></td>
-                <td th:text="${group.get('3')}"></td>
+            <tr th:each="contest : ${contests}">
+                <td th:text="${contest.key}"></td>
+                <td th:each="value: ${contest.value}">
+                <a th:href="${'/admin/problem/' + value.get('contest') + '/' + value.get('number')}" th:text="${value.get('name')}"></a>
+                </td>
             </tr>
         </tbody>
     </table>
