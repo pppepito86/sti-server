@@ -127,14 +127,22 @@ public class Repository {
 		template.update("UPDATE submissions SET verdict=?, details=?, points=? WHERE id=?", result, details, points, id);
 	}
 	
-	public void addWorker(String url) {
-        template.update("INSERT INTO workers(url) VALUES(?)", url);
+	public synchronized void addWorker(String url) {
+		if (findWorkers(url).isPresent()) {
+			template.update("UPDATE workers SET deleted=false where url=?", url);
+		} else {
+			template.update("INSERT INTO workers(url) VALUES(?)", url);
+		}
 	}
 	
 	public void deleteWorker(String url) {
         template.update("UPDATE workers SET deleted=true where url=?", url);
 	}
 
+	public Optional<Map<String, Object>> findWorkers(String url) {
+		return template.queryForList("select * from workers where url=?", url).stream().findFirst();
+	}
+	
 	public List<Map<String, Object>> listWorkers() {
 		return template.queryForList("select * from workers where deleted=false");
 	}

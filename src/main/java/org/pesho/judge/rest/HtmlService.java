@@ -226,20 +226,32 @@ public class HtmlService implements RunTerminateListener {
 		return "redirect:/admin/workers";
 	}
 	
+	@PostMapping("/admin/workers/create")
+	public String createWorker(@RequestParam("url") String url,
+			Model model) throws Exception {
+		repository.addWorker(url);
+		return "redirect:/admin/workers";
+	}
+	
 	@PostMapping("/admin/workers/delete")
 	public String deleteWorker(@RequestParam("url") String url,
+			@RequestParam("destroy") Optional<Boolean> destroy ,
 			Model model) throws Exception {
-		url = url.split(":")[0];
-		InstanceType type = InstanceType.valueOf("T2Micro");
-		Configuration configuration = new Configuration()
-				.setImageId("ami-099a0966")
-				.setInstanceType(type)
-				.setSecurityGroup("All")
-				.setSecurityKeyName("pesho")
-				.setListener(this);
-		
-		WorkerManager manager = new WorkerManager(configuration);
-		manager.killInstance(url);
+		if (destroy.orElse(false)) {
+			url = url.split(":")[0];
+			InstanceType type = InstanceType.valueOf("T2Micro");
+			Configuration configuration = new Configuration()
+					.setImageId("ami-099a0966")
+					.setInstanceType(type)
+					.setSecurityGroup("All")
+					.setSecurityKeyName("pesho")
+					.setListener(this);
+			
+			WorkerManager manager = new WorkerManager(configuration);
+			manager.killInstance(url);
+		} else {
+			repository.deleteWorker(url);
+		}
 		
 		return "redirect:/admin/workers";
 	}
