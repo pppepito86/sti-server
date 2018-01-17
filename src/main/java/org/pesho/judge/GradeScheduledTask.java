@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Component
 public class GradeScheduledTask {
 
@@ -26,9 +28,12 @@ public class GradeScheduledTask {
 	@Autowired
 	private WorkersQueue queue;
 	
+	private ObjectMapper mapper = new ObjectMapper();
+	
     @Scheduled(fixedDelay = 1000)
 	public void gradeTask() throws IOException {
     	List<Map<String, Object>> submissions = repository.submissionsToGrade();
+    	submissions.addAll(repository.failedSubmissions());
     	for (Map<String, Object> submission: submissions) {
     		boolean graded = grade(submission);
     		if (!graded) return;
@@ -58,9 +63,11 @@ public class GradeScheduledTask {
 		worker.get().setFree(false);
 		Runnable runnable = () -> {
 			String result = "";
+			String details = "";
 			int points = 0;
 			try {
 				SubmissionScore score = worker.get().grade(maybeProblem.get(), submission, sourceFile, workDir);
+				details = mapper.writeValueAsString(score);
 				points = (int) Math.round(score.getScore());
 				StepResult[] values = score.getScoreSteps().values().toArray(new StepResult[0]);
 				if (values.length > 1) {
@@ -77,13 +84,13 @@ public class GradeScheduledTask {
 			} catch (Exception e) {
 				System.out.println("Failed judging for submission: " + submissionId);
 				e.printStackTrace();
-				result = "waiting";
+				result = "system error";
 			} finally {
 				System.out.println("Finishing " + worker.get().getUrl() + " " + submission.get("id") + ", " + problemId + " time - " + (System.currentTimeMillis() - sTime)/1000);
 				worker.get().setFree(true);
 				System.out.println("Judging " + worker.get().getUrl() + " " + result + " " + submissionId + " " + problemId);
 				System.out.println("Scoring " + worker.get().getUrl() + " " + submissionId + " " + problemId);
-				repository.addScore(submissionId, result, points);
+				repository.addScore(submissionId, result, details, points);
 			}
 		};
 			

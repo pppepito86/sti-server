@@ -49,9 +49,9 @@ public class RestService {
 				.setImageId("ami-099a0966")
 				.setInstanceType(type)
 				.setSecurityGroup("All")
-				.setNewInstanceKeyName("pesho")
-				.setWorkerRegistryEndpoint("http://localhost:8889/workers")
-				.setRegisterInstances(true);
+				.setSecurityKeyName("pesho");
+//				.setWorkerRegistryEndpoint("http://localhost:8889/workers")
+//				.setRegisterInstances(true);
 
 		WorkerManager manager = new WorkerManager(configuration);
 		manager.ensureNumberOfInstances(count);

@@ -47,10 +47,10 @@ public class Worker {
 		int problemId = (int) problem.get("id");
 		
 		if (!isProblemUploaded(problemId)) {
-			String group = (String) problem.get("group");
+			int contestId = (int) problem.get("contest_id");
 			int number = (int) problem.get("number");
 			String fileName = (String) problem.get("file");
-			File zipFile = getFile(workDir, "problem", group, String.valueOf(number), fileName.toLowerCase());
+			File zipFile = getFile(workDir, "problem", String.valueOf(contestId), String.valueOf(number), fileName.toLowerCase());
 			sendProblemToWorker(problemId, zipFile.getAbsolutePath());
 		}
 

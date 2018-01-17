@@ -14,11 +14,20 @@ public class Repository {
     @Autowired
     private JdbcTemplate template;
 
-	public synchronized int addProblem(String name, String contest, int number, String file) {
-        template.update("INSERT INTO problems(name, number, contest, file) VALUES(?, ?, ?, ?)",
+    public synchronized int addContest(String name) {
+    	template.update("INSERT INTO contests(name) VALUES(?)", name);
+    	
+    	Optional<Object> last = template.queryForList("SELECT MAX(id) FROM contests").stream()
+    			.map(x -> x.get("MAX(id)")).findFirst();
+    	
+    	return (int) last.get();
+    }
+
+    public synchronized int addProblem(String name, int contestId, int number, String file) {
+        template.update("INSERT INTO problems(name, number, contest_id, file) VALUES(?, ?, ?, ?)",
         		name,
         		number,
-        		contest,
+        		contestId,
                 file);
         
 		Optional<Object> first = template.queryForList("SELECT MAX(id) FROM problems").stream()
@@ -38,10 +47,10 @@ public class Repository {
 				id).stream().findFirst();
 	}
 	
-	public Optional<Map<String, Object>> getProblem(String contest, int number) {
+	public Optional<Map<String, Object>> getProblem(int contestId, int number) {
 		return template.queryForList(
-				"select * from problems where contest=? AND number=?", 
-				contest, number).stream().findFirst();
+				"select * from problems where contest_id=? AND number=?", 
+				contestId, number).stream().findFirst();
 	}
 	
 	public List<Map<String, Object>> getContestProblems(String contest) {
@@ -53,6 +62,18 @@ public class Repository {
         return template.queryForList("SELECT * from problems");
 	}
 	
+	public List<Map<String, Object>> listContestProblems(int contestId) {
+		return template.queryForList("SELECT * from problems where contest_id=?", contestId);
+	}
+	
+	public List<Map<String, Object>> listContests() {
+		return template.queryForList("SELECT * from contests");
+	}
+	
+	public Optional<Map<String, Object>> getContest(int id) {
+		return template.queryForList("SELECT * from contests where id=?", id).stream().findFirst();
+	}
+	
 	public List<Map<String, Object>> listSubmissions() {
 		return template.queryForList("SELECT * from submissions");
 	}
@@ -62,9 +83,9 @@ public class Repository {
 	}
 	
 	public void addSubmission(String city, String username, String contest, String problemName, String file) {
-        template.update("INSERT INTO submissions(city, username, contest, file, details, problem_id) " +
-        		"SELECT ?, ?, ?, ?, ?, id from problems where name=? AND contest=?",
-                city, username, contest, file, "waiting", problemName, contest);		
+        template.update("INSERT INTO submissions(city, username, file, verdict, details, problem_id) " +
+        		"SELECT ?, ?, ?, ?, ?, problems.id from problems inner join contests on problems.contest_id=contests.id where problems.name=?",
+                city, username, file, "waiting", "", problemName);
 	}
 	
 	public boolean hasCitySubmissions(String city) {
@@ -75,18 +96,35 @@ public class Repository {
         return template.queryForList("SELECT * from submissions where city=? AND contest=?",
                 city, contest);
 	}
+	
+	public List<Map<String, Object>> listDetailedSubmissions() {
+		return template.queryForList("SELECT submissions.id, city, username, verdict, points, contests.name as contest_name, problems.name as problem_name from submissions" + 
+				" inner join problems on submissions.problem_id=problems.id" +
+				" inner join contests on problems.contest_id=contests.id");
+	}
+
+	public List<Map<String, Object>> listContestSubmissions(int contestId) {
+		return template.queryForList("SELECT submissions.id, city, username, verdict, points, problems.name from submissions" + 
+				" inner join problems on problems.contest_id=? AND submissions.problem_id=problems.id",
+			contestId);
+	}
 
 	public List<Map<String, Object>> submissionsToGrade() {
 		return template.queryForList(
-				"select * from submissions where details='waiting'");
-	}
-
-	public synchronized void addStatus(int id, String details) {
-		template.update("UPDATE submissions SET details=? WHERE id=?", details, id);
+				"select * from submissions where verdict='waiting'");
 	}
 	
-	public synchronized void addScore(int id, String result, int points) {
-		template.update("UPDATE submissions SET details=?, points=? WHERE id=?", result, points, id);
+	public List<Map<String, Object>> failedSubmissions() {
+		return template.queryForList(
+				"select * from submissions where verdict='system error'");
+	}
+
+	public synchronized void addStatus(int id, String verdict) {
+		template.update("UPDATE submissions SET verdict=? WHERE id=?", verdict, id);
+	}
+	
+	public synchronized void addScore(int id, String result, String details, int points) {
+		template.update("UPDATE submissions SET verdict=?, details=?, points=? WHERE id=?", result, details, points, id);
 	}
 	
 	public void addWorker(String url) {
@@ -94,11 +132,22 @@ public class Repository {
 	}
 	
 	public void deleteWorker(String url) {
-        template.update("DELETE from workers where url=?", url);
+        template.update("UPDATE workers SET deleted=true where url=?", url);
 	}
 
 	public List<Map<String, Object>> listWorkers() {
-		return template.queryForList("select * from workers");
+		return template.queryForList("select * from workers where deleted=false");
+	}
+	
+	public List<Map<String, Object>> listActiveWorkers() {
+		return template.queryForList("select * from workers where active=true AND deleted=false");
+	}
+
+	public Optional<Map<String, Object>> getSubmission(int id) {
+		return template.queryForList("SELECT submissions.id, city, username, verdict, details, points, contests.name as contest_name, problems.name as problem_name from submissions" +
+				" inner join problems on submissions.problem_id=problems.id" +
+				" inner join contests on problems.contest_id=contests.id" +
+				"  where submissions.id=?", id).stream().findFirst();
 	}
 	
 }
