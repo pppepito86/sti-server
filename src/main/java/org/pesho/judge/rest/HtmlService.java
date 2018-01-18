@@ -53,13 +53,11 @@ public class HtmlService implements RunTerminateListener {
 	@Override
 	public void instanceCreated(String url) {
 		repository.addWorker(url + ":8089");
-		workersQueue.put(new Worker(url));
 	}
 	
 	@Override
 	public void instanceTerminated(String url) {
 		repository.deleteWorker(url + ":8089");
-		workersQueue.remove(url);
 	}
 
 	@GetMapping("/admin")
@@ -233,6 +231,7 @@ public class HtmlService implements RunTerminateListener {
 	public String createWorker(@RequestParam("url") String url,
 			Model model) throws Exception {
 		repository.addWorker(url);
+		workersQueue.put(new Worker(url));
 		return "redirect:/admin/workers";
 	}
 	
@@ -240,6 +239,7 @@ public class HtmlService implements RunTerminateListener {
 	public String deleteWorker(@RequestParam("url") String url,
 			@RequestParam("destroy") Optional<Boolean> destroy ,
 			Model model) throws Exception {
+		workersQueue.remove(url);
 		if (destroy.orElse(false)) {
 			url = url.split(":")[0];
 			InstanceType type = InstanceType.valueOf("T2Micro");
