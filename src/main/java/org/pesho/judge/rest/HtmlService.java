@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.FileUtils;
 import org.pesho.grader.SubmissionScore;
+import org.pesho.judge.Worker;
 import org.pesho.judge.WorkersQueue;
 import org.pesho.judge.repositories.Repository;
 import org.pesho.workermanager.Configuration;
@@ -52,11 +53,13 @@ public class HtmlService implements RunTerminateListener {
 	@Override
 	public void instanceCreated(String url) {
 		repository.addWorker(url + ":8089");
+		workersQueue.put(new Worker(url));
 	}
 	
 	@Override
 	public void instanceTerminated(String url) {
 		repository.deleteWorker(url + ":8089");
+		workersQueue.remove(url);
 	}
 
 	@GetMapping("/admin")
@@ -379,15 +382,15 @@ public class HtmlService implements RunTerminateListener {
 
 	public void unzip(File file, File folder) {
 		try {
-			ZipUtil.unpack(file, folder);
+			new ProcessExecutor().command("unzip", file.getCanonicalPath(), "-d", folder.getCanonicalPath()).execute();
 		} catch (Exception e) {
 			try {
-				new ProcessExecutor().command("unzip", file.getCanonicalPath(), "-d", folder.getCanonicalPath()).execute();
+				ZipUtil.unpack(file, folder);
 			} catch (Exception e2) {
 				e2.printStackTrace();
 				throw new IllegalStateException(e);
 			}
 		}
 	}
-
+	
 }	

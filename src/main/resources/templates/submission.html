@@ -35,34 +35,34 @@
             <!-- /.box-header -->
             
             <div class="box-body">
-             <table class="table table-bordered">
+             <table style="table-layout:fixed; word-wrap: break-word;"  class="table table-bordered">
                 <tr>
-                  <th style="width: 10px">Id</th>
-                  <th>Contest</th>
-                  <th>City</th>
-                  <th>Task</th>
+                  <th>Id</th>
                   <th>User</th>
+                  <th>City</th>
+                  <th>Contest</th>
+                  <th>Task</th>
                   <th>Score</th>
-                  <th>Status</th>
+                  <th style="width: 50%">Status</th>
                 </tr>
                 <tr>
                   <td th:text="${submission.get('id')}"></td>
+                  <td th:text="${submission.get('username')}"></td>
                   <td th:text="${submission.get('city')}"></td>
                   <td th:text="${submission.get('contest_name')}"></td>
                   <td th:text="${submission.get('problem_name')}"></td>
-                  <td th:text="${submission.get('username')}"></td>
                   <td th:text="${score}"></td>
                   <td th:text="${submission.get('verdict')}"></td>
                 </tr>
               </table>
             </div>
             <div class="box-body">
-              <table th:if="${!tests.isEmpty()}" class="table table-bordered table-striped">
+              <table style="table-layout:fixed; word-wrap: break-word;" th:if="${!tests.isEmpty()}" class="table table-bordered table-striped">
                 <tr>
                   <th>Name</th>
                   <th>Result</th>
-                  <th>Output</th>
-                  <th>Expected</th>
+                  <th style="width: 40%">Output</th>
+                  <th style="width: 40%">Expected</th>
                 </tr>
                 <tr th:each="test: ${tests}">
                   <td th:text="${test.key}"></td>
