@@ -323,9 +323,9 @@ public class HtmlService implements RunTerminateListener {
 	public String addSubmission(@RequestPart("file") MultipartFile file, 
 			@RequestParam("city") String city, Model model)
 			throws Exception {
-    	if (repository.hasCitySubmissions(city)) {
-    		return "redirect:/admin/submissions";
-    	}
+//    	if (repository.hasCitySubmissions(city)) {
+//    		return "redirect:/admin/submissions";
+//    	}
     	
 		File zipFile = getFile("submission", city, city + ".zip");
 		zipFile.getParentFile().mkdirs();
