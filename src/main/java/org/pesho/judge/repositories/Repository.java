@@ -82,10 +82,10 @@ public class Repository {
 		return template.queryForList("SELECT * from submissions where city=?", city);
 	}
 	
-	public void addSubmission(String city, String username, String contest, String problemName, String file) {
-        template.update("INSERT INTO submissions(city, username, file, verdict, details, problem_id) " +
-        		"SELECT ?, ?, ?, ?, ?, problems.id from problems inner join contests on problems.contest_id=contests.id where problems.name=?",
-                city, username, file, "waiting", "", problemName);
+	public void addSubmission(String city, String username, String contest, String problemName, byte[] sourceCode, String fileName) {
+        template.update("INSERT INTO submissions(city, username, source, filename, verdict, details, problem_id) " +
+        		"SELECT ?, ?, ?, ?, ?, ?, problems.id from problems inner join contests on problems.contest_id=contests.id where problems.name=?",
+                city, username, sourceCode, fileName, "waiting", "", problemName);
 	}
 	
 	public boolean hasCitySubmissions(String city) {
@@ -98,7 +98,7 @@ public class Repository {
 	}
 	
 	public List<Map<String, Object>> listDetailedSubmissions() {
-		return template.queryForList("SELECT submissions.id, city, username, verdict, points, contests.name as contest_name, problems.name as problem_name from submissions" + 
+		return template.queryForList("SELECT submissions.id, city, username, source, verdict, points, contests.name as contest_name, problems.name as problem_name from submissions" + 
 				" inner join problems on submissions.problem_id=problems.id" +
 				" inner join contests on problems.contest_id=contests.id");
 	}
@@ -152,7 +152,7 @@ public class Repository {
 	}
 
 	public Optional<Map<String, Object>> getSubmission(int id) {
-		return template.queryForList("SELECT submissions.id, city, username, verdict, details, points, contests.name as contest_name, problems.name as problem_name from submissions" +
+		return template.queryForList("SELECT submissions.id, city, username, source, filename, problem_id, verdict, details, points, contests.name as contest_name, problems.name as problem_name from submissions" +
 				" inner join problems on submissions.problem_id=problems.id" +
 				" inner join contests on problems.contest_id=contests.id" +
 				"  where submissions.id=?", id).stream().findFirst();

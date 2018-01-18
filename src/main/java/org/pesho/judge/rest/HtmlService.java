@@ -320,15 +320,12 @@ public class HtmlService implements RunTerminateListener {
     
     @PostMapping("/grade")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public String addSubmission(@RequestPart("file") MultipartFile file, 
+	public synchronized String addSubmission(@RequestPart("file") MultipartFile file, 
 			@RequestParam("city") String city, Model model)
 			throws Exception {
-//    	if (repository.hasCitySubmissions(city)) {
-//    		return "redirect:/admin/submissions";
-//    	}
-    	
 		File zipFile = getFile("submission", city, city + ".zip");
 		zipFile.getParentFile().mkdirs();
+		
 		FileUtils.copyInputStreamToFile(file.getInputStream(), zipFile);
 		File zipFolder = getFile("submission", city, city);
 		unzip(zipFile, zipFolder);
@@ -337,13 +334,14 @@ public class HtmlService implements RunTerminateListener {
 		for (File sourceFile: listSourceFiles) {
 			String username = sourceFile.getParentFile().getName();
 			String contest = sourceFile.getParentFile().getParentFile().getName();
-			String sourceFilePath = sourceFile.getCanonicalPath().replace(new File(workDir).getCanonicalPath(), "");
-			if (sourceFilePath.startsWith(File.separator)) {
-				sourceFilePath = sourceFilePath.substring(1);
-			}
 			String problemName = sourceFile.getName().substring(0, sourceFile.getName().lastIndexOf('.'));
-			repository.addSubmission(city, username, contest, problemName, sourceFilePath);
+			String fileName = sourceFile.getName();
+			byte[] sourceCode = FileUtils.readFileToByteArray(sourceFile);
+			repository.addSubmission(city, username, contest, problemName, sourceCode, fileName);
 		}
+		
+		FileUtils.deleteQuietly(zipFile);
+		FileUtils.deleteQuietly(zipFolder);
 		
 		return "redirect:/admin/submissions";
 	}

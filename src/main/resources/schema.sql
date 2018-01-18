@@ -34,11 +34,12 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `city` varchar(100) NOT NULL,
   `username` varchar(100) NOT NULL,
-  `file` varchar(1000) NOT NULL,
   `problem_id` int(11) NOT NULL,
-  `verdict` varchar(1000) NOT NULL,
-  `details` mediumtext NOT NULL,
+  `source` mediumtext NOT NULL,
+  `filename` varchar(100) NOT NULL,
   `points` int(11) DEFAULT NULL,
+  `verdict` varchar(1000) DEFAULT NULL,
+  `details` mediumtext DEFAULT NULL,
   `worker_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

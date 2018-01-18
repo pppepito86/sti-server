@@ -42,7 +42,7 @@ public class Worker {
 		this.url = url;
 	}
 
-	public SubmissionScore grade(Map<String, Object> problem, Map<String, Object> submission, File file, String workDir)
+	public SubmissionScore grade(Map<String, Object> problem, Map<String, Object> submission, String workDir)
 			throws Exception {
 		int problemId = (int) problem.get("id");
 		
@@ -56,8 +56,9 @@ public class Worker {
 
 		String submissionId = submission.get("id") + "_" + problem.get("name") + "_" + new Random().nextInt(100);
 
+		String fileName = submission.get("filename").toString();
         HttpEntity entity = MultipartEntityBuilder.create()
-                .addBinaryBody("file", file, ContentType.TEXT_PLAIN, file.getName())
+                .addBinaryBody("file", submission.get("source").toString().getBytes(), ContentType.TEXT_PLAIN, fileName)
                 .addTextBody("metadata", "{\"problemId\":" + problemId + "}", ContentType.APPLICATION_JSON)
                 .build();
 		
