@@ -145,6 +145,7 @@ public class HtmlService implements RunTerminateListener {
 			}
 			model.addAttribute("submission", submission.get());
 		}
+		System.out.println("source: " + new String((byte[])submission.get().get("source"), "UTF-8"));
 		return "submission";
 	}
 	
@@ -337,6 +338,7 @@ public class HtmlService implements RunTerminateListener {
 			String problemName = sourceFile.getName().substring(0, sourceFile.getName().lastIndexOf('.'));
 			String fileName = sourceFile.getName();
 			byte[] sourceCode = FileUtils.readFileToByteArray(sourceFile);
+			System.out.println(new String(sourceCode));
 			repository.addSubmission(city, username, contest, problemName, sourceCode, fileName);
 		}
 		

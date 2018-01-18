@@ -58,7 +58,7 @@ public class Worker {
 
 		String fileName = submission.get("filename").toString();
         HttpEntity entity = MultipartEntityBuilder.create()
-                .addBinaryBody("file", submission.get("source").toString().getBytes(), ContentType.TEXT_PLAIN, fileName)
+                .addBinaryBody("file", (byte[]) submission.get("source"), ContentType.TEXT_PLAIN, fileName)
                 .addTextBody("metadata", "{\"problemId\":" + problemId + "}", ContentType.APPLICATION_JSON)
                 .build();
 		
