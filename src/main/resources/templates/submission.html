@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head th:replace="fragments/head :: head"></head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 <header th:replace="fragments/header :: header"></header>
@@ -85,7 +88,7 @@
               </table>
             </div>
           </div>
-          <pre th:text="${new String(submission.get('source'))}"></pre>
+          <pre th:text="${source}"></pre>
           <!-- /.box -->
         
         </section>

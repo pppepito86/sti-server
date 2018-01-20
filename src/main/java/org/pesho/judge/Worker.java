@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -42,7 +43,7 @@ public class Worker {
 		this.url = url;
 	}
 
-	public SubmissionScore grade(Map<String, Object> problem, Map<String, Object> submission, String workDir)
+	public SubmissionScore grade(Map<String, Object> problem, Map<String, Object> submission, String workDir, File sourceFile)
 			throws Exception {
 		int problemId = (int) problem.get("id");
 		
@@ -56,9 +57,8 @@ public class Worker {
 
 		String submissionId = submission.get("id") + "_" + problem.get("name") + "_" + new Random().nextInt(100);
 
-		String fileName = submission.get("filename").toString();
         HttpEntity entity = MultipartEntityBuilder.create()
-                .addBinaryBody("file", (byte[]) submission.get("source"), ContentType.TEXT_PLAIN, fileName)
+                .addBinaryBody("file", sourceFile, ContentType.TEXT_PLAIN, sourceFile.getName())
                 .addTextBody("metadata", "{\"problemId\":" + problemId + "}", ContentType.APPLICATION_JSON)
                 .build();
 		

@@ -1,6 +1,8 @@
 package org.pesho.judge.rest;
 
 import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,6 +15,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.pesho.grader.SubmissionScore;
 import org.pesho.judge.Worker;
 import org.pesho.judge.WorkersQueue;
@@ -143,9 +146,14 @@ public class HtmlService implements RunTerminateListener {
 				score.getScoreSteps().remove("Compile");
 				model.addAttribute("tests", score.getScoreSteps());
 			}
+			File sourceFile = getFile("submissions", String.valueOf(submission.get().get("id")), submission.get().get("file").toString());
+			String source = FileUtils.readFileToString(sourceFile, Charset.forName("UTF-8"));
+			String content = new String (Files.readAllBytes(sourceFile.toPath()),Charset.forName("UTF-8"));
+			System.out.println(content);
+			System.out.println(sourceFile.getAbsolutePath());
+			model.addAttribute("source", content);
 			model.addAttribute("submission", submission.get());
 		}
-		System.out.println("source: " + new String((byte[])submission.get().get("source"), "UTF-8"));
 		return "submission";
 	}
 	
@@ -324,11 +332,11 @@ public class HtmlService implements RunTerminateListener {
 	public synchronized String addSubmission(@RequestPart("file") MultipartFile file, 
 			@RequestParam("city") String city, Model model)
 			throws Exception {
-		File zipFile = getFile("submission", city, city + ".zip");
+		File zipFile = getFile("temp", city, city + ".zip");
 		zipFile.getParentFile().mkdirs();
 		
 		FileUtils.copyInputStreamToFile(file.getInputStream(), zipFile);
-		File zipFolder = getFile("submission", city, city);
+		File zipFolder = getFile("temp", city, city);
 		unzip(zipFile, zipFolder);
 
 		List<File> listSourceFiles = listSourceFiles(zipFolder);
@@ -337,9 +345,10 @@ public class HtmlService implements RunTerminateListener {
 			String contest = sourceFile.getParentFile().getParentFile().getName();
 			String problemName = sourceFile.getName().substring(0, sourceFile.getName().lastIndexOf('.'));
 			String fileName = sourceFile.getName();
-			byte[] sourceCode = FileUtils.readFileToByteArray(sourceFile);
-			System.out.println(new String(sourceCode));
-			repository.addSubmission(city, username, contest, problemName, sourceCode, fileName);
+			int submissionId = repository.addSubmission(city, username, contest, problemName, fileName);
+			File newFile = getFile("submissions", String.valueOf(submissionId), fileName);
+			newFile.getParentFile().mkdirs();
+			FileUtils.copyFile(sourceFile, newFile);
 		}
 		
 		FileUtils.deleteQuietly(zipFile);

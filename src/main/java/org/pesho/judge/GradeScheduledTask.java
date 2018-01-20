@@ -1,5 +1,6 @@
 package org.pesho.judge;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -34,14 +35,13 @@ public class GradeScheduledTask {
     	List<Map<String, Object>> submissions = repository.submissionsToGrade();
     	submissions.addAll(repository.failedSubmissions());
     	for (Map<String, Object> submission: submissions) {
-    		boolean graded = grade((int) submission.get("id"));
+    		boolean graded = grade(submission);
     		if (!graded) return;
     	}
     }
 
-	private boolean grade(int submissionId) throws IOException {
-		Map<String, Object> submission = repository.getSubmission(submissionId).get();
-		
+	private boolean grade(Map<String, Object> submission) throws IOException {
+		int submissionId = (int) submission.get("id");
 		int problemId = (int) submission.get("problem_id");
 		
 		Optional<Map<String,Object>> maybeProblem = repository.getProblem(problemId);
@@ -57,6 +57,9 @@ public class GradeScheduledTask {
 		repository.addStatus(submissionId, "judging");
 			
 		long sTime = System.currentTimeMillis();
+		
+		File sourceFile = new File(new File(workDir).getAbsolutePath() + File.separator + "submissions" + File.separator + submissionId
+				+ File.separator + submission.get("file"));
 
 		worker.get().setFree(false);
 		Runnable runnable = () -> {
@@ -64,7 +67,7 @@ public class GradeScheduledTask {
 			String details = "";
 			int points = 0;
 			try {
-				SubmissionScore score = worker.get().grade(maybeProblem.get(), submission, workDir);
+				SubmissionScore score = worker.get().grade(maybeProblem.get(), submission, workDir, sourceFile);
 				details = mapper.writeValueAsString(score);
 				points = (int) Math.round(score.getScore());
 				StepResult[] values = score.getScoreSteps().values().toArray(new StepResult[0]);
