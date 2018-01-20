@@ -39,7 +39,7 @@ public class Repository {
 
 	public void updateProblem(int id, String name, String file, String checksum) {
         template.update("UPDATE problems set name=?, file=?, checksum=? where id=?",
-        		name, file, id, checksum);
+        		name, file, checksum, id);
 	}
 	
 	public Optional<Map<String, Object>> getProblem(int id) {
