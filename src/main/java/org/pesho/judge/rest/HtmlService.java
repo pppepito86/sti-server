@@ -40,6 +40,7 @@ import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.zip.ZipUtil;
 
 import com.amazonaws.services.ec2.model.InstanceType;
+import com.amazonaws.services.ec2.model.Tag;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
@@ -58,12 +59,14 @@ public class HtmlService implements RunTerminateListener {
 	
 	@Override
 	public void instanceCreated(String url) {
-		repository.addWorker(url + ":8089");
+		repository.addWorker(url + ":8089", "automatic");
+		repository.addWorker(url + ":8090", "automatic");
 	}
 	
 	@Override
 	public void instanceTerminated(String url) {
 		repository.deleteWorker(url + ":8089");
+		repository.deleteWorker(url + ":8090");
 	}
 
 	@GetMapping("/admin")
@@ -243,17 +246,20 @@ public class HtmlService implements RunTerminateListener {
 	@PostMapping("/admin/workers/ensure")
 	public String ensureWorkers(@RequestParam("count") int count,
 			Model model) throws Exception {
-		count = Math.min(30, count);
-		InstanceType type = InstanceType.valueOf("C5Large");
+		count = Math.min(20, count);
+		int manualCount = (int) repository.listWorkers().stream().filter(w -> "manual".equals(w.get("type"))).count();
+		int automaticCount = Math.max((count - manualCount + 1) / 2, 0);
+		InstanceType type = InstanceType.valueOf("C4Large");
 		Configuration configuration = new Configuration()
-				.setImageId("ami-099a0966")
+				.setImageId("ami-18bf2177")
 				.setInstanceType(type)
 				.setSecurityGroup("All")
-				.setSecurityKeyName("pesho")
+				.setSecurityKeyName("noi")
+				.setWorkerTag(new Tag("noi2_worker"))
 				.setListener(this);
 
 		WorkerManager manager = new WorkerManager(configuration);
-		manager.ensureNumberOfInstances(count);
+		manager.ensureNumberOfInstances(automaticCount);
 		
 		return "redirect:/admin/workers";
 	}
@@ -261,31 +267,17 @@ public class HtmlService implements RunTerminateListener {
 	@PostMapping("/admin/workers/create")
 	public String createWorker(@RequestParam("url") String url,
 			Model model) throws Exception {
-		repository.addWorker(url);
+		repository.addWorker(url, "manual");
 		workersQueue.put(new Worker(url));
+		
 		return "redirect:/admin/workers";
 	}
 	
 	@PostMapping("/admin/workers/delete")
 	public String deleteWorker(@RequestParam("url") String url,
-			@RequestParam("destroy") Optional<Boolean> destroy ,
 			Model model) throws Exception {
 		workersQueue.remove(url);
-		if (destroy.orElse(false)) {
-			url = url.split(":")[0];
-			InstanceType type = InstanceType.valueOf("T2Micro");
-			Configuration configuration = new Configuration()
-					.setImageId("ami-099a0966")
-					.setInstanceType(type)
-					.setSecurityGroup("All")
-					.setSecurityKeyName("pesho")
-					.setListener(this);
-			
-			WorkerManager manager = new WorkerManager(configuration);
-			manager.killInstance(url);
-		} else {
-			repository.deleteWorker(url);
-		}
+		repository.deleteWorker(url);
 		
 		return "redirect:/admin/workers";
 	}

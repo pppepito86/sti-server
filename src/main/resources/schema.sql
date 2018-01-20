@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `submissions` (
 CREATE TABLE IF NOT EXISTS `workers`(
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `url` varchar(1000) NOT NULL,
+  `type` varchar(15) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1,
   `deleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)

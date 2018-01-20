@@ -143,11 +143,11 @@ public class Repository {
 		template.update("UPDATE submissions SET verdict=?, details=?, points=? WHERE id=?", result, details, points, id);
 	}
 	
-	public synchronized void addWorker(String url) {
+	public synchronized void addWorker(String url, String type) {
 		if (findWorkers(url).isPresent()) {
-			template.update("UPDATE workers SET deleted=false where url=?", url);
+			template.update("UPDATE workers SET type=?, deleted=false where url=?", type, url);
 		} else {
-			template.update("INSERT INTO workers(url) VALUES(?)", url);
+			template.update("INSERT INTO workers(url, type) VALUES(?, ?)", url, type);
 		}
 	}
 	

@@ -23,9 +23,8 @@
     <!-- Main content -->
     <section class="content">
       <!-- Small boxes (Stat box) -->
-      <div class="row">
+      <!-- div class="row">
         <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
               <h3 th:text="${contests.size()}"><sup style="font-size: 20px">%</sup></h3>
@@ -38,9 +37,7 @@
             <a href="/admin/contests" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
-        <!-- ./col -->
         <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
           <div class="small-box bg-yellow">
             <div class="inner">
               <h3 th:text="${submissions.size()}"></h3>
@@ -54,7 +51,6 @@
           </div>
         </div>
          <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
               <h3 th:text="${workers.size()}"></h3>
@@ -67,37 +63,91 @@
             <a href="/admin/workers" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
-        <!-- ./col -->
-      </div>
+      </div-->
       
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">
         <!-- Left col -->
         <section class="col-lg-7 connectedSortable">
-        
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">Workers</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <table th:if="${!workers.isEmpty()}" class="table table-bordered">
+          <div class="nav-tabs-custom">
+            <!-- Tabs within a box -->
+            <ul class="nav nav-tabs pull-right">
+              <li class="active"><a href="#list_workers" data-toggle="tab">List</a></li>
+              <li><a href="#ensure_workers" data-toggle="tab">Ensure</a></li>
+              <li><a href="#add_worker" data-toggle="tab">Add</a></li>
+              <li><a href="#remove_worker" data-toggle="tab">Remove</a></li>
+              <li class="pull-left header">Workers</li>
+            </ul>
+            <div class="tab-content no-padding">
+              <!-- Morris chart - Sales -->
+              <div class="chart tab-pane active" id="list_workers" style="position: relative;">
+              <div class="box-body">
+              <table class="table table-bordered">
                 <tr>
                   <th style="width: 10px">Id</th>
                   <th>Url</th>
+                  <th>Type</th>
                 </tr>
                 <tr th:each="worker: ${workers}">
                   <td th:text="${worker.get('id')}"></td>
                   <td th:text="${worker.get('url')}"></td>
+                  <td th:text="${worker.get('type')}"></td>
                 </tr>
-              </table>
-              <div th:if="${workers.isEmpty()}">
-                 No workers
+                </table>
+                </div>
               </div>
+             
+              <div class="chart tab-pane" id="ensure_workers" style="position: relative;">
+            <form role="form" action="/admin/workers/ensure" method="post">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="count">Count</label>
+                  <input type="text" class="form-control" name="count" id="count" placeholder="Workers count" />
+                </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Ensure</button>
+              </div>
+            </form>         
+             </div>
+             
+              <div class="chart tab-pane" id="add_worker" style="position: relative;">
+            <form role="form" action="/admin/workers/create" method="post">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="url">Url</label>
+                  <input type="text" class="form-control" name="url" id="url" placeholder="Worker url" />
+                </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Add</button>
+              </div>
+            </form>         
+             </div>
+             
+              <div class="chart tab-pane" id="remove_worker" style="position: relative;">
+            <form role="form" action="/admin/workers/delete" method="post">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="url">Url</label>
+                  <select class="form-control" name="url" id="url">
+                  <option th:each="worker: ${workers}" th:if="${worker.get('type')=='manual'}" th:text="${worker.get('url')}" />
+                  </select>
+                </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Remove</button>
+              </div>
+            </form>         
+             </div>
+             
             </div>
           </div>
-          <!-- /.box -->
+          <!-- /.nav-tabs-custom -->
 
           <div class="box">
             <div class="box-header with-border">
