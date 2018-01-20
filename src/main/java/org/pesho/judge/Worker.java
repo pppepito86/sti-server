@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -49,6 +48,7 @@ public class Worker {
 		String checksum = (String) problem.get("checksum");
 		
 		if (!isProblemUploaded(problemId, checksum)) {
+			System.out.println("Problem is not uloaded. Uploading...");
 			int contestId = (int) problem.get("contest_id");
 			int number = (int) problem.get("number");
 			String fileName = (String) problem.get("file");
@@ -121,7 +121,8 @@ public class Worker {
 	
 	public boolean isProblemUploaded(int problemId, String checksum) throws IOException {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
-		HttpGet get = new HttpGet(url + "/problems/" + problemId +"?checksum=" + checksum);
+		HttpGet get = new HttpGet(url + "/api/v1/problems/" + problemId +"?checksum=" + checksum);
+		System.out.println("problem check url: " + get.getURI().toString());
 		CloseableHttpResponse response = httpclient.execute(get);
 		httpclient.close();
 		return response.getStatusLine().getStatusCode() == 200;
@@ -143,6 +144,7 @@ public class Worker {
 			exists = false;
 		}
 
+		System.out.println("problem exists last check");
 		org.springframework.http.HttpEntity<MultiValueMap<String, Object>> params = new org.springframework.http.HttpEntity<MultiValueMap<String, Object>>(parameters,
 				headers);
 		if (exists) {

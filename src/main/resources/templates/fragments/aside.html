@@ -11,16 +11,21 @@
           </a>
         </li>
         <li>
+          <a th:href="@{/admin/contests}">
+            <i class="fa fa-files-o"></i> <span>Contests</span>
+          </a>
+        </li>
+        <li>
           <a th:href="@{/admin/submissions}">
             <i class="fa fa-files-o"></i> <span>Submissions</span>
           </a>
         </li>
         <li>
-          <a th:href="@{/admin/contests}">
-            <i class="fa fa-files-o"></i> <span>Contests</span>
+          <a th:href="@{/admin/workers}">
+            <i class="fa fa-files-o"></i> <span>Workers</span>
           </a>
         </li>
-        <li class="treeview">
+        <!-- li class="treeview">
           <a href="#">
             <i class="fa fa-pie-chart"></i>
             <span>Contests</span>
@@ -31,7 +36,7 @@
           <ul class="treeview-menu">
             <li th:each="contest: ${contests}"><a th:href="@{'/admin/contests/'+${contest.get('id')}}"><i class="fa fa-circle-o"></i><span th:text="${contest.get('name')}">ChartJS</span></a></li>
           </ul>
-        </li>
+        </li-->
       </ul>
     </section>
     <!-- /.sidebar -->

@@ -294,11 +294,6 @@ public class HtmlService implements RunTerminateListener {
 			problemId = repository.addProblem(name, contestId, number, zipFile.getName(), checksum);
 		}
 
-		final int problemIdFinal = problemId;
-		workersQueue.getAll().stream().parallel().forEach(worker -> {
-			worker.sendProblemToWorker(problemIdFinal, zipFile.getAbsolutePath());
-		});
-
 		return "redirect:/admin/contests/"+contestId;
 	}
 
@@ -346,9 +341,11 @@ public class HtmlService implements RunTerminateListener {
 			String problemName = sourceFile.getName().substring(0, sourceFile.getName().lastIndexOf('.'));
 			String fileName = sourceFile.getName();
 			int submissionId = repository.addSubmission(city, username, contest, problemName, fileName);
-			File newFile = getFile("submissions", String.valueOf(submissionId), fileName);
-			newFile.getParentFile().mkdirs();
-			FileUtils.copyFile(sourceFile, newFile);
+			if (submissionId != 0) {
+				File newFile = getFile("submissions", String.valueOf(submissionId), fileName);
+				newFile.getParentFile().mkdirs();
+				FileUtils.copyFile(sourceFile, newFile);
+			}
 		}
 		
 		FileUtils.deleteQuietly(zipFile);

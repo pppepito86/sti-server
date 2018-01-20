@@ -53,6 +53,14 @@ public class Repository {
 				"select * from problems where contest_id=? AND number=?", 
 				contestId, number).stream().findFirst();
 	}
+
+	public Optional<Map<String, Object>> getProblem(String contestName, String problemName) {
+		return template.queryForList(
+				"select * from problems" +
+				" inner join contests on contests.name=?" +
+				" where problems.name=?", 
+				contestName, problemName).stream().findFirst();
+	}
 	
 	public List<Map<String, Object>> getContestProblems(String contest) {
 		return template.queryForList(
@@ -64,7 +72,7 @@ public class Repository {
 	}
 	
 	public List<Map<String, Object>> listContestProblems(int contestId) {
-		return template.queryForList("SELECT * from problems where contest_id=?", contestId);
+		return template.queryForList("SELECT * from problems where contest_id=? order by number", contestId);
 	}
 	
 	public List<Map<String, Object>> listContests() {
@@ -84,14 +92,16 @@ public class Repository {
 	}
 	
 	public synchronized int addSubmission(String city, String username, String contest, String problemName, String file) {
-        template.update("INSERT INTO submissions(city, username, file, verdict, details, problem_id) " +
-        		"SELECT ?, ?, ?, ?, ?, problems.id from problems inner join contests on problems.contest_id=contests.id where problems.name=?",
-                city, username, file, "waiting", "", problemName);
+		Optional<Map<String,Object>> problem = getProblem(contest, problemName);
+		if (problem.isPresent()) {
+			template.update("INSERT INTO submissions(city, username, file, verdict, details, problem_id) VALUES(?, ?, ?, ?, ?, ?)",
+                city, username, file, "waiting", "", (int) problem.get().get("id"));
         
-        Optional<Object> first = template.queryForList("SELECT MAX(id) FROM submissions").stream()
+			Optional<Object> first = template.queryForList("SELECT MAX(id) FROM submissions").stream()
 				.map(x -> x.get("MAX(id)")).findFirst();
-		
-		return (int) first.get();
+			return (int) first.get();
+		}
+		return 0;
 	}
 	
 	public boolean hasCitySubmissions(String city) {

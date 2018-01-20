@@ -45,8 +45,8 @@
                   <th>Contest</th>
                 </tr>
                 <tr th:each="contest: ${contests}">
-                  <td><a th:href="@{'/admin/contests/'+${contest.get('id')}}" th:text="${contest.get('id')}"></a></td>
-                  <td th:text="${contest.get('name')}"></td>
+                  <td th:text="${contest.get('id')}"></td>
+                  <td><a th:href="@{'/admin/contests/'+${contest.get('id')}}" th:text="${contest.get('name')}"></a></td>
                 </tr>
                 </table>
                 </div>
