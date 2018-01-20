@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `problems` (
   `number` int(11) NOT NULL,
   `file` varchar(100) NOT NULL,
   `contest_id` int(11) NOT NULL,
+  `checksum` varchar(100),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

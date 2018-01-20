@@ -46,8 +46,9 @@ public class Worker {
 	public SubmissionScore grade(Map<String, Object> problem, Map<String, Object> submission, String workDir, File sourceFile)
 			throws Exception {
 		int problemId = (int) problem.get("id");
+		String checksum = (String) problem.get("checksum");
 		
-		if (!isProblemUploaded(problemId)) {
+		if (!isProblemUploaded(problemId, checksum)) {
 			int contestId = (int) problem.get("contest_id");
 			int number = (int) problem.get("number");
 			String fileName = (String) problem.get("file");
@@ -118,9 +119,9 @@ public class Worker {
 		}
 	}
 	
-	public boolean isProblemUploaded(int problemId) throws IOException {
+	public boolean isProblemUploaded(int problemId, String checksum) throws IOException {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
-		HttpGet get = new HttpGet(url + "/problems/" + problemId);
+		HttpGet get = new HttpGet(url + "/problems/" + problemId +"?checksum=" + checksum);
 		CloseableHttpResponse response = httpclient.execute(get);
 		httpclient.close();
 		return response.getStatusLine().getStatusCode() == 200;

@@ -1,8 +1,9 @@
 package org.pesho.judge.rest;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,8 +15,8 @@ import java.util.stream.Collectors;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.pesho.grader.SubmissionScore;
 import org.pesho.judge.Worker;
 import org.pesho.judge.WorkersQueue;
@@ -148,10 +149,7 @@ public class HtmlService implements RunTerminateListener {
 			}
 			File sourceFile = getFile("submissions", String.valueOf(submission.get().get("id")), submission.get().get("file").toString());
 			String source = FileUtils.readFileToString(sourceFile, Charset.forName("UTF-8"));
-			String content = new String (Files.readAllBytes(sourceFile.toPath()),Charset.forName("UTF-8"));
-			System.out.println(content);
-			System.out.println(sourceFile.getAbsolutePath());
-			model.addAttribute("source", content);
+			model.addAttribute("source", source);
 			model.addAttribute("submission", submission.get());
 		}
 		return "submission";
@@ -283,15 +281,17 @@ public class HtmlService implements RunTerminateListener {
 		
 		zipFile.getParentFile().mkdirs();
 		FileUtils.copyInputStreamToFile(file.getInputStream(), zipFile);
+		
+		String checksum = getChecksum(zipFile);
 		File zipFolder = getFile("problem", String.valueOf(contestId), String.valueOf(number), name);
 		unzip(zipFile, zipFolder);
 
 		int problemId = 0;
 		if (maybeProblem.isPresent()) {
 			problemId = (int) maybeProblem.get().get("id");
-			repository.updateProblem(problemId, name, zipFile.getName());
+			repository.updateProblem(problemId, name, zipFile.getName(), checksum);
 		} else {
-			problemId = repository.addProblem(name, contestId, number, zipFile.getName());
+			problemId = repository.addProblem(name, contestId, number, zipFile.getName(), checksum);
 		}
 
 		final int problemIdFinal = problemId;
@@ -387,6 +387,15 @@ public class HtmlService implements RunTerminateListener {
 		String path = new File(workDir).getAbsolutePath() + File.separator + type + File.separator + city
 				+ File.separator + group + File.separator + fileName;
 		return new File(path).getAbsoluteFile();
+	}
+	
+	public String getChecksum(File file) {
+		try (FileInputStream fis = new FileInputStream(file)) {
+			return DigestUtils.md5Hex(fis);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "";
+		}
 	}
 
 	public void unzip(File file, File folder) {

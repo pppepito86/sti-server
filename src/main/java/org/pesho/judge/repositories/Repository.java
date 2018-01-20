@@ -23,12 +23,13 @@ public class Repository {
     	return (int) last.get();
     }
 
-    public synchronized int addProblem(String name, int contestId, int number, String file) {
-        template.update("INSERT INTO problems(name, number, contest_id, file) VALUES(?, ?, ?, ?)",
+    public synchronized int addProblem(String name, int contestId, int number, String file, String checksum) {
+        template.update("INSERT INTO problems(name, number, contest_id, file, checksum) VALUES(?, ?, ?, ?, ?)",
         		name,
         		number,
         		contestId,
-                file);
+                file,
+                checksum);
         
 		Optional<Object> first = template.queryForList("SELECT MAX(id) FROM problems").stream()
 				.map(x -> x.get("MAX(id)")).findFirst();
@@ -36,9 +37,9 @@ public class Repository {
 		return (int) first.get();
 	}
 
-	public void updateProblem(int id, String name, String file) {
-        template.update("UPDATE problems set name=?, file=? where id=?",
-        		name, file, id);
+	public void updateProblem(int id, String name, String file, String checksum) {
+        template.update("UPDATE problems set name=?, file=?, checksum where id=?",
+        		name, file, id, checksum);
 	}
 	
 	public Optional<Map<String, Object>> getProblem(int id) {
