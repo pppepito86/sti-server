@@ -18,7 +18,7 @@
         <small>details</small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a th:href="@{/admin}"><i class="fa fa-dashboard"></i> Home</a></li>
         <li><a th:href="@{/admin/submissions}"> Submissions</a></li>
         <li class="active" th:text="${submissionId}"></li>
       </ol>
@@ -59,7 +59,7 @@
                 </tr>
               </table>
             </div>
-            <div class="box-body">
+            <div th:if="${tests} != null" class="box-body">
               <table style="table-layout:fixed; word-wrap: break-word;" th:if="${!tests.isEmpty()}" class="table table-bordered table-striped">
                 <tr>
                   <th>Name</th>

@@ -18,6 +18,8 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.pesho.grader.SubmissionScore;
+import org.pesho.grader.task.TaskDetails;
+import org.pesho.grader.task.TaskParser;
 import org.pesho.judge.Worker;
 import org.pesho.judge.WorkersQueue;
 import org.pesho.judge.repositories.Repository;
@@ -130,6 +132,28 @@ public class HtmlService implements RunTerminateListener {
 		model.addAttribute("contest", contest);
 		return "contest";
 	}
+	
+	@GetMapping("/admin/contests/{contest_id}/problems/{problem_number}")
+	public String adminContestProblemPage(
+			@PathVariable("contest_id") int contestId, 
+			@PathVariable("problem_number") int number,
+			Model model) {
+		List<Map<String,Object>> contests = repository.listContests();
+		model.addAttribute("contests", contests);
+		Optional<Map<String,Object>> contest = repository.getContest(contestId);
+		model.addAttribute("contest", contest.get());
+		
+		Optional<Map<String,Object>> problem = repository.getProblem(contestId, number);
+		if (problem.isPresent()) {
+			File problemDir = getFile("problem", String.valueOf(contestId), String.valueOf(number));
+			TaskParser parser = new TaskParser(problemDir);
+			TaskDetails details = TaskDetails.create(parser);
+			model.addAttribute("problem", problem.get());
+			model.addAttribute("details", details);
+		}
+		
+		return "problem";
+	}
 
 	@GetMapping("/admin/submissions/{submission_id}")
 	public String adminSubmissionPage(@PathVariable("submission_id") int id,
@@ -141,7 +165,6 @@ public class HtmlService implements RunTerminateListener {
 			String details = submission.get().get("details").toString();
 			if (details != null && !details.isEmpty()) {
 				SubmissionScore score = mapper.readValue(details, SubmissionScore.class);
-				model.addAttribute("submissionId", String.valueOf(id));
 				model.addAttribute("score", Math.round(score.getScore()));
 				model.addAttribute("compile", score.getScoreSteps().get("Compile"));
 				score.getScoreSteps().remove("Compile");
@@ -149,6 +172,7 @@ public class HtmlService implements RunTerminateListener {
 			}
 			File sourceFile = getFile("submissions", String.valueOf(submission.get().get("id")), submission.get().get("file").toString());
 			String source = FileUtils.readFileToString(sourceFile, Charset.forName("UTF-8"));
+			model.addAttribute("submissionId", String.valueOf(id));
 			model.addAttribute("source", source);
 			model.addAttribute("submission", submission.get());
 		}

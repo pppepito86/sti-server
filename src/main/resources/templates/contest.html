@@ -47,8 +47,8 @@
                   <th>Task</th>
                 </tr>
                 <tr th:each="problem: ${problems}">
-                  <td><a th:href="@{'/admin/contests/'+${contest.get('id')}+'/problems/'+${problem.get('number')}}" th:text="${problem.get('number')}"></a></td>
-                  <td th:text="${problem.get('name')}"></td>
+                  <td th:text="${problem.get('number')}"></td>
+                  <td><a th:href="@{'/admin/contests/'+${contest.get('id')}+'/problems/'+${problem.get('number')}}" th:text="${problem.get('name')}"></a></td>
                 </tr>
                 </table>
                 </div>
