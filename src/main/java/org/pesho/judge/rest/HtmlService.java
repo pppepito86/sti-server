@@ -255,7 +255,7 @@ public class HtmlService implements RunTerminateListener {
 				.setInstanceType(type)
 				.setSecurityGroup("All")
 				.setSecurityKeyName("noi")
-				.setWorkerTag(new Tag("noi2_worker"))
+				.setWorkerTag(new Tag("type", "noi2_worker"))
 				.setListener(this);
 
 		WorkerManager manager = new WorkerManager(configuration);
