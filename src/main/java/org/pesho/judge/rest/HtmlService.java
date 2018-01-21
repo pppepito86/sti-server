@@ -156,7 +156,9 @@ public class HtmlService implements RunTerminateListener {
 			
 			int total = 0;
 			for (int i = 1; i <= problemsCount; i++) {
-				total += (int) userResults.get(i).getOrDefault("points", 0);
+				Integer points = (Integer) userResults.get(i).get("points");
+				if (points == null) points = 0;
+				total += points;
 			}
 			totals.get(userSubmissions.getKey()).put("total", total);
 		}
@@ -180,9 +182,10 @@ public class HtmlService implements RunTerminateListener {
 		}
 		for (Map<String, Object> submission: userSubmissions) {
 			int number = (int) submission.get("number");
-			int currentScore = (int) map.get(number).getOrDefault("points", 0);
-			System.out.println("points" + submission.get("points"));
-			int submissionPoints = (int) submission.getOrDefault("points", 0);
+			Integer currentScore = (Integer) map.get(number).get("points");
+			if (currentScore == null) currentScore = 0;
+			Integer submissionPoints = (Integer) submission.get("points");
+			if (submissionPoints == null) submissionPoints = 0;
 			if (submissionPoints >= currentScore) {
 				map.put(number, submission);
 			}
