@@ -181,7 +181,9 @@ public class HtmlService implements RunTerminateListener {
 		for (Map<String, Object> submission: userSubmissions) {
 			int number = (int) submission.get("number");
 			int currentScore = (int) map.get(number).getOrDefault("points", 0);
-			if ((int) submission.getOrDefault("points", 0) >= currentScore) {
+			System.out.println("points" + submission.get("points"));
+			int submissionPoints = (int) submission.getOrDefault("points", 0);
+			if (submissionPoints >= currentScore) {
 				map.put(number, submission);
 			}
 		}
