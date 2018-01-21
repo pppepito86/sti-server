@@ -69,8 +69,12 @@ public class HtmlService implements RunTerminateListener {
 	
 	@Override
 	public void instanceTerminated(String url) {
-		repository.deleteWorker(url + ":8089");
-		repository.deleteWorker(url + ":8090");
+		String url1 = url + ":8089";
+		String url2 = url + ":8090";
+		repository.deleteWorker(url1);
+		repository.addWorker(url1, "automatic");
+		repository.deleteWorker(url2);
+		repository.addWorker(url2, "automatic");
 	}
 
 	@GetMapping("/admin")
