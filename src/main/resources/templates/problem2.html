@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:dt="http://www.thymeleaf.org/dandelion/datatables">
+<head>
+	<meta charset="utf-8" />
+	<title>NOI Grader</title>
+	
+	<style>
+		table, th, td {
+		    border: 1px solid black;
+		    border-collapse: collapse;
+		    padding: 5px;
+		}
+	</style>
+</head>
+<body>
+<h3 th:text="${problem.get('name')}" ></h3>
+<div class="span12">
+    <table dt:table="true">
+        <tbody>
+        <tr><td>Contest</td><td th:text="${problem.get('contest')}"></td></tr>
+        <tr><td>Number</td><td th:text="${problem.get('number')}"></td></tr>
+        </tbody>
+    </table>
+</div>
+<br />
+<div class="span12">
+    <table dt:table="true">
+        <thead>
+            <tr>
+                <th>property</th>
+                <th>value</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr><td>Time</td><td th:text="${details.getTime()}"></td></tr>
+        <tr><td>Memory</td><td th:text="${details.getMemory()}"></td></tr>
+        <tr><td>Points</td><td th:text="${details.getPoints()}"></td></tr>
+        </tbody>
+    </table>
+</div>
+<br />
+<div class="span12">
+    <table dt:table="true">
+        <thead>
+            <tr>
+                <th>number</th>
+                <th>input</th>
+                <th>output</th>
+            </tr>
+        </thead>
+        <tbody>
+        <span th:each="group : ${details.getTestGroups()}">
+            <tr th:each="case : ${group.getTestCases()}">
+                <td th:text="${case.getNumber()}" />
+                <td th:text="${case.getInput()}" />
+                <td th:text="${case.getOutput()}" />
+            </tr>
+        </span>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
