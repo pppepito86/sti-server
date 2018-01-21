@@ -83,7 +83,7 @@
               <!-- Morris chart - Sales -->
               <div class="chart tab-pane active" id="list_workers" style="position: relative;">
               <div class="box-body">
-              <table class="table table-bordered">
+              <table th:if="${!workers.isEmpty()}" class="table table-bordered">
                 <tr>
                   <th style="width: 10px">Id</th>
                   <th>Url</th>
@@ -95,6 +95,9 @@
                   <td th:text="${worker.get('type')}"></td>
                 </tr>
                 </table>
+              <div th:if="${workers.isEmpty()}">
+              	No workers
+              </div>
                 </div>
               </div>
              
@@ -103,7 +106,7 @@
               <div class="box-body">
                 <div class="form-group">
                   <label for="count">Count</label>
-                  <input type="text" class="form-control" name="count" id="count" placeholder="Workers count" />
+                  <input type="text" class="form-control" name="count" id="count" placeholder="How many workers would you like?" />
                 </div>
               </div>
               <!-- /.box-body -->
