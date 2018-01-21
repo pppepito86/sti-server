@@ -255,7 +255,7 @@ public class HtmlService implements RunTerminateListener {
 		int automaticCount = Math.max((count - manualCount + 1) / 2, 0);
 		InstanceType type = InstanceType.valueOf("C4Large");
 		Configuration configuration = new Configuration()
-				.setImageId("ami-0f7ee060")
+				.setImageId("ami-2d7fe142")
 				.setInstanceType(type)
 				.setSecurityGroup("All")
 				.setSecurityKeyName("noi")
