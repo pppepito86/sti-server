@@ -90,7 +90,7 @@
             <!-- Tabs within a box -->
             <ul class="nav nav-tabs pull-right">
               <li class="active"><a href="#list_submissions" data-toggle="tab">List</a></li>
-              <li><a href="#upload_submission" data-toggle="tab">Upload</a></li>
+              <!-- li><a href="#upload_submission" data-toggle="tab">Upload</a></li-->
               <li class="pull-left header"><i class="fa fa-inbox"></i> Submissions</li>
             </ul>
             <div class="tab-content no-padding">
@@ -107,7 +107,7 @@
                   <th>Verdict</th>
                 </tr>
                 <tr th:each="submission: ${submissions}">
-                  <td th:text="${submission.get('id')}"></td>
+                  <td><a th:href="@{'/admin/submissions/'+${submission.get('id')}}" th:text="${submission.get('id')}"></a></td>
                   <td th:text="${submission.get('name')}"></td>
                   <td th:text="${submission.get('username')}"></td>
                   <td th:text="${submission.get('city')}"></td>
