@@ -269,7 +269,7 @@ public class HtmlService implements RunTerminateListener {
 		WorkerManager manager = new WorkerManager(configuration);
 		manager.ensureNumberOfInstances(automaticCount);
 		
-		return "redirect:/admin/workers";
+		return "redirect:/admin";
 	}
 	
 	@PostMapping("/admin/workers/create")
@@ -278,7 +278,7 @@ public class HtmlService implements RunTerminateListener {
 		repository.addWorker(url, "manual");
 		workersQueue.put(new Worker(url));
 		
-		return "redirect:/admin/workers";
+		return "redirect:/admin";
 	}
 	
 	@PostMapping("/admin/workers/delete")
@@ -287,7 +287,7 @@ public class HtmlService implements RunTerminateListener {
 		workersQueue.remove(url);
 		repository.deleteWorker(url);
 		
-		return "redirect:/admin/workers";
+		return "redirect:/admin";
 	}
 	
 	@PostMapping("/admin/problem")

@@ -56,7 +56,7 @@ public class Repository {
 
 	public Optional<Map<String, Object>> getProblem(String contestName, String problemName) {
 		return template.queryForList(
-				"select * from problems" +
+				"select problems.id, problems.name from problems" +
 				" inner join contests on contests.name=?" +
 				" where problems.name=?", 
 				contestName, problemName).stream().findFirst();
