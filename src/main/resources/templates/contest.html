@@ -41,7 +41,7 @@
               <!-- Morris chart - Sales -->
               <div class="chart tab-pane active" id="list_tasks" style="position: relative;">
               <div class="box-body">
-              <table class="table table-bordered">
+              <table th:if="${!problems.isEmpty()}" class="table table-bordered">
                 <tr>
                   <th style="width: 10px">#</th>
                   <th>Task</th>
@@ -51,6 +51,9 @@
                   <td><a th:href="@{'/admin/contests/'+${contest.get('id')}+'/problems/'+${problem.get('number')}}" th:text="${problem.get('name')}"></a></td>
                 </tr>
                 </table>
+                <div th:if="${problems.isEmpty()}">
+              	No tasks
+              </div>
                 </div>
 
               </div>
@@ -97,7 +100,7 @@
               <!-- Morris chart - Sales -->
               <div class="chart tab-pane active" id="list_submissions" style="position: relative;">
               <div class="box-body">
-              <table class="table table-bordered">
+              <table th:if="${!submissions.isEmpty()}" class="table table-bordered">
                 <tr>
                   <th style="width: 10px">#</th>
                   <th>Task</th>
@@ -115,6 +118,9 @@
                   <td th:text="${submission.get('verdict')}"></td>
                 </tr>
                 </table>
+               <div th:if="${submissions.isEmpty()}">
+              	No submissions
+              </div>
                 </div>
 
               </div>
