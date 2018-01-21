@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
@@ -129,7 +130,66 @@ public class HtmlService implements RunTerminateListener {
 		model.addAttribute("submissions", submissions);
 		return "submissions";
 	}
+
+	@GetMapping("/admin/results")
+	public String adminResultsPage(Model model) {
+		List<Map<String,Object>> contests = repository.listContests();
+		List<Map<String,Object>> submissions = repository.listDetailedSubmissions();
+		int problemsCount = repository.maxProblemNumber();
+		Map<String, Map<String, Object>> totals = new HashMap<>();
+		for (Map<String, Object> submission: submissions) {
+			String key = submission.get("username").toString().toUpperCase() +
+					submission.get("city").toString().toUpperCase() +
+					submission.get("contest_name").toString().toUpperCase();
+			submission.put("key", key);
+			HashMap<String, Object> info = new HashMap<>();
+			info.put("username", submission.get("username").toString().toUpperCase());
+			info.put("city", submission.get("city").toString().toUpperCase());
+			info.put("contest_name", submission.get("contest_name").toString().toUpperCase());
+			totals.put(key, info);
+		}
+		Map<String, List<Map<String, Object>>> usersSubmissions = submissions.stream().collect(Collectors.groupingBy(s -> s.get("key").toString()));
+		Map<String, Map<Integer, Map<String, Object>>> results = new HashMap<>();
+		for (Map.Entry<String, List<Map<String, Object>>> userSubmissions: usersSubmissions.entrySet()) {
+			Map<Integer, Map<String, Object>> userResults = fixSubmissions(userSubmissions.getValue(), problemsCount);
+			results.put(userSubmissions.getKey(), userResults);
+			
+			int total = 0;
+			for (int i = 1; i <= problemsCount; i++) {
+				total += (int) userResults.get(i).getOrDefault("points", 0);
+			}
+			totals.get(userSubmissions.getKey()).put("total", total);
+		}
+		model.addAttribute("contests", contests);
+		model.addAttribute("results", results);
+		model.addAttribute("totals", totals);
+		
+		List<String> problems = new ArrayList<>(problemsCount);
+		for (int i = 1; i <= problemsCount; i++) problems.add("Problem " + i);
+		model.addAttribute("problems", problems);
+		return "results";
+	}
 	
+	private Map<Integer, Map<String, Object>> fixSubmissions(List<Map<String, Object>> userSubmissions, int problemsCount) {
+		Map<Integer, Map<String, Object>> map = new TreeMap<>();
+		for (int i = 1; i <= problemsCount; i++) {
+			HashMap<String, Object> emptyMap = new HashMap<>();
+			emptyMap.put("points", 0);
+			emptyMap.put("verdict", "not solved");
+			map.put(i, emptyMap);
+		}
+		for (Map<String, Object> submission: userSubmissions) {
+			int number = (int) submission.get("number");
+			int currentScore = (int) map.get(number).getOrDefault("points", 0);
+			if ((int) submission.get("points") >= currentScore) {
+				map.put(number, submission);
+			}
+		}
+		
+		//map.put("total", total);
+		return map;
+	}
+
 	@GetMapping("/admin/contests/{contest_id}")
 	public String adminContestPage(@PathVariable("contest_id") int contestId, Model model) {
 		Map<String, Object> contest = repository.getContest(contestId).get();

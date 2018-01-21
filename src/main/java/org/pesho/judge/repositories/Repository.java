@@ -114,7 +114,7 @@ public class Repository {
 	}
 	
 	public List<Map<String, Object>> listDetailedSubmissions() {
-		return template.queryForList("SELECT submissions.id, city, username, submissions.file, verdict, points, contests.name as contest_name, problems.name as problem_name from submissions" + 
+		return template.queryForList("SELECT submissions.id, city, username, submissions.file, verdict, points, contests.name as contest_name, problems.name as problem_name, problems.number from submissions" + 
 				" inner join problems on submissions.problem_id=problems.id" +
 				" inner join contests on problems.contest_id=contests.id");
 	}
@@ -165,6 +165,10 @@ public class Repository {
 	
 	public List<Map<String, Object>> listActiveWorkers() {
 		return template.queryForList("select * from workers where active=true AND deleted=false");
+	}
+	
+	public int maxProblemNumber() {
+		return template.queryForList("select max(number) from problems").stream().findFirst().map(x -> (int) x.get("max(number)")).orElse(0);
 	}
 
 	public Optional<Map<String, Object>> getSubmission(int id) {
