@@ -59,8 +59,12 @@ public class HtmlService implements RunTerminateListener {
 	
 	@Override
 	public void instanceCreated(String url) {
-		repository.addWorker(url + ":8089", "automatic");
-		repository.addWorker(url + ":8090", "automatic");
+		String url1 = url + ":8089";
+		String url2 = url + ":8090";
+		repository.addWorker(url1, "automatic");
+		workersQueue.remove(url1);
+		repository.addWorker(url2, "automatic");
+		workersQueue.remove(url2);
 	}
 	
 	@Override
