@@ -63,9 +63,9 @@ public class HtmlService implements RunTerminateListener {
 		String url1 = url + ":8089";
 		String url2 = url + ":8090";
 		repository.addWorker(url1, "automatic");
-		workersQueue.remove(url1);
+		workersQueue.put(new Worker(url1));
 		repository.addWorker(url2, "automatic");
-		workersQueue.remove(url2);
+		workersQueue.put(new Worker(url2));
 	}
 	
 	@Override
@@ -73,9 +73,9 @@ public class HtmlService implements RunTerminateListener {
 		String url1 = url + ":8089";
 		String url2 = url + ":8090";
 		repository.deleteWorker(url1);
-		repository.addWorker(url1, "automatic");
+		workersQueue.remove(url1);
 		repository.deleteWorker(url2);
-		repository.addWorker(url2, "automatic");
+		workersQueue.remove(url2);
 	}
 
 	@GetMapping("/admin")
