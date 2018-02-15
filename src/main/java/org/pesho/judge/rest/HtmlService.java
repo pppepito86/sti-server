@@ -201,6 +201,12 @@ public class HtmlService implements RunTerminateListener {
 		
 		List<Map<String,Object>> contests = repository.listContests();
 		List<Map<String,Object>> problems = repository.listContestProblems(contestId);
+		for (Map<String,Object> problem: problems) {
+			File problemDir = getFile("problem", String.valueOf(contestId), problem.get("number").toString());
+			TaskParser parser = new TaskParser(problemDir);
+			TaskDetails details = TaskDetails.create(parser);
+			problem.put("details", details);
+		}
 		List<Map<String,Object>> submissions = repository.listContestSubmissions(contestId);
 		model.addAttribute("contests", contests);
 		model.addAttribute("problems", problems);

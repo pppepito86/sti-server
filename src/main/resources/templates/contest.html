@@ -45,10 +45,16 @@
                 <tr>
                   <th style="width: 10px">#</th>
                   <th>Task</th>
+                  <th>Time</th>
+                  <th>Memory</th>
+                  <th>Points</th>
                 </tr>
                 <tr th:each="problem: ${problems}">
                   <td th:text="${problem.get('number')}"></td>
                   <td><a th:href="@{'/admin/contests/'+${contest.get('id')}+'/problems/'+${problem.get('number')}}" th:text="${problem.get('name')}"></a></td>
+                  <td th:text="${problem.get('details').getTime()}"></td>
+                  <td th:text="${problem.get('details').getMemory()}"></td>
+                  <td th:text="${problem.get('details').getPoints()}"></td>                  
                 </tr>
                 </table>
                 <div th:if="${problems.isEmpty()}">
