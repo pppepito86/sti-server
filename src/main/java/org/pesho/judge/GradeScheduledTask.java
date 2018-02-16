@@ -68,7 +68,7 @@ public class GradeScheduledTask {
 			int points = 0;
 			try {
 				if (sourceFile.length() > 50 * 1024) {
-					result = "source file too large";
+					result = "LF";
 				} else {
 					SubmissionScore score = worker.get().grade(maybeProblem.get(), submission, workDir, sourceFile);
 					details = mapper.writeValueAsString(score);
