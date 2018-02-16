@@ -67,20 +67,24 @@ public class GradeScheduledTask {
 			String details = "";
 			int points = 0;
 			try {
-				SubmissionScore score = worker.get().grade(maybeProblem.get(), submission, workDir, sourceFile);
-				details = mapper.writeValueAsString(score);
-				points = (int) Math.round(score.getScore());
-				StepResult[] values = score.getScoreSteps().values().toArray(new StepResult[0]);
-				if (values.length > 1) {
-					for (int i = 1; i < values.length; i++) {
-						StepResult step = values[i];
-						if (i != 1)
-							result += ",";
-						result += step.getVerdict();
-					}
+				if (sourceFile.length() > 50 * 1024) {
+					result = "source file too large";
 				} else {
-					result = values[0].getVerdict().toString();
-					System.out.println("Submission <" + submissionId + "> failed with " + values[0].getReason());
+					SubmissionScore score = worker.get().grade(maybeProblem.get(), submission, workDir, sourceFile);
+					details = mapper.writeValueAsString(score);
+					points = (int) Math.round(score.getScore());
+					StepResult[] values = score.getScoreSteps().values().toArray(new StepResult[0]);
+					if (values.length > 1) {
+						for (int i = 1; i < values.length; i++) {
+							StepResult step = values[i];
+							if (i != 1)
+								result += ",";
+							result += step.getVerdict();
+						}
+					} else {
+						result = values[0].getVerdict().toString();
+						System.out.println("Submission <" + submissionId + "> failed with " + values[0].getReason());
+					}
 				}
 			} catch (Exception e) {
 				System.out.println("Failed judging for submission: " + submissionId);
