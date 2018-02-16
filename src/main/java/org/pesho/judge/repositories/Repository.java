@@ -178,4 +178,9 @@ public class Repository {
 				"  where submissions.id=?", id).stream().findFirst();
 	}
 	
+    public synchronized void addLog(String topic, String title, String message) {
+    	template.update("INSERT INTO logs(topic, title, message) VALUES(?, ?, ?)", 
+    			topic, title, message);
+    }
+	
 }

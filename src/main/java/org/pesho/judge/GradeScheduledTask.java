@@ -96,6 +96,15 @@ public class GradeScheduledTask {
 				System.out.println("Judging " + worker.get().getUrl() + " " + result + " " + submissionId + " " + problemId);
 				System.out.println("Scoring " + worker.get().getUrl() + " " + submissionId + " " + problemId);
 				repository.addScore(submissionId, result, details, points);
+				if (result.equals("CE")) {
+					repository.addLog("grade", "compilation error " + submissionId, "");
+				}
+				if (result.equals("LF")) {
+					repository.addLog("grade", "large file " + submissionId, "");
+				}
+				if (result.equals("SE")) {
+					repository.addLog("grade", "system error " + submissionId, "");
+				}
 			}
 		};
 			

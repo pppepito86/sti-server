@@ -6,11 +6,10 @@
 
 CREATE TABLE IF NOT EXISTS `logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `folder` varchar(100) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `number` int(11) NOT NULL,
-  `file` varchar(100) NOT NULL,
-  `contest_id` int(11) NOT NULL,
+  `topic` varchar(20) NOT NULL,
+  `title` varchar(500) NOT NULL,
+  `message` varchar(1000) NOT NULL,
+  `read` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
