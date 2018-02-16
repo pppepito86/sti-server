@@ -112,7 +112,11 @@ public class Worker {
 		try (CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultRequestConfig(config).build()) {
 			HttpGet httpGet = new HttpGet(url + "/api/v1/health-check");
 			CloseableHttpResponse response = httpclient.execute(httpGet);
-			return response.getStatusLine().getStatusCode() == HttpStatus.OK.value();
+			if (response.getStatusLine().getStatusCode() == HttpStatus.OK.value()) {
+				String responseString = EntityUtils.toString(response.getEntity());
+				return responseString.equals("ok");
+			}
+			return false;
 		} catch (Exception e) {
 			System.out.println("Cannot connect to worker " + url);
 			return false;
