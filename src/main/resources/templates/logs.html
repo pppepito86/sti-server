@@ -47,9 +47,9 @@
                 </tr>
                 </thead>
                 <tr th:each="log: ${logs}">
-                  <td th:text="${submission.get('id')}"></td>
-                  <td th:text="${submission.get('topic')}"></td>
-                  <td th:text="${submission.get('title')}"></td>
+                  <td th:text="${log.get('id')}"></td>
+                  <td th:text="${log.get('topic')}"></td>
+                  <td th:text="${log.get('title')}"></td>
                 </tr>
                 </table>
                 </div>
@@ -67,9 +67,9 @@
                 </tr>
                 </thead>
                 <tr th:each="log: ${logs}" th:if="!log.get('read')">
-                  <td th:text="${submission.get('id')}"></td>
-                  <td th:text="${submission.get('topic')}"></td>
-                  <td th:text="${submission.get('title')}"></td>
+                  <td th:text="${log.get('id')}"></td>
+                  <td th:text="${log.get('topic')}"></td>
+                  <td th:text="${log.get('title')}"></td>
                 </tr>
                 </table>
                 </div>              
