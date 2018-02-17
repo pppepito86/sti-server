@@ -19,6 +19,8 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.pesho.grader.SubmissionScore;
+import org.pesho.grader.step.StepResult;
+import org.pesho.grader.step.Verdict;
 import org.pesho.grader.task.TaskDetails;
 import org.pesho.grader.task.TaskParser;
 import org.pesho.judge.Worker;
@@ -42,6 +44,8 @@ import org.zeroturnaround.zip.ZipUtil;
 
 import com.amazonaws.services.ec2.model.InstanceType;
 import com.amazonaws.services.ec2.model.Tag;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
@@ -292,6 +296,28 @@ public class HtmlService implements RunTerminateListener {
 			if (submissionPoints >= currentScore) {
 				if (addDetails) {
 					String details = repository.getSubmission((int) submission.get("id")).get().get("details").toString();
+					if (details != null && !details.isEmpty()) {
+						try {
+							SubmissionScore score = mapper.readValue(details, SubmissionScore.class);
+							if (score.getScoreSteps().size() == 1) {
+								details = "C";
+							} else {
+								for (Map.Entry<String, StepResult> entry: score.getScoreSteps().entrySet()) {
+									if (entry.getKey().equals("Compile")) continue;
+									Verdict verdict = entry.getValue().getVerdict();
+									if (verdict == Verdict.OK) details += "+";
+									if (verdict == Verdict.ML) details += "M";
+									if (verdict == Verdict.TL) details += "T";
+									if (verdict == Verdict.RE) details += "R";
+									if (verdict == Verdict.WA) details += "W";
+								}
+							}
+						} catch (Exception e) {
+							details = "";
+						}
+					} else {
+						details = "";
+					}
 					details.replaceAll("OK", "+");
 					details.replaceAll("TL", "T");
 					details.replaceAll("ML", "M");
