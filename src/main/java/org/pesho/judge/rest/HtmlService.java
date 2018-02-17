@@ -176,7 +176,7 @@ public class HtmlService implements RunTerminateListener {
 	}
 	
 	@GetMapping("/admin/results/{contest}")
-	public String adminContestResultsPage(@PathVariable("group") String contest, Model model) {
+	public String adminContestResultsPage(@PathVariable("contest") String contest, Model model) {
 		List<Map<String,Object>> contests = repository.listContests();
 		List<Map<String,Object>> submissions = repository.listDetailedSubmissions().stream()
 				.filter(x -> !"author".equalsIgnoreCase(x.get("city").toString()))
