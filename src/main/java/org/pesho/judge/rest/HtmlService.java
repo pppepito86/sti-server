@@ -451,6 +451,9 @@ public class HtmlService implements RunTerminateListener {
 				File newFile = getFile("submissions", String.valueOf(submissionId), fileName);
 				newFile.getParentFile().mkdirs();
 				FileUtils.copyFile(sourceFile, newFile);
+			} else {
+				String details = String.format("%s_%s_%s_%s", city, contest, username, problemName);
+				repository.addLog("submission", "problem not found for " + details, "");
 			}
 		}
 		
