@@ -154,7 +154,7 @@ public class HtmlService implements RunTerminateListener {
 		Map<String, List<Map<String, Object>>> usersSubmissions = submissions.stream().collect(Collectors.groupingBy(s -> s.get("key").toString()));
 		Map<String, Map<Integer, Map<String, Object>>> results = new HashMap<>();
 		for (Map.Entry<String, List<Map<String, Object>>> userSubmissions: usersSubmissions.entrySet()) {
-			Map<Integer, Map<String, Object>> userResults = fixSubmissions(userSubmissions.getValue(), problemsCount);
+			Map<Integer, Map<String, Object>> userResults = fixSubmissions(userSubmissions.getValue(), problemsCount, false);
 			results.put(userSubmissions.getKey(), userResults);
 			
 			int total = 0;
@@ -173,6 +173,50 @@ public class HtmlService implements RunTerminateListener {
 		for (int i = 1; i <= problemsCount; i++) problems.add("Problem " + i);
 		model.addAttribute("problems", problems);
 		return "results";
+	}
+	
+	@GetMapping("/admin/resultsfull")
+	public String adminResultsFullPage(Model model) {
+		List<Map<String,Object>> contests = repository.listContests();
+		List<Map<String,Object>> submissions = repository.listDetailedSubmissions().stream()
+				.filter(x -> !"author".equalsIgnoreCase(x.get("city").toString()))
+				.filter(x -> !"test".equalsIgnoreCase(x.get("city").toString()))
+				.collect(Collectors.toList());
+		int problemsCount = repository.maxProblemNumber();
+		Map<String, Map<String, Object>> totals = new HashMap<>();
+		for (Map<String, Object> submission: submissions) {
+			String key = submission.get("username").toString().toUpperCase() +
+					submission.get("city").toString().toUpperCase() +
+					submission.get("contest_name").toString().toUpperCase();
+			submission.put("key", key);
+			HashMap<String, Object> info = new HashMap<>();
+			info.put("username", submission.get("username").toString().toUpperCase());
+			info.put("city", submission.get("city").toString().toUpperCase());
+			info.put("contest_name", submission.get("contest_name").toString().toUpperCase());
+			totals.put(key, info);
+		}
+		Map<String, List<Map<String, Object>>> usersSubmissions = submissions.stream().collect(Collectors.groupingBy(s -> s.get("key").toString()));
+		Map<String, Map<Integer, Map<String, Object>>> results = new HashMap<>();
+		for (Map.Entry<String, List<Map<String, Object>>> userSubmissions: usersSubmissions.entrySet()) {
+			Map<Integer, Map<String, Object>> userResults = fixSubmissions(userSubmissions.getValue(), problemsCount, true);
+			results.put(userSubmissions.getKey(), userResults);
+			
+			int total = 0;
+			for (int i = 1; i <= problemsCount; i++) {
+				Integer points = (Integer) userResults.get(i).get("points");
+				if (points == null) points = 0;
+				total += points;
+			}
+			totals.get(userSubmissions.getKey()).put("total", total);
+		}
+		model.addAttribute("contests", contests);
+		model.addAttribute("results", results);
+		model.addAttribute("totals", totals);
+		
+		List<String> problems = new ArrayList<>(problemsCount);
+		for (int i = 1; i <= problemsCount; i++) problems.add("Problem " + i);
+		model.addAttribute("problems", problems);
+		return "resultsfull";
 	}
 	
 	@GetMapping("/admin/results/{contest}")
@@ -199,7 +243,7 @@ public class HtmlService implements RunTerminateListener {
 		Map<String, List<Map<String, Object>>> usersSubmissions = submissions.stream().collect(Collectors.groupingBy(s -> s.get("key").toString()));
 		Map<String, Map<Integer, Map<String, Object>>> results = new HashMap<>();
 		for (Map.Entry<String, List<Map<String, Object>>> userSubmissions: usersSubmissions.entrySet()) {
-			Map<Integer, Map<String, Object>> userResults = fixSubmissions(userSubmissions.getValue(), problemsCount);
+			Map<Integer, Map<String, Object>> userResults = fixSubmissions(userSubmissions.getValue(), problemsCount, false);
 			results.put(userSubmissions.getKey(), userResults);
 			
 			int total = 0;
@@ -231,7 +275,7 @@ public class HtmlService implements RunTerminateListener {
 		return "logs";
 	}
 	
-	private Map<Integer, Map<String, Object>> fixSubmissions(List<Map<String, Object>> userSubmissions, int problemsCount) {
+	private Map<Integer, Map<String, Object>> fixSubmissions(List<Map<String, Object>> userSubmissions, int problemsCount, boolean addDetails) {
 		Map<Integer, Map<String, Object>> map = new TreeMap<>();
 		for (int i = 1; i <= problemsCount; i++) {
 			HashMap<String, Object> emptyMap = new HashMap<>();
@@ -246,6 +290,15 @@ public class HtmlService implements RunTerminateListener {
 			Integer submissionPoints = (Integer) submission.get("points");
 			if (submissionPoints == null) submissionPoints = 0;
 			if (submissionPoints >= currentScore) {
+				if (addDetails) {
+					String details = repository.getSubmission((int) submission.get("id")).get().get("details").toString();
+					details.replaceAll("OK", "+");
+					details.replaceAll("TL", "T");
+					details.replaceAll("ML", "M");
+					details.replaceAll("WA", "W");
+					details.replaceAll(",", "");
+					submission.put("details", details);
+				}
 				map.put(number, submission);
 			}
 		}
