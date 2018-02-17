@@ -182,5 +182,10 @@ public class Repository {
     	template.update("INSERT INTO logs(topic, title, message) VALUES(?, ?, ?)", 
     			topic, title, message);
     }
+    
+    public List<Map<String, Object>> listLogs() {
+		return template.queryForList("select * from logs");
+	}
+	
 	
 }

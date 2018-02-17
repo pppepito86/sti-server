@@ -172,6 +172,17 @@ public class HtmlService implements RunTerminateListener {
 		return "results";
 	}
 	
+	
+	@GetMapping("/admin/logs")
+	public String adminLogsPage(Model model) {
+		List<Map<String,Object>> contests = repository.listContests();
+		List<Map<String,Object>> logs = repository.listLogs();
+		model.addAttribute("contests", contests);
+		model.addAttribute("logs", logs);
+
+		return "logs";
+	}
+	
 	private Map<Integer, Map<String, Object>> fixSubmissions(List<Map<String, Object>> userSubmissions, int problemsCount) {
 		Map<Integer, Map<String, Object>> map = new TreeMap<>();
 		for (int i = 1; i <= problemsCount; i++) {
