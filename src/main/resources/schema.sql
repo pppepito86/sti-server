@@ -7,6 +7,7 @@
 
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `role` varchar(100) NOT NULL,
   `name` varchar(100) NOT NULL,
   `display_name` varchar(100) NOT NULL,
   `grade` varchar(100) NOT NULL,
