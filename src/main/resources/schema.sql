@@ -9,11 +9,12 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `role` varchar(100) NOT NULL,
   `name` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
   `display_name` varchar(100) NOT NULL,
-  `grade` varchar(100) NOT NULL,
-  `school` varchar(100) NOT NULL,
-  `city` varchar(100) NOT NULL,
-  `contest` int(11) DEFAULT 0,
+  `grade` varchar(100),
+  `school` varchar(100),
+  `city` varchar(100),
+  `contest` varchar(100) DEFAULT "",
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

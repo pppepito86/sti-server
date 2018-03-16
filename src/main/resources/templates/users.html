@@ -26,57 +26,66 @@
         <!-- Left col -->
         <section class="col-lg-12 connectedSortable">
           <!-- Custom tabs (Charts with tabs)-->
-<!-- submissions -->
+<!-- users -->
           <div class="nav-tabs-custom">
             <!-- Tabs within a box -->
             <ul class="nav nav-tabs pull-right">
-              <li class="active"><a href="#list_submissions" data-toggle="tab">List</a></li>
-              <li><a href="#upload_submission" data-toggle="tab">Upload</a></li>
+              <li class="active"><a href="#list_users" data-toggle="tab">List</a></li>
+              <li><a href="#upload_user" data-toggle="tab">Upload</a></li>
               <li class="pull-left header"><i class="fa fa-inbox"></i> Users </li>
+              <a class="btn btn-primary" href="/admin/download-users" target="_blank"> Download as CSV</a>
             </ul>
             <div class="tab-content no-padding">
               <!-- Morris chart - Sales -->
-              <div class="chart tab-pane active" id="list_submissions" style="position: relative;">
+              <div class="chart tab-pane active" id="list_users" style="position: relative;">
               <div class="box-body">
               <table id="example1" class="table table-bordered table-striped">
               <thead>
                 <tr>
                   <th style="width: 10px">#</th>
-                  <th>Contest</th>
-                  <th>Task</th>
-                  <th>User</th>
+                  <th>Display Name</th>
+                  <th>Username</th>
+                  <th>School</th>
+                  <th>Grade</th>
                   <th>City</th>
-                  <th>Points</th>
-                  <th>Verdict</th>
+                  <th>Contest</th>
                 </tr>
                 </thead>
-                <tr th:each="submission: ${submissions}">
-                  <td><a th:href="@{'/admin/submissions/'+${submission.get('id')}}" th:text="${submission.get('id')}"></a></td>
-                  <td th:text="${submission.get('contest_name')}"></td>
-                  <td th:text="${submission.get('problem_name')}"></td>
-                  <td th:text="${submission.get('username')}"></td>
-                  <td th:text="${submission.get('city')}"></td>
-                  <td th:text="${submission.get('points')}"></td>
-                  <td th:text="${submission.get('verdict')}"></td>
+                <tr th:each="user: ${users}">
+                  <td><a th:href="@{'/admin/users/'+${user.get('id')}}" th:text="${user.get('id')}"></a></td>
+                  <td th:text="${user.get('display_name')}"></td>
+                  <td th:text="${user.get('name')}"></td>
+                  <td th:text="${user.get('school')}"></td>
+                  <td th:text="${user.get('grade')}"></td>
+                  <td th:text="${user.get('city')}"></td>
+                  <td th:text="${user.get('contest')}"></td>
                 </tr>
                 </table>
                 </div>
 
               </div>
-              <div class="chart tab-pane" id="upload_submission" style="position: relative;">
+              <div class="chart tab-pane" id="upload_user" style="position: relative;">
               
-            <form role="form" action="/upload-users" method="post" enctype="multipart/form-data">
+            <form role="form" action="/admin/upload-users" method="post" enctype="multipart/form-data">
               <div class="box-body">
               	<div class="form-group">
                   <label for="name-column-index">Name column index (0 based)</label>
                   <input type="number" class="form-control" name="name-column-index" id="name-column-index" placeholder="0" />
                 </div>
                 <div class="form-group">
-                  <label for="group-column-index">Group column index	 (0 based)</label>
+                  <label for="group-column-index">Group column index (0 based)</label>
                   <input type="number" class="form-control" name="group-column-index" id="group-column-index" placeholder="1" />
                 </div>
                 <div class="form-group">
-                  <label for="file">Users CSV </label>
+                  <label for="school-column-index">School column index (0 based)</label>
+                  <input type="number" class="form-control" name="school-column-index" id="group-column-index" placeholder="1" />
+                </div>
+                <div class="form-group">
+                  <label for="grade-column-index">Grade column index (0 based)</label>
+                  <input type="number" class="form-control" name="grade-column-index" id="group-column-index" placeholder="1" />
+                </div>
+                <div class="form-group">
+                  <label for="file">Users CSV</label>
                   <input type="file" name="file" id="file" />
                 </div>
               </div>
@@ -91,7 +100,7 @@
             </div>
           </div>
 
-<!-- /submissions -->
+<!-- /users -->
 
         </section>
         <!-- /.Left col -->

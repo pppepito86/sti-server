@@ -1,12 +1,15 @@
 package org.pesho.judge.rest;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +25,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
 import org.pesho.grader.SubmissionScore;
@@ -38,6 +42,10 @@ import org.pesho.workermanager.RunTerminateListener;
 import org.pesho.workermanager.WorkerManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -134,9 +142,9 @@ public class HtmlService implements RunTerminateListener {
 	@GetMapping("/admin/users")
 	public String adminUsersPage(Model model) {
 		List<Map<String,Object>> contests = repository.listContests();
-		List<Map<String,Object>> submissions = repository.listDetailedSubmissions();
+		List<Map<String,Object>> users = repository.listUsers();
 		model.addAttribute("contests", contests);
-		model.addAttribute("submissions", submissions);
+		model.addAttribute("users", users);
 		return "users";
 	}
 	
@@ -562,16 +570,59 @@ public class HtmlService implements RunTerminateListener {
         }
     }
     
-	@PostMapping("/upload-users")
+	@GetMapping("/admin/download-users")
+	public ResponseEntity<InputStreamResource> downloadUsers() {
+		HttpHeaders respHeaders = new HttpHeaders();
+	    respHeaders.setContentDispositionFormData("attachment", "users.csv");
+	    
+	    StringBuffer buffer = new StringBuffer();
+	    
+	    
+	    final String[] displayColumnNames = new String[] {"ID", "Name", 
+	    		"Username", "Password", "School"};
+	    final String[] dbColumns = new String[] {"id", "display_name", 
+	    		"name", "password", "school"};
+	    
+	    try (
+            CSVPrinter csvPrinter = new CSVPrinter(buffer, CSVFormat.DEFAULT
+                    .withHeader(displayColumnNames));
+        ) {
+	    	List<Map<String, Object>> users = repository.listUsers();
+	    	for (Map<String, Object> user : users) {
+	    		Object[] values = Arrays
+	    				.stream(dbColumns)
+	    				.map(column -> user.get(column).toString())
+	    				.toArray();
+	    		csvPrinter.printRecord(values);
+	    	}
+            csvPrinter.flush();  
+        } catch (IOException e) {
+			e.printStackTrace();
+		}
+	    
+	    InputStream is = new ByteArrayInputStream(buffer.toString().getBytes());
+		InputStreamResource inputStreamResource = new InputStreamResource(is);
+	    
+		return new ResponseEntity<InputStreamResource>(inputStreamResource, 
+	    		respHeaders, HttpStatus.OK);
+	}
+			
+			
+	@PostMapping("/admin/upload-users")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public synchronized String uploadUsers(@RequestPart("file") MultipartFile file, 
 			@RequestParam("name-column-index") int nameColumnIndex,
-			@RequestParam("group-column-index") int groupColumnIndex, Model model)
+			@RequestParam("group-column-index") int groupColumnIndex, 
+			@RequestParam("school-column-index") Optional<Integer> schoolColumnIndex,
+			@RequestParam("grade-column-index") Optional<Integer> gradeColumnIndex,
+			Model model)
 			throws Exception {
 		
 		
 		InputStreamReader reader = new InputStreamReader(file.getInputStream());
 		CSVParser csv = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
+		Map<String, Integer> groupNumUsersMap = new HashMap<String, Integer>();
+		
 		try {
 		    for (final CSVRecord record : csv) {
 		        String name = record.get(nameColumnIndex);
@@ -582,14 +633,29 @@ public class HtmlService implements RunTerminateListener {
 		        String password = Long.toHexString(Double.doubleToLongBits(Math.random()));
 		        
 		        
+		        if (!groupNumUsersMap.containsKey(group)) {
+		        	groupNumUsersMap.put(group, 0);
+		        }
+		        int id = groupNumUsersMap.get(group);
+		        groupNumUsersMap.put(group, id+1);
+		        String username = group + String.format("%03d", id);
+		        
+		        String school = null;
+		        if (schoolColumnIndex.isPresent()) {
+		        	school = record.get(schoolColumnIndex.get());
+		        }
+		        
+		        String grade = null;
+		        if (gradeColumnIndex.isPresent()) {
+		        	grade = record.get(gradeColumnIndex.get());
+		        }
+		        
+		        repository.addUser(username, password, name, group, school, grade);
 		    }
 		} finally {
 		    csv.close();
 		    reader.close();
 		}
-		   
-//		Scanner fileScanner = new Scanner(file.getInputStream());
-//		new BufferedReader(new InputStreamReader()); 
 		
 		return "redirect:/admin/users";
 	}

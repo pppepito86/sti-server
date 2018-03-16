@@ -186,6 +186,22 @@ public class Repository {
     public List<Map<String, Object>> listLogs() {
 		return template.queryForList("select * from logs");
 	}
+    
+    public List<Map<String, Object>> listUsers() {
+		return template.queryForList("select * from users");
+	}
 	
-	
+    public synchronized int addUser(String username, 
+    		String password, String displayName, String group, 
+    		String school, String grade) {
+    	
+    	template.update("INSERT INTO users(name, display_name, password, contest, role, school, grade) "
+    			+ "VALUES(?, ?, ?, ?, ?, ?, ?)", 
+    			username, displayName, password, group, "USER", school, grade);
+    	
+    	Optional<Object> last = template.queryForList("SELECT MAX(id) FROM users").stream()
+    			.map(x -> x.get("MAX(id)")).findFirst();
+    	
+    	return (int) last.get();
+	}
 }
