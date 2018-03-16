@@ -635,4 +635,9 @@ public class HtmlService implements RunTerminateListener {
 		}
 	}
 	
-}	
+    @GetMapping("/login")
+    public String login() {
+    	return "/login";
+    }
+	
+}
