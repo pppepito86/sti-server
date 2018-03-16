@@ -1,0 +1,31 @@
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside th:fragment="top" class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu" data-widget="tree">
+        <li>
+          <a th:href="@{/user}">
+            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/user/contests}">
+            <i class="fa fa-files-o"></i> <span>Tasks</span>
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/user/submissions}">
+            <i class="fa fa-files-o"></i> <span>Submissions</span>
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/user/communication}">
+            <i class="fa fa-files-o"></i> <span>Communication</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+    <!-- /.sidebar -->	
+  </aside>
