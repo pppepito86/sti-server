@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class NoiUserDetailsService implements UserDetailsService {
 
+	private static final String ROLE_PREFIX = "ROLE_";
 	@Autowired
 	private JdbcTemplate template;
 	
@@ -23,17 +24,17 @@ public class NoiUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		if (username.equalsIgnoreCase("admin")) {
 			return new User("admin", "admin", 
-					Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+					Arrays.asList(new SimpleGrantedAuthority(ROLE_PREFIX + "ADMIN")));
 		}
 		
 		Optional<Map<String, Object>> result = template.queryForList(
-				"select username, password, role from users", 
+				"select user, password, role from users", 
 				new Object[] {username}).stream().findFirst();
 		
 		return result.map(user -> new User(
-				user.get("username").toString(), 
+				user.get("user").toString(), 
 				user.get("password").toString(), 
-				Arrays.asList(new SimpleGrantedAuthority(user.get("role").toString())))).orElse(null);
+				Arrays.asList(new SimpleGrantedAuthority(ROLE_PREFIX + user.get("role").toString())))).orElse(null);
 	}
 	
 }
