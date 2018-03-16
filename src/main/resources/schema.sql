@@ -3,6 +3,18 @@
 --DROP TABLE IF EXISTS `contests`;
 --DROP TABLE IF EXISTS `workers`;
 --DROP TABLE IF EXISTS `logs`;
+--DROP TABLE IF EXISTS `users`;
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `display_name` varchar(100) NOT NULL,
+  `grade` varchar(100) NOT NULL,
+  `school` varchar(100) NOT NULL,
+  `city` varchar(100) NOT NULL,
+  `contest` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
