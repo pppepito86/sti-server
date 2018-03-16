@@ -28,11 +28,11 @@ public class NoiUserDetailsService implements UserDetailsService {
 		}
 		
 		Optional<Map<String, Object>> result = template.queryForList(
-				"select user, password, role from users", 
-				new Object[] {username}).stream().findFirst();
+				"select name, password, role from users where name=?", 
+				username).stream().findFirst();
 		
 		return result.map(user -> new User(
-				user.get("user").toString(), 
+				user.get("name").toString(), 
 				user.get("password").toString(), 
 				Arrays.asList(new SimpleGrantedAuthority(ROLE_PREFIX + user.get("role").toString())))).orElse(null);
 	}
