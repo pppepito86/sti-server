@@ -1,8 +1,10 @@
 package org.pesho.judge.rest;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -17,6 +20,9 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
 import org.pesho.grader.SubmissionScore;
 import org.pesho.grader.step.StepResult;
@@ -26,6 +32,7 @@ import org.pesho.grader.task.TaskParser;
 import org.pesho.judge.Worker;
 import org.pesho.judge.WorkersQueue;
 import org.pesho.judge.repositories.Repository;
+import org.pesho.judge.util.HomographTranslator;
 import org.pesho.workermanager.Configuration;
 import org.pesho.workermanager.RunTerminateListener;
 import org.pesho.workermanager.WorkerManager;
@@ -124,13 +131,22 @@ public class HtmlService implements RunTerminateListener {
 		return "workers";
 	}
 	
+	@GetMapping("/admin/users")
+	public String adminUsersPage(Model model) {
+		List<Map<String,Object>> contests = repository.listContests();
+		List<Map<String,Object>> submissions = repository.listDetailedSubmissions();
+		model.addAttribute("contests", contests);
+		model.addAttribute("submissions", submissions);
+		return "users";
+	}
+	
 	@GetMapping("/admin/submissions")
 	public String adminSubmissionsPage(Model model) {
 		List<Map<String,Object>> contests = repository.listContests();
 		List<Map<String,Object>> submissions = repository.listDetailedSubmissions();
 		model.addAttribute("contests", contests);
 		model.addAttribute("submissions", submissions);
-		return "submissions";
+		return "submissions";	
 	}
 
 	@GetMapping("/admin/results")
@@ -546,6 +562,38 @@ public class HtmlService implements RunTerminateListener {
         }
     }
     
+	@PostMapping("/upload-users")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public synchronized String uploadUsers(@RequestPart("file") MultipartFile file, 
+			@RequestParam("name-column-index") int nameColumnIndex,
+			@RequestParam("group-column-index") int groupColumnIndex, Model model)
+			throws Exception {
+		
+		
+		InputStreamReader reader = new InputStreamReader(file.getInputStream());
+		CSVParser csv = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
+		try {
+		    for (final CSVRecord record : csv) {
+		        String name = record.get(nameColumnIndex);
+		        String group = record.get(groupColumnIndex);
+		        group = group.substring(0, 1);
+		        group = new HomographTranslator().translate(group);
+		        
+		        String password = Long.toHexString(Double.doubleToLongBits(Math.random()));
+		        
+		        
+		    }
+		} finally {
+		    csv.close();
+		    reader.close();
+		}
+		   
+//		Scanner fileScanner = new Scanner(file.getInputStream());
+//		new BufferedReader(new InputStreamReader()); 
+		
+		return "redirect:/admin/users";
+	}
+	
     @PostMapping("/grade")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public synchronized String addSubmission(@RequestPart("file") MultipartFile file, 
