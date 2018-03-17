@@ -1,6 +1,5 @@
 package org.pesho.judge.rest;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -46,6 +44,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -793,5 +792,41 @@ public class HtmlService implements RunTerminateListener {
     public String login() {
     	return "/login";
     }
+
+    @GetMapping("/problems/{number}")
+    public ResponseEntity<?> downloadPdf(@PathVariable("number") int number) throws Exception {
+    	HttpHeaders respHeaders = new HttpHeaders();
+	    respHeaders.setContentDispositionFormData("attachment", "problem" + number + ".pdf");
+	    
+	    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+	    String contest = repository.getUserContest(username).get();
+	    int contestId = (int) repository.getContest(contest).get().get("id");
+	    
+	    File problemDir = getFile("problem", String.valueOf(contestId), String.valueOf(number));
+	    File pdf = findPdf(problemDir);
+	    if (pdf == null) return ResponseEntity.noContent().build();
+	    
+	    InputStream is = new FileInputStream(pdf);
+		InputStreamResource inputStreamResource = new InputStreamResource(is);
+	    
+		return new ResponseEntity<InputStreamResource>(inputStreamResource, 
+	    		respHeaders, HttpStatus.OK);
+    }
+
+	private File findPdf(File problemDir) {
+		File[] files = problemDir.listFiles();
+		if (files == null) return null;
+		
+		for (File file: files) {
+			if (file.isFile() && file.getName().endsWith(".pdf")) {
+				return file;
+			}
+			if (file.isDirectory()) {
+				File pdf = findPdf(file);
+				if (pdf != null) return pdf;
+			}
+		}
+		return null;
+	}
 	
 }

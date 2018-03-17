@@ -82,6 +82,10 @@ public class Repository {
 	public Optional<Map<String, Object>> getContest(int id) {
 		return template.queryForList("SELECT * from contests where id=?", id).stream().findFirst();
 	}
+
+	public Optional<Map<String, Object>> getContest(String contest) {
+		return template.queryForList("SELECT * from contests where name=?", contest).stream().findFirst();
+	}
 	
 	public List<Map<String, Object>> listSubmissions() {
 		return template.queryForList("SELECT * from submissions");
@@ -204,4 +208,8 @@ public class Repository {
     	
     	return (int) last.get();
 	}
+    
+    public Optional<String> getUserContest(String username) {
+    	return template.queryForList("select contest from users where name=?", username).stream().map(x -> x.get("contest").toString()).findFirst();
+    }
 }

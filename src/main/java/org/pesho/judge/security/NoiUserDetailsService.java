@@ -16,7 +16,8 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class NoiUserDetailsService implements UserDetailsService {
 
-	private static final String ROLE_PREFIX = "ROLE_";
+	public static final String ROLE_PREFIX = "ROLE_";
+
 	@Autowired
 	private JdbcTemplate template;
 	
