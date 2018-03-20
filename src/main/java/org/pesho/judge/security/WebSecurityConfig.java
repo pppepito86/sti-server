@@ -31,6 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/bower_components/**").permitAll()
 			.antMatchers("/build/**").permitAll()
 			.antMatchers("/dist/**").permitAll()
+			.antMatchers("/docs/**").permitAll()
 			.antMatchers("/plugins/**").permitAll()
 			.antMatchers("/pages/**").permitAll()
 			.antMatchers("/login/**").permitAll()

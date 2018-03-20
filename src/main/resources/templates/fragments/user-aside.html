@@ -1,28 +1,73 @@
+  <meta charset="UTF-8" />
+
   <!-- Left side column. contains the logo and sidebar -->
   <aside th:fragment="top" class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
 
+
+<p id="demo"></p>
+
+<script>
+// Set the date we're counting down to
+var countDownDate = new Date("Sep 5, 2018 15:37:25").getTime();
+
+// Update the count down every 1 second
+var x = setInterval(function() {
+
+    // Get todays date and time
+    var now = new Date().getTime();
+    
+    // Find the distance between now an the count down date
+    var distance = countDownDate - now;
+    
+    // Time calculations for days, hours, minutes and seconds
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+    // Output the result in an element with id="demo"
+    document.getElementById("demo").innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+      
+    if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("demo").innerHTML = "EXPIRED";
+    }
+}, 1000);
+</script>
+
+
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
+        <li class="header">МЕНЮ</li>
         <li>
           <a th:href="@{/user}">
-            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-          </a>
-        </li>
-        <li>
-          <a th:href="@{/user/contests}">
-            <i class="fa fa-files-o"></i> <span>Tasks</span>
-          </a>
-        </li>
-        <li>
-          <a th:href="@{/user/submissions}">
-            <i class="fa fa-files-o"></i> <span>Submissions</span>
+            <i class="fa fa-dashboard"></i> <span>Задачи</span>
           </a>
         </li>
         <li>
           <a th:href="@{/user/communication}">
-            <i class="fa fa-files-o"></i> <span>Communication</span>
+            <i class="fa fa-files-o"></i> <span>Комуникация</span>
+          </a>
+        <li>
+	        <a target="_blank" th:href="@{/docs/en/index.html}"><i class="fa fa-book"></i> <span>Документация</span></a>
+        </li>
+        </li>
+        <li class="header">ЗАДАЧИ</li>
+        <li>
+          <a th:href="@{/user/communication}">
+            <i class="fa fa-files-o"></i> <span>Игра</span>
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/user/communication}">
+            <i class="fa fa-files-o"></i> <span>Разлика</span>
+          </a>
+        </li>
+        <li>
+          <a th:href="@{/user/communication}">
+            <i class="fa fa-files-o"></i> <span>Сума</span>
           </a>
         </li>
       </ul>
