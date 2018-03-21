@@ -128,10 +128,103 @@ public class HtmlService implements RunTerminateListener {
     	return "user/communication";
     }
 	
+	@GetMapping("/user/problem/{problem-number}")
+    public String userProblem(Model model, 
+    		@PathVariable("problem-number") Integer problemNumber) {
+		
+		int contestId = getCurrentUserContestId();
+
+		String problemNumStr = Integer.toString(problemNumber);
+		File problemDir = getFile("problem", String.valueOf(contestId), problemNumStr);
+		TaskParser parser = new TaskParser(problemDir);
+		TaskDetails details = TaskDetails.create(parser);
+		model.addAttribute("problemDetails", details);
+		
+		Map<String,Object> problem = repository.getProblem(contestId, problemNumber).get();
+		
+		model.addAttribute("problem", problem);
+		model.addAttribute("problemNumber", problemNumber);
+		
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		List<Map<String, Object>> submissions = 
+				repository.listUserSubmissionsForProblem(username, problemNumber);
+		
+		model.addAttribute("submissions", submissions);
+		
+    	return "user/problem";
+    }
+	
+	@PostMapping("/user/submit-code")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public String submitCode(@RequestPart("file") MultipartFile file, 
+			@RequestParam("problemNumber") Integer problemNumber,
+			Model model) throws Exception {
+		
+		String city = "Sofia";
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		String contest = getCurrentUserContest();
+		int contestId = getCurrentUserContestId();
+		String problemName = repository
+				.getProblem(contestId, problemNumber).get().get("name").toString();
+		
+		String fileName = problemName + ".cpp";
+		
+		int submissionId = repository.addSubmission(city, username, contest, problemName, fileName);
+		if (submissionId != 0) {
+			File sourceFile = getFile("submissions", String.valueOf(submissionId), fileName);
+			FileUtils.copyInputStreamToFile(file.getInputStream(), sourceFile);
+		} else {
+			String details = String.format("%s_%s_%s_%s", city, contest, username, problemName);
+			repository.addLog("submission", "problem not found for " + details, "");
+		}
+		
+		return "redirect:/user/problem/"+problemNumber;
+	}
+	
+	@GetMapping("/user/submissions/{submission_id}")
+	public String userSubmissionPage(@PathVariable("submission_id") int id,
+			Model model) throws Exception {
+		List<Map<String,Object>> contests = repository.listContests();
+		model.addAttribute("contests", contests);
+		Optional<Map<String,Object>> submission = repository.getSubmission(id);
+		if (submission.isPresent()) {
+			String details = submission.get().get("details").toString();
+			if (details != null && !details.isEmpty()) {
+				SubmissionScore score = mapper.readValue(details, SubmissionScore.class);
+				model.addAttribute("score", Math.round(score.getScore()));
+				model.addAttribute("compile", score.getScoreSteps().get("Compile"));
+				score.getScoreSteps().remove("Compile");
+				model.addAttribute("tests", score.getScoreSteps());
+			}
+			File sourceFile = getFile("submissions", String.valueOf(submission.get().get("id")), submission.get().get("file").toString());
+			String source = FileUtils.readFileToString(sourceFile, Charset.forName("UTF-8"));
+			model.addAttribute("submissionId", String.valueOf(id));
+			model.addAttribute("source", source);
+			model.addAttribute("submission", submission.get());
+		}
+		return "user/submission";
+	}
+	
 	@GetMapping("/admin/communication")
     public String adminCommunication(Model model) {
 		
     	return "communication";
+    }
+	
+	@PostMapping("/admin/send-message")
+    public String adminSendMessage(@RequestParam("message") String message,
+    		@RequestParam("msg-type") String messageType,
+    		@RequestParam("username") Optional<String> username,
+    		@RequestParam("contest-name") Optional<String> contestname) {
+		
+		System.out.println(message + " " + messageType);
+    	return "redirect:/admin/communication";
+    }
+	
+	@PostMapping("/user/send-message")
+    public String userSendMessage(@RequestParam("message") String message) {
+		
+    	return "redirect:/user/communication";
     }
 	
 	@GetMapping("/admin")
@@ -798,9 +891,7 @@ public class HtmlService implements RunTerminateListener {
     	HttpHeaders respHeaders = new HttpHeaders();
 	    respHeaders.setContentDispositionFormData("attachment", "problem" + number + ".pdf");
 	    
-	    String username = SecurityContextHolder.getContext().getAuthentication().getName();
-	    String contest = repository.getUserContest(username).get();
-	    int contestId = (int) repository.getContest(contest).get().get("id");
+	    int contestId = getCurrentUserContestId();
 	    
 	    File problemDir = getFile("problem", String.valueOf(contestId), String.valueOf(number));
 	    File pdf = findPdf(problemDir);
@@ -812,6 +903,18 @@ public class HtmlService implements RunTerminateListener {
 		return new ResponseEntity<InputStreamResource>(inputStreamResource, 
 	    		respHeaders, HttpStatus.OK);
     }
+
+	private int getCurrentUserContestId() {
+		String contest = getCurrentUserContest();
+	    int contestId = (int) repository.getContest(contest).get().get("id");
+		return contestId;
+	}
+
+	private String getCurrentUserContest() {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+	    String contest = repository.getUserContest(username).get();
+		return contest;
+	}
 
 	private File findPdf(File problemDir) {
 		File[] files = problemDir.listFiles();

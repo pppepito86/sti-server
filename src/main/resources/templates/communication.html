@@ -27,7 +27,7 @@
 					<h3 class="box-title"> Send message </h3>
 				</div>	
 				<div class="box-body">
-					<form role="form" action="/user/send-message" method="post">
+					<form role="form" action="/admin/send-message" method="post">
 						
 						<div class="form-group">
 		                  <div class="radio">
@@ -52,22 +52,35 @@
 		                
 						<div class="form-group" id="user-form-group">
 		                  <label for="username">User</label>
-		                  <input type="text" class="form-control" id="username" placeholder="Enter username"/>
+		                  <input type="text" 
+		                  	class="form-control" 
+		                  	id="username" 
+		                  	name="username"
+		                  	placeholder="Enter username"/>
 		                </div>
 		                <div class="form-group" id="contest-form-group">
 		                  <label for="contest-name">Contest</label>
-		                  <input type="text" class="form-control" id="contest-name" placeholder="Enter contest name"/>
+		                  <input type="text" 
+		                  	class="form-control" 
+		                  	id="contest-name"
+		                  	name="contest-name" 
+		                  	placeholder="Enter contest name"/>
 		                </div>
 	                	
 	                	<div class="form-group">
 	                		<label for="message">Message</label>
-							<textarea id="message" class="form-control" rows="5" placeholder="Enter message..."></textarea>
+							<textarea id="message" 
+								name="message" 
+								class="form-control" 
+								rows="5" 
+								placeholder="Enter message..."></textarea>
 						</div>
+						
+						<div class="box-footer">
+			                <button type="submit" class="btn btn-primary">Send</button>
+			            </div>
 					</form>
 				</div>
-				<div class="box-footer">
-	                <button type="submit" class="btn btn-primary">Send</button>
-	            </div>
 			</div>		
 		</div>
 		

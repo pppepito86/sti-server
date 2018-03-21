@@ -95,6 +95,11 @@ public class Repository {
 		return template.queryForList("SELECT * from submissions where city=?", city);
 	}
 	
+	public List<Map<String, Object>> listUserSubmissionsForProblem(String username, int problemId) {
+		return template.queryForList("SELECT * from submissions where username=? and problem_id=?", 
+				username, problemId);
+	}
+	
 	public synchronized int addSubmission(String city, String username, String contest, String problemName, String file) {
 		Optional<Map<String,Object>> problem = getProblem(contest, problemName);
 		if (problem.isPresent()) {
