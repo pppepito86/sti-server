@@ -7,12 +7,14 @@
 
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li class="header">МЕНЮ</li>
-        <li>
-          <a th:href="@{/user}">
-            <i class="fa fa-dashboard"></i> <span>Задачи</span>
+        <li class="header">ЗАДАЧИ</li>
+        <li th:each="problem: ${contestProblems}">
+          <a th:href="@{'/user/problem/' + ${problem.get('number')}}">
+            <i class="fa fa-files-o"></i> <span th:text="${problem.get('name')}"> </span>
           </a>
         </li>
+        
+        <li class="header">МЕНЮ</li>
         <li>
           <a th:href="@{/user/communication}">
             <i class="fa fa-files-o"></i> <span>Комуникация</span>
@@ -21,22 +23,7 @@
 	        <a target="_blank" th:href="@{/docs/en/index.html}"><i class="fa fa-book"></i> <span>Документация</span></a>
         </li>
         </li>
-        <li class="header">ЗАДАЧИ</li>
-        <li>
-          <a th:href="@{/user/communication}">
-            <i class="fa fa-files-o"></i> <span>Игра</span>
-          </a>
-        </li>
-        <li>
-          <a th:href="@{/user/communication}">
-            <i class="fa fa-files-o"></i> <span>Разлика</span>
-          </a>
-        </li>
-        <li>
-          <a th:href="@{/user/communication}">
-            <i class="fa fa-files-o"></i> <span>Сума</span>
-          </a>
-        </li>
+        
       </ul>
     </section>
     <!-- /.sidebar -->	

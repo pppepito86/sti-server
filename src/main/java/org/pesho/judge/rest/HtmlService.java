@@ -119,12 +119,17 @@ public class HtmlService implements RunTerminateListener {
 		model.addAttribute("submissionsWaiting", submissionsWaiting);
 		model.addAttribute("submissionsErrors", submissionsErrors);
 		model.addAttribute("submissionsScored", submissionsScored);
+		
+		int contestId = getCurrentUserContestId();
+		addContestProblemsToModel(model, contestId);
     	return "user/dashboard";
     }
 	
 	@GetMapping("/user/communication")
     public String userCommunication(Model model) {
 		
+		int contestId = getCurrentUserContestId();
+		addContestProblemsToModel(model, contestId);
     	return "user/communication";
     }
 	
@@ -151,8 +156,16 @@ public class HtmlService implements RunTerminateListener {
 		
 		model.addAttribute("submissions", submissions);
 		
+		addContestProblemsToModel(model, contestId);
+		
     	return "user/problem";
     }
+
+	private void addContestProblemsToModel(Model model, int contestId) {
+		List<Map<String, Object>> contestProblems = 
+				repository.listContestProblems(contestId);
+		model.addAttribute("contestProblems", contestProblems);
+	}
 	
 	@PostMapping("/user/submit-code")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -202,6 +215,9 @@ public class HtmlService implements RunTerminateListener {
 			model.addAttribute("source", source);
 			model.addAttribute("submission", submission.get());
 		}
+		
+		int contestId = getCurrentUserContestId();
+		addContestProblemsToModel(model, contestId);
 		return "user/submission";
 	}
 	
