@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS `submissions` (
   `verdict` varchar(1000) DEFAULT NULL,
   `details` mediumtext DEFAULT NULL,
   `worker_id` int(11) DEFAULT NULL,
+  `upload_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

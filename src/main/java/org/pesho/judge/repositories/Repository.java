@@ -95,9 +95,12 @@ public class Repository {
 		return template.queryForList("SELECT * from submissions where city=?", city);
 	}
 	
-	public List<Map<String, Object>> listUserSubmissionsForProblem(String username, int problemId) {
-		return template.queryForList("SELECT * from submissions where username=? and problem_id=?", 
-				username, problemId);
+	public List<Map<String, Object>> listUserSubmissionsForProblem(String username, int problemNumber) {
+		return template.queryForList("SELECT * from submissions" +
+				" inner join users on users.name=? and users.name=submissions.username" + 
+				" inner join contests on contests.name=users.contest" + 
+				" inner join problems on problems.number=? and problems.contest_id=contests.id and problems.id=submissions.problem_id", 
+				username, problemNumber);
 	}
 	
 	public synchronized int addSubmission(String city, String username, String contest, String problemName, String file) {
@@ -217,4 +220,10 @@ public class Repository {
     public Optional<String> getUserContest(String username) {
     	return template.queryForList("select contest from users where name=?", username).stream().map(x -> x.get("contest").toString()).findFirst();
     }
+    
+    public Optional<Map<String, Object>> getUserLastSubmission(String name) {
+    	return template.queryForList("SELECT upload_time from submissions" +
+				"  where username=?", name).stream().findFirst();
+    }
+    
 }
