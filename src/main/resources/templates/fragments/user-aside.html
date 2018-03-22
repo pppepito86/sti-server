@@ -32,7 +32,10 @@
     </section>
     <!-- /.sidebar -->
     
-    <script> var countDownDate = new Date("Sep 5, 2018 20:37:25").getTime(); </script>
+    <script> 
+     var msTillEnd = 2*60*1000;
+     var countDownDate = new Date().getTime() + msTillEnd; 
+    </script>
     <script th:src="@{/dist/js/timer.js}"></script>
     	
   </aside>
