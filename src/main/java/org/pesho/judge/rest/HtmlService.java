@@ -7,13 +7,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -281,6 +285,13 @@ public class HtmlService implements RunTerminateListener {
 	public String adminContestsPage(Model model) {
 		List<Map<String, Object>> contests = repository.listContests();
 		model.addAttribute("contests", contests);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+		Calendar startTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		Calendar endTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		endTime.set(Calendar.HOUR_OF_DAY, endTime.get(Calendar.HOUR_OF_DAY) + 4);
+		model.addAttribute("startTime", sdf.format(startTime.getTime()));
+		model.addAttribute("endTime", sdf.format(endTime.getTime()));
 		return "contests";
 	}
 	
@@ -623,9 +634,16 @@ public class HtmlService implements RunTerminateListener {
 
 	@PostMapping("/admin/contests")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public String addContest(@RequestParam("name") String name,
+	public String addContest(
+			@RequestParam("name") String name,
+			@RequestParam("start_time") String startTime,
+			@RequestParam("end_time") String endTime,
 			Model model) throws Exception {
-		int id = repository.addContest(name);
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+		long start = sdf.parse(startTime).getTime();
+		long end = sdf.parse(endTime).getTime();
+		int id = repository.addContest(name, new Timestamp(start), new Timestamp(end));
 		return "redirect:/admin/contests/"+id;
 	}
 	

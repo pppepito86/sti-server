@@ -1,5 +1,6 @@
 package org.pesho.judge.repositories;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,8 +15,9 @@ public class Repository {
     @Autowired
     private JdbcTemplate template;
 
-    public synchronized int addContest(String name) {
-    	template.update("INSERT INTO contests(name) VALUES(?)", name);
+    public synchronized int addContest(String name, Timestamp start, Timestamp end) {
+    	template.update("INSERT INTO contests(name, start_time, end_time) VALUES(?, ?, ?)", 
+    			name, start, end);
     	
     	Optional<Object> last = template.queryForList("SELECT MAX(id) FROM contests").stream()
     			.map(x -> x.get("MAX(id)")).findFirst();

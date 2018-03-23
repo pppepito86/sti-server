@@ -60,6 +60,14 @@
                   <label for="name">Name</label>
                   <input type="text" class="form-control" name="name" id="name" placeholder="Contest name" />
                 </div>
+                <div class="form-group">
+                  <label for="start_time">Start time</label>
+                  <input type="text" class="form-control" name="start_time" id="start_time" th:value="${startTime}" />
+                </div>
+                <div class="form-group">
+                  <label for="end_time">End time</label>
+                  <input type="text" class="form-control" name="end_time" id="end_time" th:value="${endTime}" />
+                </div>
               </div>
               <!-- /.box-body -->
               <div class="box-footer">
