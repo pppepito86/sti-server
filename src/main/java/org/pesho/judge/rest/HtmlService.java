@@ -569,6 +569,24 @@ public class HtmlService implements RunTerminateListener {
 		//map.put("total", total);
 		return map;
 	}
+	
+	@PostMapping("/admin/contests/{contest_id}/time")
+	public String updateContestTime(
+			@PathVariable("contest_id") int contestId, 
+			@RequestParam("start_time") String startTime,
+			@RequestParam("end_time") String endTime,
+			Model model) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+		long start = sdf.parse(startTime).getTime();
+		long end = sdf.parse(endTime).getTime();
+		repository.updateContest(contestId, new Timestamp(start), new Timestamp(end));
+		
+		return "redirect:/admin/contests/" + contestId;
+	}
+		
+
 
 	@GetMapping("/admin/contests/{contest_id}")
 	public String adminContestPage(@PathVariable("contest_id") int contestId, Model model) {
@@ -587,6 +605,14 @@ public class HtmlService implements RunTerminateListener {
 		model.addAttribute("problems", problems);
 		model.addAttribute("submissions", submissions);
 		model.addAttribute("contest", contest);
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+		Timestamp startTime = (Timestamp) contest.get("start_time");
+		Timestamp endTime = (Timestamp) contest.get("end_time");
+
+		model.addAttribute("startTime", sdf.format(startTime.getTime()));
+		model.addAttribute("endTime", sdf.format(endTime.getTime()));
 		return "contest";
 	}
 	

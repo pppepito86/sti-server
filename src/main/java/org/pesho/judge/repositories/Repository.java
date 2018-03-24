@@ -227,5 +227,10 @@ public class Repository {
     	return template.queryForList("SELECT upload_time from submissions" +
 				"  where username=? order by upload_time desc", name).stream().findFirst();
     }
+
+	public void updateContest(int id, Timestamp start, Timestamp end) {
+		template.update("UPDATE contests SET start_time=?, end_time=? where id=?", 
+				start, end, id);
+	}
     
 }
