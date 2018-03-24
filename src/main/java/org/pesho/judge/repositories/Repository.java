@@ -225,7 +225,7 @@ public class Repository {
     
     public Optional<Map<String, Object>> getUserLastSubmission(String name) {
     	return template.queryForList("SELECT upload_time from submissions" +
-				"  where username=?", name).stream().findFirst();
+				"  where username=? order by upload_time desc", name).stream().findFirst();
     }
     
 }

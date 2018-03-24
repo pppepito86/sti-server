@@ -126,8 +126,52 @@ public class HtmlService implements RunTerminateListener {
 		
 		int contestId = getCurrentUserContestId();
 		addContestProblemsToModel(model, contestId);
+
+		addTimeLeft(model, contestId);
+		
     	return "user/dashboard";
     }
+
+	private void addTimeLeft(Model model, int contestId) {
+		Map<String, Object> contest = repository.getContest(contestId).get();
+		Timestamp endTime = (Timestamp) contest.get("end_time");
+		long timeLeft = endTime.getTime() - System.currentTimeMillis();
+		model.addAttribute("timeLeft", timeLeft);
+	}
+	
+	@GetMapping("/user/error")
+	public String userError(Model model) {
+		List<Map<String,Object>> workers = repository.listWorkers();
+		List<Map<String,Object>> contests = repository.listContests();
+		List<Map<String,Object>> submissions = repository.listDetailedSubmissions();
+		List<Map<String,Object>> submissionsQueue = submissions.stream()
+				.filter(s -> s.get("verdict").equals("waiting") 
+						|| s.get("verdict").equals("judging"))
+				.collect(Collectors.toList());
+		submissionsQueue.addAll(submissions.stream().filter(s -> s.get("verdict").equals("system error")).collect(Collectors.toList()));
+		
+		Long submissionsCE = submissions.stream().filter(x -> x.get("verdict").equals("CE")).count();
+		Long submissionsEvaluating = submissions.stream().filter(x -> x.get("verdict").equals("judging")).count();
+		Long submissionsWaiting = submissions.stream().filter(x -> x.get("verdict").equals("waiting")).count();
+		Long submissionsErrors = submissions.stream().filter(x -> x.get("verdict").equals("system error")).count();
+		Long submissionsScored = submissions.size() - submissionsCE - submissionsEvaluating - submissionsWaiting - submissionsErrors;
+		model.addAttribute("workers", workers);
+		model.addAttribute("contests", contests);
+		model.addAttribute("submissions", submissions);
+		model.addAttribute("queue", submissionsQueue);
+		model.addAttribute("submissionsCE", submissionsCE);
+		model.addAttribute("submissionsEvaluating", submissionsEvaluating);
+		model.addAttribute("submissionsWaiting", submissionsWaiting);
+		model.addAttribute("submissionsErrors", submissionsErrors);
+		model.addAttribute("submissionsScored", submissionsScored);
+		
+		int contestId = getCurrentUserContestId();
+		addContestProblemsToModel(model, contestId);
+		
+		addTimeLeft(model, contestId);
+		
+		return "user/error";
+	}
 	
 	@GetMapping("/user/communication")
     public String userCommunication(Model model) {
@@ -162,6 +206,8 @@ public class HtmlService implements RunTerminateListener {
 		
 		addContestProblemsToModel(model, contestId);
 		
+		addTimeLeft(model, contestId);
+		
     	return "user/problem";
     }
 
@@ -177,6 +223,8 @@ public class HtmlService implements RunTerminateListener {
 			@RequestParam("problemNumber") Integer problemNumber,
 			Model model) throws Exception {
 		
+		long submissionTime = System.currentTimeMillis();
+		
 		String city = "Sofia";
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		String contest = getCurrentUserContest();
@@ -189,7 +237,16 @@ public class HtmlService implements RunTerminateListener {
 		Optional<Map<String,Object>> submission = repository.getUserLastSubmission(SecurityContextHolder.getContext().getAuthentication().getName());
 		if (submission.isPresent()) {
 			System.out.println("Previous submission exist");
-			System.out.println(submission.get().get("upload_time"));
+			Timestamp lastSubmissionTime = (Timestamp) submission.get().get("upload_time");
+			if (lastSubmissionTime.getTime() + 60 * 1000 > submissionTime) {
+				return "redirect:/user/error?msg=\"submission not received\"";
+			}
+		}
+		
+		Map<String, Object> contestMap = repository.getContest(contestId).get();
+		Timestamp endTime = (Timestamp) contestMap.get("end_time");
+		if (submissionTime > endTime.getTime()) {
+			return "redirect:/user/error?msg=\"contest is over\"";
 		}
 		
 		int submissionId = repository.addSubmission(city, username, contest, problemName, fileName);
@@ -640,6 +697,7 @@ public class HtmlService implements RunTerminateListener {
 			@RequestParam("end_time") String endTime,
 			Model model) throws Exception {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
 		long start = sdf.parse(startTime).getTime();
 		long end = sdf.parse(endTime).getTime();

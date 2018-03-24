@@ -32,8 +32,17 @@
     </section>
     <!-- /.sidebar -->
     
+    <script th:inline="javascript">
+
+      /*<![CDATA[*/
+	    
+         var msTillEnd = /*[[${timeLeft}]]*/;
+
+       /*]]>*/
+	</script> 
+    
     <script> 
-     var msTillEnd = 2*60*1000;
+     var msTillEnd2 = 2*60*1000;
      var countDownDate = new Date().getTime() + msTillEnd; 
     </script>
     <script th:src="@{/dist/js/timer.js}"></script>
