@@ -145,30 +145,6 @@ public class HtmlService implements RunTerminateListener {
 	public String userError(
 			@RequestParam("msg") String code,
 			Model model) {
-		List<Map<String,Object>> workers = repository.listWorkers();
-		List<Map<String,Object>> contests = repository.listContests();
-		List<Map<String,Object>> submissions = repository.listDetailedSubmissions();
-		List<Map<String,Object>> submissionsQueue = submissions.stream()
-				.filter(s -> s.get("verdict").equals("waiting") 
-						|| s.get("verdict").equals("judging"))
-				.collect(Collectors.toList());
-		submissionsQueue.addAll(submissions.stream().filter(s -> s.get("verdict").equals("system error")).collect(Collectors.toList()));
-		
-		Long submissionsCE = submissions.stream().filter(x -> x.get("verdict").equals("CE")).count();
-		Long submissionsEvaluating = submissions.stream().filter(x -> x.get("verdict").equals("judging")).count();
-		Long submissionsWaiting = submissions.stream().filter(x -> x.get("verdict").equals("waiting")).count();
-		Long submissionsErrors = submissions.stream().filter(x -> x.get("verdict").equals("system error")).count();
-		Long submissionsScored = submissions.size() - submissionsCE - submissionsEvaluating - submissionsWaiting - submissionsErrors;
-		model.addAttribute("workers", workers);
-		model.addAttribute("contests", contests);
-		model.addAttribute("submissions", submissions);
-		model.addAttribute("queue", submissionsQueue);
-		model.addAttribute("submissionsCE", submissionsCE);
-		model.addAttribute("submissionsEvaluating", submissionsEvaluating);
-		model.addAttribute("submissionsWaiting", submissionsWaiting);
-		model.addAttribute("submissionsErrors", submissionsErrors);
-		model.addAttribute("submissionsScored", submissionsScored);
-		
 		int contestId = getCurrentUserContestId();
 		addContestProblemsToModel(model, contestId);
 		
@@ -274,7 +250,7 @@ public class HtmlService implements RunTerminateListener {
 		Optional<Map<String,Object>> submission = repository.getSubmission(id);
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		if (!submission.isPresent() || !username.equals(submission.get().get("username"))) {
-			return "redirect:/user/error?msg=submission does not exists";
+			return "redirect:/user/error?msg=2";
 		}
 		
 		if (submission.isPresent()) {

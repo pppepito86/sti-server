@@ -33,6 +33,23 @@
     </section>
     <!-- /.content -->
 
+    <!-- Main content -->
+    <section class="content" th:if="${code}==2">
+      <div class="error-page">
+        <div class="error-content">
+          <h3><i class="fa fa-warning text-yellow"></i> Няма ме</h3>
+
+          <p>
+          	 Това което търсите не съществува  
+          </p>
+
+        </div>
+        <!-- /.error-content -->
+      </div>
+      <!-- /.error-page -->
+    </section>
+    <!-- /.content -->
+
   </div>
   <!-- /.content-wrapper -->
   <footer th:replace="fragments/footer :: footer"></footer>
