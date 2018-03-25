@@ -269,6 +269,11 @@ public class HtmlService implements RunTerminateListener {
 		List<Map<String,Object>> contests = repository.listContests();
 		model.addAttribute("contests", contests);
 		Optional<Map<String,Object>> submission = repository.getSubmission(id);
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		if (!submission.isPresent() || !username.equals(submission.get().get("username"))) {
+			return "redirect:/user/error?msg=submission does not exists";
+		}
+		
 		if (submission.isPresent()) {
 			String details = submission.get().get("details").toString();
 			if (details != null && !details.isEmpty()) {
