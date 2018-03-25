@@ -227,7 +227,7 @@ public class HtmlService implements RunTerminateListener {
 		if (!submission.isEmpty()) {
 			Timestamp lastSubmissionTime = (Timestamp) submission.get(0).get("upload_time");
 			if (lastSubmissionTime.getTime() + 60 * 1000 > submissionTime) {
-				return "redirect:/user/error?msg=2";
+				return "redirect:/user/error?msg=1";
 			}
 		}
 		if (submission.size() == 50) {
