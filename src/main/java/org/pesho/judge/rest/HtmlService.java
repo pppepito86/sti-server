@@ -22,6 +22,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -1015,6 +1016,7 @@ public class HtmlService implements RunTerminateListener {
     public ResponseEntity<?> downloadPdf(@PathVariable("number") int number) throws Exception {
     	HttpHeaders respHeaders = new HttpHeaders();
 	    respHeaders.setContentDispositionFormData("attachment", "problem" + number + ".pdf");
+//	    respHeaders.setContentType(org.springframework.http.MediaType.APPLICATION_PDF);
 	    
 	    int contestId = getCurrentUserContestId();
 	    
