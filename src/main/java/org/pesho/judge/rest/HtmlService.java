@@ -215,13 +215,15 @@ public class HtmlService implements RunTerminateListener {
 		
 		String fileName = problemName + ".cpp";
 		
-		Optional<Map<String,Object>> submission = repository.getUserLastSubmission(SecurityContextHolder.getContext().getAuthentication().getName());
-		if (submission.isPresent()) {
-			System.out.println("Previous submission exist");
-			Timestamp lastSubmissionTime = (Timestamp) submission.get().get("upload_time");
+		List<Map<String,Object>> submission = repository.getUserSubmissions(SecurityContextHolder.getContext().getAuthentication().getName());
+		if (!submission.isEmpty()) {
+			Timestamp lastSubmissionTime = (Timestamp) submission.get(0).get("upload_time");
 			if (lastSubmissionTime.getTime() + 60 * 1000 > submissionTime) {
-				return "redirect:/user/error?msg=\"submission not received\"";
+				return "redirect:/user/error?msg=2";
 			}
+		}
+		if (submission.size() == 50) {
+			return "redirect:/user/error?msg=3";
 		}
 		
 		Map<String, Object> contestMap = repository.getContest(contestId).get();

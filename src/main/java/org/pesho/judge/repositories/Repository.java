@@ -223,9 +223,9 @@ public class Repository {
     	return template.queryForList("select contest from users where name=?", username).stream().map(x -> x.get("contest").toString()).findFirst();
     }
     
-    public Optional<Map<String, Object>> getUserLastSubmission(String name) {
+    public List<Map<String, Object>> getUserSubmissions(String name) {
     	return template.queryForList("SELECT upload_time from submissions" +
-				"  where username=? order by upload_time desc", name).stream().findFirst();
+				"  where username=? order by upload_time desc", name);
     }
 
 	public void updateContest(int id, Timestamp start, Timestamp end) {
