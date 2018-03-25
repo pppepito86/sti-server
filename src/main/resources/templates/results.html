@@ -43,6 +43,7 @@
                 <tr>
                   <th>Contest</th>
                   <th>User</th>
+                  <th>Name</th>
                   <th>City</th>
                   <th th:each="problem: ${problems}" th:text="${problem}"></th>
                   <th>Total</th>
@@ -52,6 +53,7 @@
                   <!-- td><a th:href="@{'/admin/submissions/'+${submission.get('id')}}" th:text="${submission.get('id')}"></a></td-->
                   <td th:text="${totals.get(result.key).get('contest_name')}"></td>
                   <td th:text="${totals.get(result.key).get('username')}"></td>
+                  <td th:text="${totals.get(result.key).get('display_name')}"></td>
                   <td th:text="${totals.get(result.key).get('city')}"></td>
                   <td th:each="task: ${result.value}" th:text="${task.value.get('points')}"></td>
                   <td th:text="${totals.get(result.key).get('total')}"></td>
