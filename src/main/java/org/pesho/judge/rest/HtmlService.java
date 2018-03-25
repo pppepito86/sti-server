@@ -133,6 +133,13 @@ public class HtmlService implements RunTerminateListener {
 		
     	return "user/dashboard";
     }
+	
+	private void addIsStarted(Model model, int contestId) {
+		Map<String, Object> contest = repository.getContest(contestId).get();
+		Timestamp startTime = (Timestamp) contest.get("start_time");
+		boolean isStarted = System.currentTimeMillis() >= startTime.getTime();
+		model.addAttribute("isStarted", isStarted);
+	}
 
 	private void addTimeLeft(Model model, int contestId) {
 		Map<String, Object> contest = repository.getContest(contestId).get();
@@ -187,6 +194,7 @@ public class HtmlService implements RunTerminateListener {
 		
 		addContestProblemsToModel(model, contestId);
 		
+		addIsStarted(model, contestId);
 		addTimeLeft(model, contestId);
 		
     	return "user/problem";
