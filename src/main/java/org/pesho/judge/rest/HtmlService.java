@@ -142,7 +142,9 @@ public class HtmlService implements RunTerminateListener {
 	}
 	
 	@GetMapping("/user/error")
-	public String userError(Model model) {
+	public String userError(
+			@RequestParam("msg") String code,
+			Model model) {
 		List<Map<String,Object>> workers = repository.listWorkers();
 		List<Map<String,Object>> contests = repository.listContests();
 		List<Map<String,Object>> submissions = repository.listDetailedSubmissions();
@@ -171,6 +173,7 @@ public class HtmlService implements RunTerminateListener {
 		addContestProblemsToModel(model, contestId);
 		
 		addTimeLeft(model, contestId);
+		model.addAttribute("code", code);
 		
 		return "user/error";
 	}
