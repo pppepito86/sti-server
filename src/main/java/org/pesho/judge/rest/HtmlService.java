@@ -471,6 +471,11 @@ public class HtmlService implements RunTerminateListener {
 	
 	@GetMapping("/admin/results/{contest}")
 	public String adminContestResultsPage(@PathVariable("contest") String contest, Model model) {
+		List<Map<String,Object>> users = repository.listUsers();
+		HashMap<String, String> names = new HashMap<>();
+		for (Map<String, Object> user: users) {
+			names.put(user.get("name").toString(), user.get("display_name").toString());
+		}
 		List<Map<String,Object>> contests = repository.listContests();
 		List<Map<String,Object>> submissions = repository.listDetailedSubmissions().stream()
 				.filter(x -> !"author".equalsIgnoreCase(x.get("city").toString()))
@@ -488,6 +493,7 @@ public class HtmlService implements RunTerminateListener {
 			info.put("username", submission.get("username").toString().toUpperCase());
 			info.put("city", submission.get("city").toString().toUpperCase());
 			info.put("contest_name", submission.get("contest_name").toString().toUpperCase());
+			info.put("display_name", names.getOrDefault(submission.get("username").toString().toUpperCase(), "N/A"));
 			totals.put(key, info);
 		}
 		Map<String, List<Map<String, Object>>> usersSubmissions = submissions.stream().collect(Collectors.groupingBy(s -> s.get("key").toString()));
