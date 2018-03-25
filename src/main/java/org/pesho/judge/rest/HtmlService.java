@@ -48,6 +48,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -1055,5 +1056,15 @@ public class HtmlService implements RunTerminateListener {
 		}
 		return null;
 	}
+	
+    @GetMapping("/")
+    public String index() {
+    	Object adminRole = new SimpleGrantedAuthority("ROLE_ADMIN");
+		boolean isAdmin = SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(adminRole);
+    	if (isAdmin) {
+    		return "redirect:/admin";
+    	}
+    	return "redirect:/user/problem/1";
+    }
 	
 }
