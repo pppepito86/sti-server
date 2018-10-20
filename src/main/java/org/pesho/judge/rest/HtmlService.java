@@ -266,7 +266,7 @@ public class HtmlService implements RunTerminateListener {
 		
 	}
 
-	@GetMapping("/user/problem/{problem_number}/submissions/{submission_id}")
+	@GetMapping("/user/problem/{problem_number}/submissions/{submission_number}")
 	public String userSubmissionPage(@PathVariable("problem_number") int problemNumber,
 			@PathVariable("submission_number") int submissionNumber,
 			Model model) throws Exception {
