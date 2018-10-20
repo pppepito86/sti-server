@@ -71,6 +71,23 @@
     <section class="content" th:if="${code}==4">
       <div class="error-page">
         <div class="error-content">
+          <h3><i class="fa fa-warning text-yellow"></i>Не сте избрали файл</h3>
+
+          <p>
+          	 За да качите решение моля изберете ".cpp" файл.
+          </p>
+
+        </div>
+        <!-- /.error-content -->
+      </div>
+      <!-- /.error-page -->
+    </section>
+    <!-- /.content -->
+
+    <!-- Main content -->
+    <section class="content" th:if="${code}==5">
+      <div class="error-page">
+        <div class="error-content">
           <h3><i class="fa fa-warning text-yellow"></i>Грешен файл</h3>
 
           <p>
