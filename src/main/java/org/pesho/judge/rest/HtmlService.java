@@ -273,6 +273,11 @@ public class HtmlService implements RunTerminateListener {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		List<Map<String, Object>> submissions = 
 				repository.listUserSubmissionsForProblem(username, problemNumber);
+		
+		if (submissionNumber < 0 || submissionNumber >= submissions.size()) {
+			return "redirect:/user/error?msg=2";
+		}
+		
 		Map<String, Object> submission = submissions.get(submissions.size() - submissionNumber);
 		return showUserSubmissionPage((int) submission.get("id"), model);
 	}
