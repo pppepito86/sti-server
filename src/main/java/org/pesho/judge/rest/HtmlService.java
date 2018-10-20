@@ -212,6 +212,10 @@ public class HtmlService implements RunTerminateListener {
 			@RequestParam("problemNumber") Integer problemNumber,
 			Model model) throws Exception {
 		
+		if (!file.getOriginalFilename().toLowerCase().endsWith(".cpp")) {
+			return "redirect:/user/error?msg=4";
+		}
+		
 		long submissionTime = System.currentTimeMillis();
 		
 		String city = "Sofia";
