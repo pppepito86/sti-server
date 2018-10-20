@@ -39,7 +39,7 @@ mvn install -f /vagrant/noi/pom.xml
 #c++ documentation
 mkdir -p /vagrant/noi/src/main/resources/static/docs
 wget https://github.com/PeterFeicht/cppreference-doc/releases/download/v20180923/html-book-20180923.zip -O /vagrant/noi/src/main/resources/static/docs/html_book_20180311.zip
-unzip /vagrant/noi/src/main/resources/static/docs/html_book_20180311.zip
+unzip /vagrant/noi/src/main/resources/static/docs/html_book_20180311.zip -d /vagrant/noi/src/main/resources/static/docs/
 mv /vagrant/noi/src/main/resources/static/docs/reference/* /vagrant/noi/src/main/resources/static/docs
 
 mvn spring-boot:run -f /vagrant/noi/pom.xml >/vagrant/noi/stdout 2> /vagrant/noi/stderr &
