@@ -190,6 +190,11 @@ public class HtmlService implements RunTerminateListener {
 		List<Map<String, Object>> submissions = 
 				repository.listUserSubmissionsForProblem(username, problemNumber);
 		
+		int number = submissions.size();
+		for (Map<String, Object> submission: submissions) {
+			submission.put("number", number--);
+		}
+		
 		model.addAttribute("submissions", submissions);
 		
 		addContestProblemsToModel(model, contestId);

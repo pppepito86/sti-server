@@ -101,7 +101,8 @@ public class Repository {
 		return template.queryForList("SELECT submissions.id,submissions.verdict,submissions.points from submissions" +
 				" inner join users on users.name=? and users.name=submissions.username" + 
 				" inner join contests on contests.name=users.contest" + 
-				" inner join problems on problems.number=? and problems.contest_id=contests.id and problems.id=submissions.problem_id", 
+				" inner join problems on problems.number=? and problems.contest_id=contests.id and problems.id=submissions.problem_id" +
+				" order by submissions.upload_time desc",
 				username, problemNumber);
 	}
 	

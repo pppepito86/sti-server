@@ -111,7 +111,7 @@
 			            </thead>
 		                <tbody>
 			                <tr th:each="submission: ${submissions}">
-			                  <td><a th:href="@{'/user/submissions/'+${submission.get('id')}}" th:text="${submission.get('id')}"></a></td>
+			                  <td><a th:href="@{'/user/submissions/'+${submission.get('id')}}" th:text="${submission.get('number')}"></a></td>
 			                  <td th:text="${submission.get('verdict')}"></td>
 			                  <td th:text="${submission.get('points')}"></td>
 			                </tr>
