@@ -89,7 +89,13 @@
       </div>
       <div class="row">  
 	     <div class="col-md-12">
-	        <div class="box">
+	     	<div th:if="${submissions.size() == 0}" class="box">
+	            <div class="box-header with-border">
+	              <h3 class="box-title">Няма предадени решения</h3>
+	            </div>
+	         </div>
+	            
+	        <div th:if="${submissions.size() > 0}" class="box">
 	            <div class="box-header with-border">
 	              <h3 class="box-title">Предадени решения</h3>
 	            </div>
