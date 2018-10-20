@@ -4,7 +4,7 @@ Installation:
 ```
 wget -qO- https://raw.githubusercontent.com/pppepito86/noi/master/install/provision.sh | bash -s dev
 ```
-To start/stop workers add your cretentials:
+To start/stop workers add your aws cretentials
 ~/.aws/credentials should look like
 ```
 [default]
