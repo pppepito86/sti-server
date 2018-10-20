@@ -265,10 +265,25 @@ public class HtmlService implements RunTerminateListener {
 		}
 		
 	}
+
+	@GetMapping("/user/problem/{problem_number}/submissions/{submission_id}")
+	public String userSubmissionPage(@PathVariable("problem_number") int problemNumber,
+			@PathVariable("submission_number") int submissionNumber,
+			Model model) throws Exception {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		List<Map<String, Object>> submissions = 
+				repository.listUserSubmissionsForProblem(username, problemNumber);
+		Map<String, Object> submission = submissions.get(submissions.size() - submissionNumber);
+		return showUserSubmissionPage((int) submission.get("id"), model);
+	}
 	
 	@GetMapping("/user/submissions/{submission_id}")
 	public String userSubmissionPage(@PathVariable("submission_id") int id,
 			Model model) throws Exception {
+		return showUserSubmissionPage(id, model);
+	}
+	
+	public String showUserSubmissionPage(int id, Model model) throws Exception {
 		List<Map<String,Object>> contests = repository.listContests();
 		model.addAttribute("contests", contests);
 		Optional<Map<String,Object>> submission = repository.getSubmission(id);
