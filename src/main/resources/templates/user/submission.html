@@ -14,8 +14,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Submission
-        <small>details</small>
+        Решение
+        <small>детайли</small>
       </h1>
     </section>
 
@@ -36,12 +36,12 @@
              <table style="table-layout:fixed; word-wrap: break-word;"  class="table table-bordered">
                 <tr>
                   <th>Id</th>
-                  <th>User</th>
-                  <th>City</th>
-                  <th>Contest</th>
-                  <th>Task</th>
-                  <th>Score</th>
-                  <th style="width: 50%">Status</th>
+                  <th>Потребител</th>
+                  <th>Град</th>
+                  <th>Група</th>
+                  <th>Задача</th>
+                  <th>Точки</th>
+                  <th style="width: 50%">Статус</th>
                 </tr>
                 <tr>
                   <td th:text="${submission.get('id')}"></td>
@@ -57,9 +57,9 @@
             <div th:if="${tests} != null" class="box-body">
               <table style="table-layout:fixed; word-wrap: break-word;" th:if="${!tests.isEmpty()}" class="table table-bordered table-striped">
                 <tr>
-                  <th>Name</th>
-                  <th>Result</th>
-                  <th>Time</th>
+                  <th>Стъпка</th>
+                  <th>Резултат</th>
+                  <th>Време</th>
                 </tr>
                 <tr th:each="test: ${tests}">
                   <td th:text="${test.key}"></td>
@@ -69,13 +69,13 @@
               </table>
               <table th:if="${tests.isEmpty()}" class="table table-bordered">
                 <tr>
-                  <th>Name</th>
-                  <th>Result</th>
-                  <th>Reason</th>
+                  <th>Стъпка</th>
+                  <th>Резултат</th>
+                  <th>Причина</th>
                 </tr>
                 <tr>
-                  <td>Compile</td>
-                  <td>Failed</td>
+                  <td>Compilation</td>
+                  <td>CE</td>
                   <td th:text="${compile.getReason()}"></td>
                 </tr>
               </table>
