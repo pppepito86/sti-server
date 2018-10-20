@@ -244,12 +244,13 @@ public class HtmlService implements RunTerminateListener {
 		if (submissionId != 0) {
 			File sourceFile = getFile("submissions", String.valueOf(submissionId), fileName);
 			FileUtils.copyInputStreamToFile(file.getInputStream(), sourceFile);
+			return "redirect:/user/submissions/"+submissionId;
 		} else {
 			String details = String.format("%s_%s_%s_%s", city, contest, username, problemName);
 			repository.addLog("submission", "problem not found for " + details, "");
+			return "redirect:/user/problem/"+problemNumber;
 		}
 		
-		return "redirect:/user/problem/"+problemNumber;
 	}
 	
 	@GetMapping("/user/submissions/{submission_id}")
