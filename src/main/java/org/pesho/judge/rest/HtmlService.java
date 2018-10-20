@@ -855,7 +855,7 @@ public class HtmlService implements RunTerminateListener {
 	    	for (Map<String, Object> user : users) {
 	    		Object[] values = Arrays
 	    				.stream(dbColumns)
-	    				.map(column -> user.get(column).toString())
+	    				.map(column -> user.get(column))
 	    				.toArray();
 	    		csvPrinter.printRecord(values);
 	    	}
@@ -1019,10 +1019,14 @@ public class HtmlService implements RunTerminateListener {
     }
 
     @GetMapping("/problems/{number}")
-    public ResponseEntity<?> downloadPdf(@PathVariable("number") int number) throws Exception {
+    public ResponseEntity<?> downloadPdf(@PathVariable("number") int number,
+			@RequestParam(value = "download", defaultValue = "false") Boolean download) throws Exception {
     	HttpHeaders respHeaders = new HttpHeaders();
-	    respHeaders.setContentDispositionFormData("attachment", "problem" + number + ".pdf");
-//	    respHeaders.setContentType(org.springframework.http.MediaType.APPLICATION_PDF);
+    	if (download) {
+    		respHeaders.setContentDispositionFormData("attachment", "problem" + number + ".pdf");
+    	} else {
+    		respHeaders.setContentType(org.springframework.http.MediaType.APPLICATION_PDF);
+    	}
 	    
 	    int contestId = getCurrentUserContestId();
 	    
