@@ -22,7 +22,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -215,8 +214,21 @@ public class HtmlService implements RunTerminateListener {
 	}
 	
 	@PostMapping("/user/submit-code")
+	public String submitFile(@RequestParam("code") String code, 
+			@RequestParam("problemNumber") Integer problemNumber,
+			Model model) throws Exception {
+		if (code.trim().isEmpty()) {
+			return "redirect:/user/error?msg=7";
+		}
+		
+		return addSubmission(null, code, problemNumber);
+		
+	}
+	
+	
+	@PostMapping("/user/submit-file")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public String submitCode(@RequestPart("file") MultipartFile file, 
+	public String submitFile(@RequestPart("file") MultipartFile file, 
 			@RequestParam("problemNumber") Integer problemNumber,
 			Model model) throws Exception {
 		
@@ -232,6 +244,10 @@ public class HtmlService implements RunTerminateListener {
 			return "redirect:/user/error?msg=5";
 		}
 		
+		return addSubmission(file, null, problemNumber);
+	}
+	
+	public String addSubmission(MultipartFile file, String code, Integer problemNumber) throws IOException {
 		long submissionTime = System.currentTimeMillis();
 		
 		String city = "Sofia";
@@ -263,7 +279,11 @@ public class HtmlService implements RunTerminateListener {
 		int submissionId = repository.addSubmission(city, username, contest, problemName, fileName);
 		if (submissionId != 0) {
 			File sourceFile = getFile("submissions", String.valueOf(submissionId), fileName);
-			FileUtils.copyInputStreamToFile(file.getInputStream(), sourceFile);
+			if (file != null) {
+				FileUtils.copyInputStreamToFile(file.getInputStream(), sourceFile);
+			} else {
+				FileUtils.writeStringToFile(sourceFile, code);
+			}
 			int submissionNumber = repository.userSubmissionsNumberForProblem(username, problemNumber, submissionId);
 			return "redirect:/user/problem/" + problemNumber + "/submissions/"+submissionNumber;
 		} else {

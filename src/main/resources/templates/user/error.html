@@ -118,6 +118,23 @@
     </section>
     <!-- /.content -->
 
+    <!-- Main content -->
+    <section class="content" th:if="${code}==7">
+      <div class="error-page">
+        <div class="error-content">
+          <h3><i class="fa fa-warning text-yellow"></i>Няма код</h3>
+
+          <p>
+          	 Трябва да сложите кода на решението преди да го пратите.
+          </p>
+
+        </div>
+        <!-- /.error-content -->
+      </div>
+      <!-- /.error-page -->
+    </section>
+    <!-- /.content -->
+
 
   </div>
   <!-- /.content-wrapper -->

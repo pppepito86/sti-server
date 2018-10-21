@@ -71,7 +71,7 @@
 			  
 	            <!-- /.box-header -->
 	            <div class="box-body">
-				    <form role="form" action="http://practice.sofiacode.com/user/submit-code" method="post" enctype="multipart/form-data">
+				    <form role="form" action="http://practice.sofiacode.com/user/submit-file" method="post" enctype="multipart/form-data">
 		              <div class="box-body">
 		              	
 		                <input type="hidden" class="form-control" name="problemNumber" id="problemNumber" value="1" />
@@ -96,13 +96,13 @@
 			  
 			          <!-- /.box-header -->
 	            <div class="box-body">
-				    <form role="form" action="http://practice.sofiacode.com/user/submit-code" method="post" enctype="multipart/form-data">
+				    <form role="form" action="http://practice.sofiacode.com/user/submit-code" method="post" >
 		              <div class="box-body">
 		              	
 		                <input type="hidden" class="form-control" name="problemNumber" id="problemNumber" value="1" />
 		                  	
 		                <div class="form-group">
-		                  <textarea placeholder="Поставете вашият код"
+		                  <textarea name="code" placeholder="Поставете вашият код" maxlength="65536"
                             style="width: 100%; height: 80px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
 
 		                </div>
