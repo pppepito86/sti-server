@@ -128,8 +128,6 @@ public class HtmlService implements RunTerminateListener {
 		
 		int contestId = getCurrentUserContestId();
 		addContestProblemsToModel(model, contestId);
-
-		addTimeLeft(model, contestId);
 		
     	return "user/dashboard";
     }
@@ -212,6 +210,8 @@ public class HtmlService implements RunTerminateListener {
 		model.addAttribute("contestProblems", contestProblems);
 		model.addAttribute("contestName", getCurrentUserContest());
 		model.addAttribute("problemNumber", 0);
+		
+		addTimeLeft(model, contestId);
 	}
 	
 	@PostMapping("/user/submit-code")

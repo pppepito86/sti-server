@@ -12,8 +12,7 @@ function showTimeLeft() {
     
     // Find the distance between now an the count down date
     var distance = countDownDate - now;
-    if (distance < 0) {
-        clearInterval(x);
+    if (distance <= 0) {
         document.getElementById("timer").innerHTML = "END";
         return;
     }
