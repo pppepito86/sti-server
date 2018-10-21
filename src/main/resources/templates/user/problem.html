@@ -146,6 +146,7 @@
 		                <thead>
 			                <tr>
 			                  <th style="width: 10px">#</th>
+							  <th>Час</th>
 			                  <th>Детайли</th>
 			                  <th>Точки</th>
 			                </tr>
@@ -153,6 +154,7 @@
 		                <tbody>
 			                <tr th:each="submission: ${submissions}">
 			                  <td><a th:href="@{'/user/problem/'+${problemNumber}+'/submissions/'+${submission.get('number')}}" th:text="${submission.get('number')}"></a></td>
+			                  <td th:text="${#dates.format(submission.get('upload_time'), 'dd.MM.yy HH:mm:ss')}"></td>
 			                  <td th:text="${submission.get('verdict')}"></td>
 			                  <td th:text="${submission.get('points')}"></td>
 			                </tr>
