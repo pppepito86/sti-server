@@ -149,9 +149,9 @@ public class HtmlService implements RunTerminateListener {
 			model.addAttribute("timeToSubmit", 0);
 		} else {
 			Timestamp lastSubmissionTime = (Timestamp) submission.get(0).get("upload_time");
-			long diff = System.currentTimeMillis() - lastSubmissionTime.getTime();
-			if (diff >= 60*1000) model.addAttribute("timeToSubmit", 0);
-			else model.addAttribute("timeToSubmit", diff);
+			long diff = lastSubmissionTime.getTime() + 60 * 1000 - System.currentTimeMillis();
+			if (diff > 0) model.addAttribute("timeToSubmit", diff);
+			else model.addAttribute("timeToSubmit", 0);
 		}
 	}
 	

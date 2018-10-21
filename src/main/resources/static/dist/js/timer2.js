@@ -1,4 +1,4 @@
-// Update the count down every 1 second
+//Update the count down every 1 second
 function showTimeToSubmit() {
 
     // Get todays date and time
