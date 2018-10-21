@@ -108,12 +108,12 @@ public class Repository {
 	
 	public int userSubmissionsNumberForProblem(String username, int problemNumber, int submissionId) {
 		return template.queryForList("SELECT submissions.id from submissions" +
-				" where submissions.id <= ?" +
 				" inner join users on users.name=? and users.name=submissions.username" + 
 				" inner join contests on contests.name=users.contest" + 
 				" inner join problems on problems.number=? and problems.contest_id=contests.id and problems.id=submissions.problem_id" +
+				" where submissions.id <= ?" +
 				" order by submissions.upload_time desc",
-				submissionId, username, problemNumber).size();
+				username, problemNumber, submissionId).size();
 	}
 	
 	public synchronized int addSubmission(String city, String username, String contest, String problemName, String file) {
