@@ -274,7 +274,7 @@ public class HtmlService implements RunTerminateListener {
 				return "redirect:/user/error?msg=1";
 			}
 		}
-		if (submission.size() == 50) {
+		if (submission.size() >= 50) {
 			return "redirect:/user/error?msg=3";
 		}
 		
