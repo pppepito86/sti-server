@@ -209,6 +209,7 @@ public class HtmlService implements RunTerminateListener {
 		List<Map<String, Object>> contestProblems = 
 				repository.listContestProblems(contestId);
 		model.addAttribute("contestProblems", contestProblems);
+		model.addAttribute("contestName", getCurrentUserContest());
 	}
 	
 	@PostMapping("/user/submit-code")
