@@ -57,23 +57,28 @@
 		</div>
 		
 		<div class="col-md-6">
-			<div class="box" th:if="${timeLeft} > 0">
-	            <div class="box-header with-border">
-	              <h3 class="box-title">Предай решение</h3>
-	            </div>
+		
+				
+		          <div th:if="${timeLeft} > 0" class="nav-tabs-custom" style="border-top: 3px solid #d2d6de; border-bottom: 1px solid #f4f4f4;">
+            <!-- Tabs within a box -->
+            <ul class="nav nav-tabs pull-right">
+              <li class="active" style="margin-top:-3px"><a href="#revenue-chart" data-toggle="tab">Файл</a></li>
+              <li style="margin-top:-3px"><a href="#sales-chart" data-toggle="tab">Код</a></li>
+              <li class="pull-left header" style="font-size: 18px;">Предай решение</li>
+            </ul>
+            <div class="tab-content no-padding">
+              <div class="chart tab-pane active" id="revenue-chart" style="position: relative;">
+			  
 	            <!-- /.box-header -->
 	            <div class="box-body">
-				    <form role="form" action="/user/submit-code" method="post" enctype="multipart/form-data">
+				    <form role="form" action="http://practice.sofiacode.com/user/submit-code" method="post" enctype="multipart/form-data">
 		              <div class="box-body">
 		              	
-		                <input type="hidden" 
-		                  	class="form-control" 
-		                  	name="problemNumber" id="problemNumber" 
-		                  	th:value="${problemNumber}" />
+		                <input type="hidden" class="form-control" name="problemNumber" id="problemNumber" value="1">
 		                  	
 		                <div class="form-group">
 		                  <label for="file">Файл</label>
-		                  <input type="file" name="file" id="file" accept=".cpp"/>
+		                  <input type="file" name="file" id="file" accept=".cpp">
 		                </div>
 		              </div>
 		              <!-- /.box-body -->
@@ -84,8 +89,41 @@
 		            </form> 
 	            </div>
 	            <!-- /.box-body -->
-	        </div>
-	      </div>
+	        
+			
+			  </div>
+              <div class="chart tab-pane" id="sales-chart" style="position: relative; height: auto;">
+			  
+			          <!-- /.box-header -->
+	            <div class="box-body">
+				    <form role="form" action="http://practice.sofiacode.com/user/submit-code" method="post" enctype="multipart/form-data">
+		              <div class="box-body">
+		              	
+		                <input type="hidden" class="form-control" name="problemNumber" id="problemNumber" value="1">
+		                  	
+		                <div class="form-group">
+		                  <textarea placeholder="Поставете вашият код"
+                            style="width: 100%; height: 80px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
+
+		                </div>
+		              </div>
+		              <!-- /.box-body -->
+		
+		              <div class="box-footer">
+		                <button type="submit" class="btn btn-primary">Предай</button>
+		              </div>
+		            </form> 
+	            </div>
+	            <!-- /.box-body -->
+	    
+			  
+			  </div>
+            </div>
+          </div>
+          <!-- /.nav-tabs-custom -->
+		
+		
+		  </div>
       </div>
       <div class="row">  
 	     <div class="col-md-12">
