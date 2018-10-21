@@ -13,10 +13,11 @@ function showTimeToSubmit() {
     }
     
     var seconds = Math.floor(distance / 1000) + 1;
-    
+    var text = "след " + seconds + " секунд"
+    if (seconds != 1) text = text + "и"
     // Output the result in an element with id="demo"
-    document.getElementById("timer2").innerHTML =  seconds;
-    document.getElementById("timer3").innerHTML =  seconds;
+    document.getElementById("timetosubmit2").innerHTML =  text;
+    document.getElementById("timetosubmit3").innerHTML =  text;
     
     setTimeout(showTimeToSubmit, 1000);
 };
