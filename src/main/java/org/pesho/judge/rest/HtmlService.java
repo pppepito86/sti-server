@@ -220,6 +220,10 @@ public class HtmlService implements RunTerminateListener {
 			@RequestParam("problemNumber") Integer problemNumber,
 			Model model) throws Exception {
 		
+		if (file.getSize() > 64 * 1024) {
+			return "redirect:/user/error?msg=4";
+		}
+		
 		if (file.isEmpty()) {
 			return "redirect:/user/error?msg=4";
 		}

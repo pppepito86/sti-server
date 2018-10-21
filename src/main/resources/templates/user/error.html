@@ -101,6 +101,24 @@
     </section>
     <!-- /.content -->
 
+    <!-- Main content -->
+    <section class="content" th:if="${code}==6">
+      <div class="error-page">
+        <div class="error-content">
+          <h3><i class="fa fa-warning text-yellow"></i>Голям файл</h3>
+
+          <p>
+          	 Файлът, който изпращате е много голям. Максималният позволен размер е 64KB.
+          </p>
+
+        </div>
+        <!-- /.error-content -->
+      </div>
+      <!-- /.error-page -->
+    </section>
+    <!-- /.content -->
+
+
   </div>
   <!-- /.content-wrapper -->
   <footer th:replace="fragments/footer :: footer"></footer>
