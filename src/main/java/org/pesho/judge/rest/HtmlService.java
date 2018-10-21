@@ -275,7 +275,7 @@ public class HtmlService implements RunTerminateListener {
 		List<Map<String, Object>> submissions = 
 				repository.listUserSubmissionsForProblem(username, problemNumber);
 		
-		if (submissionNumber < 0 || submissionNumber >= submissions.size()) {
+		if (submissionNumber < 1 || submissionNumber > submissions.size()) {
 			return "redirect:/user/error?msg=2";
 		}
 		
