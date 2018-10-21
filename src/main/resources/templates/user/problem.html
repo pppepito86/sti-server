@@ -74,7 +74,8 @@
 				    <form role="form" action="http://practice.sofiacode.com/user/submit-file" method="post" enctype="multipart/form-data">
 		              <div class="box-body">
 		              	
-		                <input type="hidden" class="form-control" name="problemNumber" id="problemNumber" value="1" />
+		               	<input type="hidden" class="form-control" name="problemNumber" id="problemNumber" th:value="${problemNumber}" />
+
 		                  	
 		                <div class="form-group">
 		                  <label for="file">Файл</label>
@@ -99,7 +100,7 @@
 				    <form role="form" action="http://practice.sofiacode.com/user/submit-code" method="post" >
 		              <div class="box-body">
 		              	
-		                <input type="hidden" class="form-control" name="problemNumber" id="problemNumber" value="1" />
+		                <input type="hidden" class="form-control" name="problemNumber" id="problemNumber" th:value="${problemNumber}" />
 		                  	
 		                <div class="form-group">
 		                  <textarea name="code" placeholder="Поставете вашият код" maxlength="65536"
