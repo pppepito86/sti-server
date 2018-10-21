@@ -40,13 +40,14 @@
       /*<![CDATA[*/
 	    
          var msTillEnd = /*[[${timeLeft}]]*/;
+         var msTillSubmit = /*[[${timeToSubmit}]]*/;
 
        /*]]>*/
 	</script> 
     
     <script> 
-     var msTillEnd2 = 2*60*1000;
-     var countDownDate = new Date().getTime() + msTillEnd; 
+     var countDownDate = new Date().getTime() + msTillEnd;
+     var submitDate = new Date().getTime() + msTillSubmit;
     </script>
     <script th:src="@{/dist/js/timer.js}"></script>
     	

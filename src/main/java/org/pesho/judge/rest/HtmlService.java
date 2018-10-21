@@ -143,6 +143,16 @@ public class HtmlService implements RunTerminateListener {
 		Timestamp endTime = (Timestamp) contest.get("end_time");
 		long timeLeft = endTime.getTime() - System.currentTimeMillis();
 		model.addAttribute("timeLeft", timeLeft);
+
+		List<Map<String,Object>> submission = repository.getUserSubmissions(SecurityContextHolder.getContext().getAuthentication().getName());
+		if (submission.isEmpty()) {
+			model.addAttribute("timeToSubmit", 0);
+		} else {
+			Timestamp lastSubmissionTime = (Timestamp) submission.get(0).get("upload_time");
+			long diff = System.currentTimeMillis() - lastSubmissionTime.getTime();
+			if (diff >= 60*1000) model.addAttribute("timeToSubmit", 0);
+			else model.addAttribute("timeToSubmit", diff);
+		}
 	}
 	
 	@GetMapping("/user/error")
@@ -222,9 +232,7 @@ public class HtmlService implements RunTerminateListener {
 		}
 		
 		return addSubmission(null, code, problemNumber);
-		
 	}
-	
 	
 	@PostMapping("/user/submit-file")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
