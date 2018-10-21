@@ -23,9 +23,11 @@ function showTimeLeft() {
     var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor((distance % (1000 * 60)) / 1000);
     
+    var timeString = hours.pad(2) + ":" + minutes.pad(2) + ":" + seconds.pad(2);
+    if (days > 0) timeString = days + "д " + timeString;
+    
     // Output the result in an element with id="demo"
-    document.getElementById("timer").innerHTML =  hours.pad(2) + ":"
-    + minutes.pad(2) + ":" + seconds.pad(2);
+    document.getElementById("timer").innerHTML =  timeString;
     
     setTimeout(showTimeLeft, 1000);
 };
