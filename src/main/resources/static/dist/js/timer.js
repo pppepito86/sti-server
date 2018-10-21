@@ -5,13 +5,18 @@ Number.prototype.pad = function(size) {
 }
 
 // Update the count down every 1 second
-var x = setInterval(function() {
+function showTimeLeft() {
 
     // Get todays date and time
     var now = new Date().getTime();
     
     // Find the distance between now an the count down date
     var distance = countDownDate - now;
+    if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("timer").innerHTML = "END";
+        return;
+    }
     
     // Time calculations for days, hours, minutes and seconds
     var days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -23,8 +28,6 @@ var x = setInterval(function() {
     document.getElementById("timer").innerHTML =  hours.pad(2) + ":"
     + minutes.pad(2) + ":" + seconds.pad(2);
     
-    if (distance < 0) {
-        clearInterval(x);
-        document.getElementById("timer").innerHTML = "END";
-    }
-}, 1000);
+    setTimeout(showTimeLeft, 1000);
+};
+showTimeLeft();
