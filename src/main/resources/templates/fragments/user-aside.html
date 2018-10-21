@@ -9,7 +9,10 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">ЗАДАЧИ</li>
         <li th:each="problem: ${contestProblems}">
-          <a th:href="@{'/user/problem/' + ${problem.get('number')}}">
+          <a th:if="${problemNumber!=(int)problem.get('number')}" th:href="@{'/user/problem/' + ${problem.get('number')}}">
+            <i class="fa fa-files-o"></i> <span th:text="${problem.get('name')}"> </span>
+          </a>
+          <a th:if="${problemNumber==(int)problem.get('number')}" th:href="@{'/user/problem/' + ${problem.get('number')}}" style="background-color:#445566;">
             <i class="fa fa-files-o"></i> <span th:text="${problem.get('name')}"> </span>
           </a>
         </li>

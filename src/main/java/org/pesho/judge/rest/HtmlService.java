@@ -198,6 +198,7 @@ public class HtmlService implements RunTerminateListener {
 		model.addAttribute("submissions", submissions);
 		
 		addContestProblemsToModel(model, contestId);
+		model.addAttribute("problemNumber", problemNumber);
 		
 		addIsStarted(model, contestId);
 		addTimeLeft(model, contestId);
@@ -210,6 +211,7 @@ public class HtmlService implements RunTerminateListener {
 				repository.listContestProblems(contestId);
 		model.addAttribute("contestProblems", contestProblems);
 		model.addAttribute("contestName", getCurrentUserContest());
+		model.addAttribute("problemNumber", 0);
 	}
 	
 	@PostMapping("/user/submit-code")
