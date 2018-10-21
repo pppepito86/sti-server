@@ -26,8 +26,8 @@
 	            </div>
 	            <!-- /.box-header -->
 	            <div class="box-body">
-		            <a th:href="@{'/problems/'+${problemNumber}}"  target="_blank" class="btn btn-info">Отвори</a>
-		     		<a th:href="@{'/problems/'+${problemNumber}}" target="_blank" class="btn btn-info">Изтегли</a>
+		            <a th:href="@{'/problems/'+${problemNumber}+'?download=false'}"  target="_blank" class="btn btn-info">Отвори</a>
+		     		<a th:href="@{'/problems/'+${problemNumber}+'?download=true'}" target="_blank" class="btn btn-info">Изтегли</a>
 	            </div>
 	            <!-- /.box-body -->
 	        </div>
