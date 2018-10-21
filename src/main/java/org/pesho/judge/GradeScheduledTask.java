@@ -67,7 +67,7 @@ public class GradeScheduledTask {
 			String details = "";
 			int points = 0;
 			try {
-				if (sourceFile.length() > 50 * 1024) {
+				if (sourceFile.length() > 64 * 1024) {
 					result = "LF";
 				} else {
 					SubmissionScore score = worker.get().grade(maybeProblem.get(), submission, workDir, sourceFile);
