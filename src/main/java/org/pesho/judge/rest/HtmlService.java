@@ -201,7 +201,7 @@ public class HtmlService implements RunTerminateListener {
 		for (Map<String, Object> submission: submissions) {
 			submission.put("number", number--);
 		}
-		
+
 		model.addAttribute("submissions", submissions);
 		
 		addContestProblemsToModel(model, contestId);

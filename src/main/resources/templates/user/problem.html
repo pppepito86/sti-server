@@ -71,7 +71,7 @@
 			  
 	            <!-- /.box-header -->
 	            <div class="box-body">
-				    <form role="form" action="http://practice.sofiacode.com/user/submit-file" method="post" enctype="multipart/form-data">
+				    <form role="form" th:action="@{'/user/submit-file'}" method="post" enctype="multipart/form-data">
 		              <div class="box-body">
 		              	
 		               	<input type="hidden" class="form-control" name="problemNumber" id="problemNumber" th:value="${problemNumber}" />
@@ -97,7 +97,7 @@
 			  
 			          <!-- /.box-header -->
 	            <div class="box-body">
-				    <form role="form" action="http://practice.sofiacode.com/user/submit-code" method="post" >
+				    <form role="form" th:action="@{'/user/submit-code'}" method="post" >
 		              <div class="box-body">
 		              	
 		                <input type="hidden" class="form-control" name="problemNumber" id="problemNumber" th:value="${problemNumber}" />
