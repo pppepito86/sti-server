@@ -197,7 +197,7 @@ public class Repository {
 	}
 
 	public Optional<Map<String, Object>> getSubmission(int id) {
-		return template.queryForList("SELECT submissions.id, city, username, submissions.file, problem_id, verdict, details, points, contests.name as contest_name, problems.name as problem_name from submissions" +
+		return template.queryForList("SELECT submissions.id, city, username, submissions.file, problem_id, verdict, details, points, submissions.upload_time, contests.name as contest_name, problems.name as problem_name from submissions" +
 				" inner join problems on submissions.problem_id=problems.id" +
 				" inner join contests on problems.contest_id=contests.id" +
 				"  where submissions.id=?", id).stream().findFirst();
