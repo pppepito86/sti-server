@@ -33,16 +33,12 @@
             <div class="box-body">
              <table style="table-layout:fixed; word-wrap: break-word;"  class="table table-bordered">
                 <tr>
-                  <th>Потребител</th>
-                  <th>Град</th>
                   <th>Група</th>
                   <th>Задача</th>
                   <th>Точки</th>
                   <th style="width: 50%">Статус</th>
                 </tr>
                 <tr>
-                  <td th:text="${submission.get('username')}"></td>
-                  <td th:text="${submission.get('city')}"></td>
                   <td th:text="${submission.get('contest_name')}"></td>
                   <td th:text="${submission.get('problem_name')}"></td>
                   <td th:text="${score}"></td>
