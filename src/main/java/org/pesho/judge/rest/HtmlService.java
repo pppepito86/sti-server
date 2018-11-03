@@ -80,23 +80,27 @@ public class HtmlService implements RunTerminateListener {
 	private ObjectMapper mapper = new ObjectMapper();
 	
 	@Override
-	public void instanceCreated(String url) {
-		String url1 = url + ":8089";
-		String url2 = url + ":8090";
-		repository.addWorker(url1, "automatic");
-		workersQueue.put(new Worker(url1));
-		repository.addWorker(url2, "automatic");
-		workersQueue.put(new Worker(url2));
+	public void instanceCreated(String host) {
+		addWorker(host, 8089);
+//		addWorker(host, 8090);
+	}
+	
+	private void addWorker(String host, int port) {
+		String url = host + ":" + port;
+		repository.addWorker(url, "automatic");
+		workersQueue.put(new Worker(url));
 	}
 	
 	@Override
-	public void instanceTerminated(String url) {
-		String url1 = url + ":8089";
-		String url2 = url + ":8090";
-		repository.deleteWorker(url1);
-		workersQueue.remove(url1);
-		repository.deleteWorker(url2);
-		workersQueue.remove(url2);
+	public void instanceTerminated(String host) {
+		removeWorker(host, 8089);
+//		removeWorker(url, 8090);
+	}
+	
+	private void removeWorker(String host, int port) {
+		String url = host + ":" + port;
+		repository.deleteWorker(url);
+		workersQueue.remove(url);
 	}
 	
 	@GetMapping("/user")
