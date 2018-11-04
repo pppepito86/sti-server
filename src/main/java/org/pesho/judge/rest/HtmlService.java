@@ -224,6 +224,9 @@ public class HtmlService implements RunTerminateListener {
 		model.addAttribute("contestName", getCurrentUserContest());
 		model.addAttribute("problemNumber", 0);
 		
+		String name = SecurityContextHolder.getContext().getAuthentication().getName();
+		model.addAttribute("displayName", repository.getUserDisplayName(name));
+		
 		addTimeLeft(model, contestId);
 	}
 	
