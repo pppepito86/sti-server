@@ -818,7 +818,7 @@ public class HtmlService implements RunTerminateListener {
 			Model model) throws Exception {
 		count = Math.min(20, count);
 		int manualCount = (int) repository.listWorkers().stream().filter(w -> "manual".equals(w.get("type"))).count();
-		int automaticCount = Math.max((count - manualCount + 1) / 2, 0);
+		int automaticCount = count-manualCount; // Math.max((count - manualCount + 1) / 2, 0);
 		InstanceType type = InstanceType.valueOf("C4Large");
 		Configuration configuration = new Configuration()
 				.setImageId("ami-048d5820d5e4e7e4c")
