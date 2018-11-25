@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -161,7 +162,8 @@ public class Repository {
 	}
 
 	public synchronized void addStatus(int id, String verdict) {
-		template.update("UPDATE submissions SET verdict=? WHERE id=?", verdict, id);
+		String escapedVerdict = StringEscapeUtils.escapeSql(verdict);
+		template.update("UPDATE submissions SET verdict=? WHERE id=?", escapedVerdict, id);
 	}
 	
 	public synchronized void addScore(int id, String result, String details, int points) {
