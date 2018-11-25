@@ -2,6 +2,7 @@ package org.pesho.judge.repositories;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
@@ -169,12 +170,7 @@ public class Repository {
 	
 	public synchronized void addScore(int id, String result, String details, int points) {
 		//String escapedDetails = StringEscapeUtils.escapeSql(details);
-		String escapedDetails = details;
-		try {
-			escapedDetails = URLEncoder.encode(details, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		String escapedDetails = StandardCharsets.UTF_8.encode(details).toString();
 		template.update("UPDATE submissions SET verdict=?, details=?, points=? WHERE id=?", result, escapedDetails, points, id);
 	}
 	
