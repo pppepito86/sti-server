@@ -162,12 +162,12 @@ public class Repository {
 	}
 
 	public synchronized void addStatus(int id, String verdict) {
-		String escapedVerdict = StringEscapeUtils.escapeSql(verdict);
-		template.update("UPDATE submissions SET verdict=? WHERE id=?", escapedVerdict, id);
+		template.update("UPDATE submissions SET verdict=? WHERE id=?", verdict, id);
 	}
 	
 	public synchronized void addScore(int id, String result, String details, int points) {
-		template.update("UPDATE submissions SET verdict=?, details=?, points=? WHERE id=?", result, details, points, id);
+		String escapedDetails = StringEscapeUtils.escapeSql(details);
+		template.update("UPDATE submissions SET verdict=?, details=?, points=? WHERE id=?", result, escapedDetails, points, id);
 	}
 	
 	public synchronized void addWorker(String url, String type) {
