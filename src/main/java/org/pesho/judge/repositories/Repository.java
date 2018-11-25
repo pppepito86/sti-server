@@ -170,7 +170,12 @@ public class Repository {
 	
 	public synchronized void addScore(int id, String result, String details, int points) {
 		//String escapedDetails = StringEscapeUtils.escapeSql(details);
-		String escapedDetails = StandardCharsets.UTF_8.encode(details).toString();
+		String escapedDetails = details;
+		try {
+			escapedDetails = new String(StandardCharsets.UTF_8.encode(details).array(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		template.update("UPDATE submissions SET verdict=?, details=?, points=? WHERE id=?", result, escapedDetails, points, id);
 	}
 	
