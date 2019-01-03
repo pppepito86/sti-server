@@ -36,12 +36,14 @@
                 <th>Time</th>
                 <th>Memory</th>
                 <th>Feedback</th>
+                <th>Groups</th>
                 <th>Points</th>
             </tr>
         <tr><td th:text="${contest.get('name')}"></td>
        	<td th:text="${details.getTime()}"></td>
         <td th:text="${details.getMemory()}"></td>
         <td th:text="${details.getFeedback()}"></td>
+		<td th:text="${details.getGroups()}"></td>
         <td th:text="${details.getPoints()}"></td></tr>
 </table>
                 </div>

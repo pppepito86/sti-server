@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -189,7 +190,10 @@ public class HtmlService implements RunTerminateListener {
 		}
 		
 		if (submission.isPresent()) {
+			List<List<Integer>> groups = groups(Integer.valueOf(submission.get().get("problem_id").toString()));
+			model.addAttribute("groups", groups);
 			TreeSet<Integer> feedback = feedback(Integer.valueOf(submission.get().get("problem_id").toString()));
+			
 			submission.get().put("verdict", fixVerdict(submission.get().get("verdict").toString(), feedback));
 			
 			String details = submission.get().get("details").toString();
@@ -208,7 +212,7 @@ public class HtmlService implements RunTerminateListener {
 					stepResult.setTime(null);
 					stepResult.setVerdict(Verdict.HIDDEN);
 				}
-				
+
 				if (feedback.size() == 0) {
 					model.addAttribute("score", Math.round(score.getScore()));
 				} else {
@@ -217,7 +221,30 @@ public class HtmlService implements RunTerminateListener {
 				model.addAttribute("compile", score.getScoreSteps().get("Compile"));
 				score.getScoreSteps().remove("Compile");
 				model.addAttribute("tests", score.getScoreSteps());
+				
+				LinkedHashMap<String, StepResult> steps = new LinkedHashMap<>();
+				if (groups.size() <= score.getScoreSteps().size()) {
+					for (int i = 0; i < groups.size(); i++) {
+						StepResult step = new StepResult();
+						boolean hidden = false;
+						boolean ok = true;
+						for (int t: groups.get(i)) {
+							Verdict v = score.getScoreSteps().get("Test"+t).getVerdict();
+							if (v == Verdict.HIDDEN) hidden = true;
+							if (v != Verdict.OK) ok = false;
+						}
+						if (hidden) step.setVerdict(Verdict.HIDDEN);
+						else if (ok) step.setVerdict(Verdict.OK);
+						steps.put("Group"+(i+1), step);
+						
+						for (int j = 0; j < groups.get(i).size(); j++) {
+							steps.put("Test"+groups.get(i).get(j), score.getScoreSteps().get("Test"+groups.get(i).get(j)));
+						}
+					}
+				}
+				model.addAttribute("steps", steps);
 			}
+			
 			File sourceFile = getFile("submissions", String.valueOf(submission.get().get("id")), submission.get().get("file").toString());
 			String source = FileUtils.readFileToString(sourceFile, Charset.forName("UTF-8"));
 			model.addAttribute("submissionId", String.valueOf(id));
@@ -388,6 +415,32 @@ public class HtmlService implements RunTerminateListener {
 		return feedback(details.getFeedback());
 	}
 
+	private List<List<Integer>> groups(int problemId) throws Exception {
+		Map<String, Object> problem = repository.getProblem(problemId).get();
+		File problemDir = getFile("problem", problem.get("contest_id").toString(), problem.get("number").toString());
+
+		TaskParser parser = new TaskParser(problemDir);
+		TaskDetails details = TaskDetails.create(parser);
+		String groups = details.getGroups();
+		
+		List<List<Integer>> result = new ArrayList<>();
+		if (groups.isEmpty()) return result;
+		
+		String[] split = groups.split(",");
+		for (int i = 0; i < split.length; i++) {
+			String[] split2 = split[i].split("-");
+			int start = Integer.valueOf(split2[0]);
+			int end = Integer.valueOf(split2[1]);
+
+			List<Integer> list = new ArrayList<>();
+			for (int j = start; j <= end; j++) list.add(j);
+			
+			result.add(list);
+		}
+		
+		return result;
+	}
+	
 	protected TreeSet<Integer> feedback(String feedback) {
 		TreeSet<Integer> set = new TreeSet<>();
 		if (feedback.trim().equalsIgnoreCase("full")) return set;
