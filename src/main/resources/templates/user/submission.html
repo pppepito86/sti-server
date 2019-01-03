@@ -57,7 +57,7 @@
                 </tr>
                 <tr th:each="test: ${tests}">
                   <td th:text="${test.key}"></td>
-                  <td th:text="${test.value.getVerdict()}"></td>
+                  <td th:text="${test.value.getVerdict()}" th:style="(${test.value.getVerdict()}+''=='OK'?'background-color: #00ff00':(${test.value.getVerdict()}+''=='HIDDEN'?'':'background-color: #ff0000'))"></td>
                   <td th:text="${test.value.getTime()}"></td>
                 </tr>
               </table>
