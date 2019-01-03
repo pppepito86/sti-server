@@ -71,9 +71,11 @@ public class Worker {
 		httpclient.close();
 		
 		for (int i = 0; i < 600; i++) {
-			if (isRunning(submissionId)) Thread.sleep(1000);
-			else return getScore(submissionId);
+			SubmissionScore score = getScore(submissionId);
+			if (score.isFinished()) return score;
+			else Thread.sleep(1000);
 		}
+
 		throw new IllegalStateException("time out");
 	}
 	
@@ -106,9 +108,9 @@ public class Worker {
 	
 	public boolean isAlive() {
 		RequestConfig config = RequestConfig.custom()
-				  .setConnectTimeout(1000)
-				  .setConnectionRequestTimeout(1000)
-				  .setSocketTimeout(1000).build();
+				  .setConnectTimeout(3000)
+				  .setConnectionRequestTimeout(3000)
+				  .setSocketTimeout(3000).build();
 		try (CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultRequestConfig(config).build()) {
 			HttpGet httpGet = new HttpGet(url + "/api/v1/health-check");
 			CloseableHttpResponse response = httpclient.execute(httpGet);

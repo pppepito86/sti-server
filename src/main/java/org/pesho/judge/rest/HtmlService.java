@@ -17,8 +17,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.TimeZone;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
@@ -204,6 +206,10 @@ public class HtmlService implements RunTerminateListener {
 		int number = submissions.size();
 		for (Map<String, Object> submission: submissions) {
 			submission.put("number", number--);
+			
+			TreeSet<Integer> feedback = feedback(details.getFeedback());
+			submission.put("verdict", fixVerdict(submission.get("verdict").toString(), feedback));
+			if (feedback.size() != 0) submission.put("points", "?");
 		}
 
 		model.addAttribute("submissions", submissions);
@@ -331,6 +337,18 @@ public class HtmlService implements RunTerminateListener {
 		return showUserSubmissionPage(id, model);
 	}
 	
+	private String fixVerdict(String verdict, TreeSet<Integer> feedback) {
+		if (feedback.size() == 0) return verdict;
+		
+		String[] split = verdict.split(",");
+		if (split.length < feedback.last()) return verdict;
+		
+		for (int i = 1; i <= split.length; i++) {
+			if (!feedback.contains(i)) split[i-1] = "?";
+		}
+		return String.join(",", split);
+	}
+	
 	public String showUserSubmissionPage(int id, Model model) throws Exception {
 		List<Map<String,Object>> contests = repository.listContests();
 		model.addAttribute("contests", contests);
@@ -341,10 +359,31 @@ public class HtmlService implements RunTerminateListener {
 		}
 		
 		if (submission.isPresent()) {
+			TreeSet<Integer> feedback = feedback(Integer.valueOf(submission.get().get("problem_id").toString()));
+			submission.get().put("verdict", fixVerdict(submission.get().get("verdict").toString(), feedback));
+			
 			String details = submission.get().get("details").toString();
 			if (details != null && !details.isEmpty()) {
 				SubmissionScore score = mapper.readValue(details, SubmissionScore.class);
-				model.addAttribute("score", Math.round(score.getScore()));
+				for(String key: score.getScoreSteps().keySet()) {
+					StepResult stepResult = score.getScoreSteps().get(key);
+					if (!key.startsWith("Test")) continue;
+					
+					int testId = Integer.valueOf(key.split("Test")[1]);
+					if (feedback.size() == 0 || feedback.contains(testId)) continue;
+							
+					stepResult.setExpectedOutput("");
+					stepResult.setOutput("");
+					stepResult.setReason("");
+					stepResult.setTime(0d);
+					stepResult.setVerdict(Verdict.HIDDEN);
+				}
+				
+				if (feedback.size() == 0) {
+					model.addAttribute("score", Math.round(score.getScore()));
+				} else {
+					model.addAttribute("score", "?");
+				}
 				model.addAttribute("compile", score.getScoreSteps().get("Compile"));
 				score.getScoreSteps().remove("Compile");
 				model.addAttribute("tests", score.getScoreSteps());
@@ -1144,6 +1183,24 @@ public class HtmlService implements RunTerminateListener {
 			}
 		}
 		return null;
+	}
+	
+	private TreeSet<Integer> feedback(int problemId) throws Exception {
+		Map<String, Object> problem = repository.getProblem(problemId).get();
+		File problemDir = getFile("problem", problem.get("contest_id").toString(), problem.get("number").toString());
+
+		TaskParser parser = new TaskParser(problemDir);
+		TaskDetails details = TaskDetails.create(parser);
+		return feedback(details.getFeedback());
+	}
+
+	private TreeSet<Integer> feedback(String feedback) {
+		TreeSet<Integer> set = new TreeSet<>();
+		if (feedback.trim().equalsIgnoreCase("full")) return set;
+		
+		String[] split = feedback.split(",");
+		for (String s: split) set.add(Integer.valueOf(s.trim()));
+		return set;
 	}
 	
     @GetMapping("/")
