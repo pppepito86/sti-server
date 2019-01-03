@@ -3,6 +3,7 @@ package org.pesho.judge.rest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -26,6 +27,10 @@ import org.pesho.judge.repositories.Repository;
 import org.pesho.workermanager.RunTerminateListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,6 +74,13 @@ public class HtmlService implements RunTerminateListener {
 		String url = host + ":" + port;
 		repository.deleteWorker(url);
 		workersQueue.remove(url);
+	}
+	
+	protected boolean isStarted(int contestId) {
+		Map<String, Object> contest = repository.getContest(contestId).get();
+		Timestamp startTime = (Timestamp) contest.get("start_time");
+		boolean isStarted = System.currentTimeMillis() >= startTime.getTime();
+		return isStarted;
 	}
 	
 	protected void addIsStarted(Model model, int contestId) {
@@ -384,5 +396,24 @@ public class HtmlService implements RunTerminateListener {
 		for (String s: split) set.add(Integer.valueOf(s.trim()));
 		return set;
 	}
+	
+    public ResponseEntity<?> downloadPdf(int contestId, int number, boolean download) throws Exception {
+    	HttpHeaders respHeaders = new HttpHeaders();
+    	if (download) {
+    		respHeaders.setContentDispositionFormData("attachment", "problem" + number + ".pdf");
+    	} else {
+    		respHeaders.setContentType(org.springframework.http.MediaType.APPLICATION_PDF);
+    	}
+	    
+	    File problemDir = getFile("problem", String.valueOf(contestId), String.valueOf(number));
+	    File pdf = findPdf(problemDir);
+	    if (pdf == null) return ResponseEntity.noContent().build();
+	    
+	    InputStream is = new FileInputStream(pdf);
+		InputStreamResource inputStreamResource = new InputStreamResource(is);
+	    
+		return new ResponseEntity<InputStreamResource>(inputStreamResource, 
+	    		respHeaders, HttpStatus.OK);
+    }
 	
 }

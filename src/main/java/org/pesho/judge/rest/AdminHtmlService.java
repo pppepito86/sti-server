@@ -38,6 +38,7 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,6 +51,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.ec2.model.InstanceType;
 import com.amazonaws.services.ec2.model.Tag;
 
+@PreAuthorize("hasRole('ADMIN')")
 @Controller
 public class AdminHtmlService extends HtmlService {
 
@@ -611,5 +613,40 @@ public class AdminHtmlService extends HtmlService {
 		
 		return "redirect:/admin/users";
 	}
-	
+
+    @PostMapping("/admin/grade")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public synchronized String addSubmission(@RequestPart("file") MultipartFile file, 
+			@RequestParam("city") String city, Model model)
+			throws Exception {
+		File zipFile = getFile("temp", city, city + ".zip");
+		zipFile.getParentFile().mkdirs();
+		
+		FileUtils.copyInputStreamToFile(file.getInputStream(), zipFile);
+		File zipFolder = getFile("temp", city, city);
+		unzip(zipFile, zipFolder);
+
+		List<File> listSourceFiles = listSourceFiles(zipFolder);
+		for (File sourceFile: listSourceFiles) {
+			String username = sourceFile.getParentFile().getName();
+			String contest = sourceFile.getParentFile().getParentFile().getName();
+			String problemName = sourceFile.getName().substring(0, sourceFile.getName().lastIndexOf('.'));
+			String fileName = sourceFile.getName();
+			int submissionId = repository.addSubmission(city, username, contest, problemName, fileName);
+			if (submissionId != 0) {
+				File newFile = getFile("submissions", String.valueOf(submissionId), fileName);
+				newFile.getParentFile().mkdirs();
+				FileUtils.copyFile(sourceFile, newFile);
+			} else {
+				String details = String.format("%s_%s_%s_%s", city, contest, username, problemName);
+				repository.addLog("submission", "problem not found for " + details, "");
+			}
+		}
+		
+		FileUtils.deleteQuietly(zipFile);
+		FileUtils.deleteQuietly(zipFolder);
+		
+		return "redirect:/admin/submissions";
+	}
+
 }
