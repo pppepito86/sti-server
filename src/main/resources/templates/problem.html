@@ -58,12 +58,17 @@
                 <th style="width: 45%">Input</th>
                 <th style="width: 45%">Output</th>
             </tr>
-        <span th:each="group : ${details.getTestGroups()}">
-        <tr th:each="case : ${group.getTestCases()}">
-                <td th:text="${case.getNumber()}" />
-                <td th:text="${case.getInput()}" />
-                <td th:text="${case.getOutput()}" />
-        </tr>
+        <span th:each="group, i : ${details.getTestGroups()}">
+	        <tr>
+	        	<td th:text="'Group '+${i.count}"></td>
+	        	<td></td>
+	        	<td></td>
+	        </tr>
+	        <tr th:each="case : ${group.getTestCases()}">
+	                <td th:text="'&nbsp;&nbsp;&nbsp;&nbsp;Test '+${case.getNumber()}" />
+	                <td th:text="${case.getInput()}" />
+	                <td th:text="${case.getOutput()}" />
+	        </tr>
         </span>
 </table>
         </div>

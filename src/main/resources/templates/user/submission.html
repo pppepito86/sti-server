@@ -56,11 +56,11 @@
                   <th>Време</th>
                 </tr>
                 <tr th:each="test: ${steps}">
-                  <td th:text="${test.key.replace('Group', 'Група ')}" th:if="${test.key.contains('Group')}"  th:style="(${!test.key.contains('Group')}? '': (${test.value.getVerdict()}+''=='OK'?'background-color: #00ff00': (${test.value.getVerdict()}+''=='HIDDEN'?'':'background-color: #ff0000') ) )"></td>
+                  <td th:text="${test.key.replace('Group', 'Група ')}" th:if="${test.key.contains('Group')}"></td>
                   <td th:text="${test.key.replace('Test', '&nbsp;&nbsp;&nbsp;&nbsp;Тест ')}" th:if="${!test.key.contains('Group')}"></td>
                   
                   <td th:text="''" th:if="${test.key.contains('Group')}"  th:style="(${!test.key.contains('Group')}? '': (${test.value.getVerdict()}+''=='OK'?'background-color: #00ff00': (${test.value.getVerdict()}+''=='HIDDEN'?'':'background-color: #ff0000') ) )"></td>
-				  <td th:text="${test.value.getVerdict()}" th:if="${!test.key.contains('Group')}" th:style="(${test.value.getVerdict()}+''=='OK'?'background-color: #00ff00':(${test.value.getVerdict()}+''=='HIDDEN'?'':'background-color: #ff0000'))"></td>
+				  <td th:text="${test.value.getVerdict()}" th:if="${!test.key.contains('Group')}"></td>
 				  
                   <td th:text="${test.value.getTime()}"></td>
                 </tr>
