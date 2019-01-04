@@ -80,6 +80,7 @@
 		                  <label for="file">Файл</label>
 		                  <input type="file" name="file" id="file" accept=".cpp" />
 		                </div>
+						<input type="hidden" name="ip" id="ip" />
 		              </div>
 		              <!-- /.box-body -->
 		
@@ -87,6 +88,8 @@
 		                <button type="submit" id="submitcodebutton2" class="btn btn-primary">Предай</button>
 		                <span id="timetosubmit2" style="margin-left:5px;"></span>
 		              </div>
+		              
+		              
 		            </form> 
 	            </div>
 	            <!-- /.box-body -->
@@ -107,6 +110,7 @@
                             style="width: 100%; height: 80px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
 
 		                </div>
+						<input type="hidden" name="ip" id="ip" />
 		              </div>
 		              <!-- /.box-body -->
 		
@@ -176,5 +180,14 @@
 <!-- ./wrapper -->
 
 <div th:replace="fragments/foot :: foot"></div>
+
+<script>
+	$(function () {
+		var ipFields = document.getElementsByName("ip");
+		ipFields.forEach(function(ipField) {
+			ipField.value = localStorage['ip']||'';
+		});
+	});
+</script>
 </body>
 </html>
