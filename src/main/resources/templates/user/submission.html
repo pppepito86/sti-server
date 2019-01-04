@@ -48,7 +48,7 @@
                 </tr>
               </table>
             </div>
-            <div th:if="${tests} != null" class="box-body">
+            <div th:if="${!tests.isEmpty()} and ${groups.size()!=0}" class="box-body">
               <table style="table-layout:fixed; word-wrap: break-word;" th:if="${groups.size()}!=0" class="table table-bordered table-striped">
                 <tr>
                   <th>Стъпка</th>
