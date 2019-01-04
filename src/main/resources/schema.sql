@@ -1,3 +1,4 @@
+--DROP TABLE IF EXISTS `ips`;
 --DROP TABLE IF EXISTS `submissions`;
 --DROP TABLE IF EXISTS `problems`;
 --DROP TABLE IF EXISTS `contests`;
@@ -67,5 +68,17 @@ CREATE TABLE IF NOT EXISTS `workers`(
   `deleted` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE IF NOT EXISTS `ips`(
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(100) NOT NULL,
+  `operation` varchar(1000) NOT NULL,
+  `local_ip` varchar(64) NOT NULL,
+  `public_ip` varchar(64) NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 UPDATE submissions set verdict='waiting' where verdict='judging';
