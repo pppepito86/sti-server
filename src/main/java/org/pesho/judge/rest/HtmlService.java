@@ -144,6 +144,9 @@ public class HtmlService implements RunTerminateListener {
 				.getProblem(contestId, problemNumber).get().get("name").toString();
 		
 		String fileName = problemName + ".cpp";
+		if (file != null && file.getOriginalFilename() != null && file.getOriginalFilename().toLowerCase().endsWith(".c")) {
+			fileName = problemName + ".c";
+		}
 		
 		List<Map<String,Object>> submission = repository.getUserSubmissions(SecurityContextHolder.getContext().getAuthentication().getName());
 		if (!submission.isEmpty()) {

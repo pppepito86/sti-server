@@ -107,7 +107,7 @@ public class UserHtmlService extends HtmlService {
 			return "redirect:/user/error?msg=4";
 		}
 		
-		if (!file.getOriginalFilename().toLowerCase().endsWith(".cpp")) {
+		if (!file.getOriginalFilename().toLowerCase().endsWith(".cpp") && !file.getOriginalFilename().toLowerCase().endsWith(".c")) {
 			return "redirect:/user/error?msg=5";
 		}
 		
