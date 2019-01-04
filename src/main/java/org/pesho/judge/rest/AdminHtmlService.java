@@ -462,7 +462,7 @@ public class AdminHtmlService extends HtmlService {
 		int automaticCount = count-manualCount; // Math.max((count - manualCount + 1) / 2, 0);
 		InstanceType type = InstanceType.valueOf("C4Large");
 		Configuration configuration = new Configuration()
-				.setImageId("ami-048d5820d5e4e7e4c")
+				.setImageId("ami-0653cb104a8c7e20c")
 				.setInstanceType(type)
 				.setSecurityGroup("All")
 				.setSecurityKeyName("noi")
