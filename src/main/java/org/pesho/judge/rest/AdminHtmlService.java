@@ -512,6 +512,9 @@ public class AdminHtmlService extends HtmlService {
 		String checksum = getChecksum(zipFile);
 		File zipFolder = getFile("problem", String.valueOf(contestId), String.valueOf(number), name);
 		unzip(zipFile, zipFolder);
+		
+		sanitize(zipFile, zipFolder);
+		zip(zipFile, zipFolder);
 
 		int problemId = 0;
 		if (maybeProblem.isPresent()) {
@@ -522,6 +525,23 @@ public class AdminHtmlService extends HtmlService {
 		}
 
 		return "redirect:/admin/contests/"+contestId;
+	}
+
+	private void sanitize(File zipFile, File zipFolder) throws IOException {
+		TaskParser parser = new TaskParser(zipFolder);
+		for (File input: parser.getInput()) {
+			sanitize(input);
+		}
+		for (File output: parser.getOutput()) {
+			sanitize(output);
+		}
+	}
+
+	private void sanitize(File file) throws IOException {
+		String content = FileUtils.readFileToString(file);
+		content = content.replace("\r\n", "\n");
+		content = content.replace("\r", "\n");
+		FileUtils.writeStringToFile(file, content);
 	}
 
 	@GetMapping("/admin/download-users")

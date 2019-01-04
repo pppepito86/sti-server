@@ -393,6 +393,19 @@ public class HtmlService implements RunTerminateListener {
 		}
 	}
 	
+	public void zip(File file, File folder) {
+		try {
+			new ProcessExecutor().command("zip", "-r", file.getCanonicalPath(), "*").directory(folder).execute();
+		} catch (Exception e) {
+			try {
+				ZipUtil.unpack(file, folder);
+			} catch (Exception e2) {
+				e2.printStackTrace();
+				throw new IllegalStateException(e);
+			}
+		}
+	}
+	
 	protected int getCurrentUserContestId() {
 		String contest = getCurrentUserContest();
 	    int contestId = (int) repository.getContest(contest).get().get("id");
