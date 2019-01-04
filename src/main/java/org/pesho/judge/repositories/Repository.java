@@ -136,7 +136,10 @@ public class Repository {
 	}
 	
 	public List<Map<String, Object>> listContestSubmissions(String city, String contest) {
-        return template.queryForList("SELECT * from submissions where city=? AND contest=?",
+        return template.queryForList("SELECT * from submissions "
+        		+ "inner join problems on problems.id=submissions.problem_id "
+        		+ "inner join contests on contests.id=problems.contest_id "
+        		+ "where city=? AND contests.name=?",
                 city, contest);
 	}
 	
