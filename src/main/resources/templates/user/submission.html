@@ -48,8 +48,9 @@
                 </tr>
               </table>
             </div>
-            <div th:if="${!tests.isEmpty()} and ${groups.size()!=0}" class="box-body">
-              <table style="table-layout:fixed; word-wrap: break-word;" th:if="${groups.size()}!=0" class="table table-bordered table-striped">
+            
+            <div th:if="${tests} != null" class="box-body">
+              <table style="table-layout:fixed; word-wrap: break-word;" th:if="${!tests.isEmpty()} and ${steps.size()!=0}" class="table table-bordered table-striped">
                 <tr>
                   <th>Стъпка</th>
                   <th>Резултат</th>
@@ -66,7 +67,7 @@
                 </tr>
               </table>
             
-              <table style="table-layout:fixed; word-wrap: break-word;" th:if="${!tests.isEmpty()} and ${groups.size()==0}" class="table table-bordered table-striped">
+              <table style="table-layout:fixed; word-wrap: break-word;" th:if="${!tests.isEmpty()} and ${steps.size()==0}" class="table table-bordered table-striped">
                 <tr>
                   <th>Стъпка</th>
                   <th>Резултат</th>
@@ -78,6 +79,7 @@
                   <td th:text="${test.value.getTime()}"></td>
                 </tr>
               </table>
+              
               <table th:if="${tests.isEmpty()}" class="table table-bordered">
                 <tr>
                   <th>Стъпка</th>
