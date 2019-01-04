@@ -15,6 +15,8 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.pesho.grader.SubmissionScore;
@@ -34,6 +36,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.zip.ZipUtil;
@@ -120,8 +124,16 @@ public class HtmlService implements RunTerminateListener {
 		
 		addTimeLeft(model, contestId);
 	}
+
+	public String getPublicIp() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+		        .getRequest();
+		String publicIp = request.getRemoteAddr();
+		if (publicIp == null) publicIp = "";
+		return publicIp;
+	}
 	
-	public String addSubmission(MultipartFile file, String code, Integer problemNumber) throws IOException {
+	public String addSubmission(MultipartFile file, String code, Integer problemNumber, String localIp) throws IOException {
 		long submissionTime = System.currentTimeMillis();
 		
 		String city = "Sofia";
@@ -151,6 +163,9 @@ public class HtmlService implements RunTerminateListener {
 		}
 		
 		int submissionId = repository.addSubmission(city, username, contest, problemName, fileName);
+		if (localIp == null) localIp = "";
+		repository.addIpLog(username, "SUBMISSION " + submissionId, localIp, getPublicIp());
+		
 		if (submissionId != 0) {
 			File sourceFile = getFile("submissions", String.valueOf(submissionId), fileName);
 			if (file != null) {

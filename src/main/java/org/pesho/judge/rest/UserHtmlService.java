@@ -83,18 +83,20 @@ public class UserHtmlService extends HtmlService {
 	@PostMapping("/user/submit-code")
 	public String submitFile(@RequestParam("code") String code, 
 			@RequestParam("problemNumber") Integer problemNumber,
+			@RequestParam("ip") String localIp,
 			Model model) throws Exception {
 		if (code.trim().isEmpty()) {
 			return "redirect:/user/error?msg=7";
 		}
 		
-		return addSubmission(null, code, problemNumber);
+		return addSubmission(null, code, problemNumber, localIp);
 	}
 	
 	@PostMapping("/user/submit-file")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public String submitFile(@RequestPart("file") MultipartFile file, 
 			@RequestParam("problemNumber") Integer problemNumber,
+			@RequestParam("ip") String localIp,
 			Model model) throws Exception {
 		
 		if (file.getSize() > 64 * 1024) {
@@ -109,7 +111,7 @@ public class UserHtmlService extends HtmlService {
 			return "redirect:/user/error?msg=5";
 		}
 		
-		return addSubmission(file, null, problemNumber);
+		return addSubmission(file, null, problemNumber, localIp);
 	}
 	
 	@GetMapping("/user/problem/{problem_number}/submissions/{submission_number}")

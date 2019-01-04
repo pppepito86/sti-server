@@ -1,14 +1,12 @@
 package org.pesho.judge.repositories;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -217,6 +215,11 @@ public class Repository {
     public synchronized void addLog(String topic, String title, String message) {
     	template.update("INSERT INTO logs(topic, title, message) VALUES(?, ?, ?)", 
     			topic, title, message);
+    }
+    
+    public synchronized void addIpLog(String username, String operation, String localIp, String publicIp) {
+    	template.update("INSERT INTO ips(username, operation, local_ip, public_ip) VALUES(?, ?, ?, ?)", 
+    			username, operation, localIp, publicIp);
     }
     
     public List<Map<String, Object>> listLogs() {
