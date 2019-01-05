@@ -1,6 +1,8 @@
 package org.pesho.judge.rest;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +62,21 @@ public class CommonHtmlService extends HtmlService {
     			List<Map<String, Object>> contestSubmissions = repository.listContestSubmissions(city, contest);
         		Map<String, List<Map<String, Object>>> usersSubmissions = contestSubmissions.stream().collect(Collectors.groupingBy(s->s.get("username").toString()));
         		for (List<Map<String, Object>> list: usersSubmissions.values()) {
-        			while (list.size() < 3) list.add(new HashMap<>());
+        			boolean[] numbers = new boolean[4];
+        			for (Map<String, Object> s: list) numbers[Integer.valueOf(s.get("number").toString())]=true;
+        			for (int i = 1; i <= 3; i++) {
+        				if (numbers[i]) continue;
+        				HashMap<String, Object> m = new HashMap<>();
+        				m.put("number", i);
+        				list.add(m);
+        			}
+        			
+        			Collections.sort(list, new Comparator<Map<String, Object>>() {
+        				@Override
+        				public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+        					return Integer.valueOf(o1.get("number").toString()) - Integer.valueOf(o2.get("number").toString());
+        				}
+					});
         		}
         		result.put(contest, usersSubmissions);
     		}
