@@ -97,7 +97,7 @@ public class CommonHtmlService extends HtmlService {
 		FileUtils.deleteQuietly(zipFile);
 		FileUtils.deleteQuietly(zipFolder);
 		
-		return "redirect:/admin/submissions";
+		return "redirect:/home?city="+city;
 	}
 
     
