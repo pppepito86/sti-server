@@ -74,7 +74,7 @@ public class CommonHtmlService extends HtmlService {
         }
     }
 
-    @PostMapping("/grade")
+    @PostMapping("/home/grade")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public synchronized String addSubmission(@RequestPart("file") MultipartFile file, 
 			@RequestParam("city") String city, Model model)
