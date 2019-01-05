@@ -110,6 +110,8 @@ public class CommonHtmlService extends HtmlService {
 			contest = new HomographTranslator().translate(contest);
 			
 			String problemName = sourceFile.getName().substring(0, sourceFile.getName().lastIndexOf('.'));
+			problemName = new HomographTranslator().translate(problemName);
+			
 			String fileName = sourceFile.getName();
 			int submissionId = repository.addSubmission(city, username, contest, problemName, fileName);
 			if (submissionId != 0) {
