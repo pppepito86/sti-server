@@ -4,12 +4,14 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.FileUtils;
+import org.pesho.judge.util.HomographTranslator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,10 +41,18 @@ public class CommonHtmlService extends HtmlService {
     	return "/login";
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/home")
-    public String table(@RequestParam(value = "city") String city, Model model) {
-    	city = city.toLowerCase();
+    public String table(@RequestParam(value = "city") Optional<String> maybeCity, Model model) {
+    	if (!maybeCity.isPresent()) {
+    		return "home";
+    	}
+    	
+    	String city = maybeCity.get().toLowerCase();
+    	if (city.isEmpty()) {
+    		return "home";
+    	}
+    	
+    	
     	List<Map<String,Object>> submissions = repository.listCitySubmissions(city);
     	if (submissions.size() > 0) {
     		Map<String, Map<String, List<Map<String, Object>>>> result = new HashMap<>();
@@ -64,7 +74,6 @@ public class CommonHtmlService extends HtmlService {
         }
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/grade")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public synchronized String addSubmission(@RequestPart("file") MultipartFile file, 
@@ -81,6 +90,9 @@ public class CommonHtmlService extends HtmlService {
 		for (File sourceFile: listSourceFiles) {
 			String username = sourceFile.getParentFile().getName();
 			String contest = sourceFile.getParentFile().getParentFile().getName();
+			
+			contest = new HomographTranslator().translate(contest);
+			
 			String problemName = sourceFile.getName().substring(0, sourceFile.getName().lastIndexOf('.'));
 			String fileName = sourceFile.getName();
 			int submissionId = repository.addSubmission(city, username, contest, problemName, fileName);
