@@ -638,29 +638,42 @@ public class AdminHtmlService extends HtmlService {
     @PostMapping("/admin/grade")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public synchronized String addAdminSubmission(@RequestPart("file") MultipartFile file, 
-			@RequestParam("city") String city, Model model)
+			@RequestParam("city") String givenCity, Model model)
 			throws Exception {
-		File zipFile = getFile("temp", city, city + ".zip");
+		File zipFile = getFile("temp", givenCity, givenCity + ".zip");
 		zipFile.getParentFile().mkdirs();
 		
 		FileUtils.copyInputStreamToFile(file.getInputStream(), zipFile);
-		File zipFolder = getFile("temp", city, city);
+		File zipFolder = getFile("temp", givenCity, givenCity);
 		unzip(zipFile, zipFolder);
 
 		List<File> listSourceFiles = listSourceFiles(zipFolder);
 		for (File sourceFile: listSourceFiles) {
 			String username = sourceFile.getParentFile().getName();
 			String contest = sourceFile.getParentFile().getParentFile().getName();
+			contest = new HomographTranslator().translate(contest);
+			
 			String problemName = sourceFile.getName().substring(0, sourceFile.getName().lastIndexOf('.'));
+			problemName = new HomographTranslator().translate(contest);
+			
 			String fileName = sourceFile.getName();
-			int submissionId = repository.addSubmission(city, username, contest, problemName, fileName);
-			if (submissionId != 0) {
-				File newFile = getFile("submissions", String.valueOf(submissionId), fileName);
-				newFile.getParentFile().mkdirs();
-				FileUtils.copyFile(sourceFile, newFile);
-			} else {
+			
+			String city = givenCity;
+			if (city.equalsIgnoreCase("all")) city = sourceFile.getParentFile().getParentFile().getParentFile().getName();
+			
+			if (sourceFile.length() > 64*1024) {
 				String details = String.format("%s_%s_%s_%s", city, contest, username, problemName);
-				repository.addLog("submission", "problem not found for " + details, "");
+				repository.addLog("submission", "source size exceeds 64K for " + details, "");
+			} else {
+				int submissionId = repository.addSubmission(city, username, contest, problemName, fileName);
+				if (submissionId != 0) {
+					File newFile = getFile("submissions", String.valueOf(submissionId), fileName);
+					newFile.getParentFile().mkdirs();
+					FileUtils.copyFile(sourceFile, newFile);
+				} else {
+					String details = String.format("%s_%s_%s_%s", city, contest, username, problemName);
+					repository.addLog("submission", "problem not found for " + details, "");
+				}
 			}
 		}
 		
@@ -669,6 +682,5 @@ public class AdminHtmlService extends HtmlService {
 		
 		return "redirect:/admin/submissions";
 	}
-
 	
 }
