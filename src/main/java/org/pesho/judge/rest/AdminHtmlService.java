@@ -654,7 +654,7 @@ public class AdminHtmlService extends HtmlService {
 			contest = new HomographTranslator().translate(contest);
 			
 			String problemName = sourceFile.getName().substring(0, sourceFile.getName().lastIndexOf('.'));
-			problemName = new HomographTranslator().translate(contest);
+			problemName = new HomographTranslator().translate(problemName);
 			
 			String fileName = sourceFile.getName();
 			
