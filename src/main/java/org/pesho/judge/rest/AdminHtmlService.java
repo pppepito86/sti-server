@@ -135,8 +135,10 @@ public class AdminHtmlService extends HtmlService {
 	public String adminSubmissionsPage(Model model) {
 		List<Map<String,Object>> contests = repository.listContests();
 		List<Map<String,Object>> submissions = repository.listDetailedSubmissions();
+		List<Map<String,Object>> problems = repository.listProblemsWithContest();
 		model.addAttribute("contests", contests);
 		model.addAttribute("submissions", submissions);
+		model.addAttribute("problems", problems);
 		return "submissions";	
 	}
 
@@ -551,7 +553,6 @@ public class AdminHtmlService extends HtmlService {
 	    
 	    StringBuffer buffer = new StringBuffer();
 	    
-	    
 	    final String[] displayColumnNames = new String[] {"ID", "Name", 
 	    		"Username", "Password", "School"};
 	    final String[] dbColumns = new String[] {"id", "display_name", 
@@ -682,5 +683,51 @@ public class AdminHtmlService extends HtmlService {
 		
 		return "redirect:/admin/submissions";
 	}
-	
+
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/admin/quick_grade")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public synchronized String addAdminQuickSubmission(
+			@RequestPart("file") MultipartFile file, 
+			@RequestParam("city") String city, 
+			@RequestParam("name") String username, 
+			@RequestParam("problem_id") String problemId, 
+			Model model)
+			throws Exception {
+    	
+    	Optional<Map<String, Object>> maybeProblem = repository.getProblem(Integer.valueOf(problemId));
+    	if (!maybeProblem.isPresent()) return "redirect:/admin/submissions";
+    	Map<String, Object> problemMap = maybeProblem.get();
+    	
+    	Map<String, Object> contestMap = repository.getContest((int) problemMap.get("contest_id")).get();
+    	
+		String contest = contestMap.get("name").toString();
+		String problemName = problemMap.get("name").toString();
+		
+		File sourceFile = getFile("temp", city, file.getName());
+		FileUtils.copyInputStreamToFile(file.getInputStream(), sourceFile);
+		String fileName = sourceFile.getName();
+			
+		if (sourceFile.length() > 64*1024) {
+			String details = String.format("%s_%s_%s_%s", city, contest, username, problemName);
+			repository.addLog("submission", "source size exceeds 64K for " + details, "");
+		} else {
+			int submissionId = repository.addSubmission(city, username, contest, problemName, fileName);
+			if (submissionId != 0) {
+				File newFile = getFile("submissions", String.valueOf(submissionId), fileName);
+				newFile.getParentFile().mkdirs();
+				FileUtils.copyFile(sourceFile, newFile);
+			} else {
+				String details = String.format("%s_%s_%s_%s", city, contest, username, problemName);
+				repository.addLog("submission", "problem not found for " + details, "");
+			}
+		}
+		
+		FileUtils.deleteQuietly(sourceFile);
+		
+		return "redirect:/admin/submissions";
+	}
+
+    
 }

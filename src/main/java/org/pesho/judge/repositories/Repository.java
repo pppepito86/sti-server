@@ -74,6 +74,10 @@ public class Repository {
 	public List<Map<String, Object>> listProblems() {
         return template.queryForList("SELECT * from problems");
 	}
+
+	public List<Map<String, Object>> listProblemsWithContest() {
+        return template.queryForList("SELECT * from problems inner join contests on contests.id=problems.contest_id");
+	}
 	
 	public List<Map<String, Object>> listContestProblems(int contestId) {
 		return template.queryForList("SELECT * from problems where contest_id=? order by number", contestId);

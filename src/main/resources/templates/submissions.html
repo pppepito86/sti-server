@@ -32,6 +32,7 @@
             <ul class="nav nav-tabs pull-right">
               <li class="active"><a href="#list_submissions" data-toggle="tab">List</a></li>
               <li><a href="#upload_submission" data-toggle="tab">Upload</a></li>
+              <li><a href="#quick_upload_submission" data-toggle="tab">Quick Upload</a></li>
               <li class="pull-left header"><i class="fa fa-inbox"></i> Submissions</li>
             </ul>
             <div class="tab-content no-padding">
@@ -73,7 +74,7 @@
                 </div>
                 <div class="form-group">
                   <label for="file">File input</label>
-                  <input type="file" name="file" id="file" />
+                  <input type="file" name="file" id="file" accept=".zip"  />
                 </div>
               </div>
               <!-- /.box-body -->
@@ -84,6 +85,40 @@
             </form>         
               
               </div>
+
+              <div class="chart tab-pane" id="quick_upload_submission" style="position: relative;">
+              
+            <form role="form" action="/admin/quick_grade" method="post" enctype="multipart/form-data">
+              <div class="box-body">
+              	<div class="form-group">
+                  <label for="city">City</label>
+                  <input type="text" class="form-control" name="city" id="city" value="admin" />
+                </div>
+              	<div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" class="form-control" name="name" id="name" value="admin" />
+                </div>
+              	<div class="form-group">
+                  <label for="problem_id">Problem Id</label>
+                  <select class="form-control" name="problem_id" id="problem_id">
+                  	<option th:each="problem: ${problems}" th:value="${problem.get('id')}" th:text="${problem.get('contest.name')+ '/' + problem.get('name')}" />
+                  </select>
+               </div>
+                <div class="form-group">
+                  <label for="file">File input</label>
+                  <input type="file" name="file" id="file" accept=".cpp,.c" />
+                </div>
+              </div>
+              <!-- /.box-body -->
+
+              <div class="box-footer">
+                <button type="submit" class="btn btn-primary">Upload</button>
+              </div>
+            </form>         
+              
+              </div>
+
+
             </div>
           </div>
 
