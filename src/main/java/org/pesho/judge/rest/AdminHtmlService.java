@@ -705,7 +705,7 @@ public class AdminHtmlService extends HtmlService {
 		String contest = contestMap.get("name").toString();
 		String problemName = problemMap.get("name").toString();
 		
-		File sourceFile = getFile("temp", city, file.getName());
+		File sourceFile = getFile("temp", city, file.getOriginalFilename());
 		FileUtils.copyInputStreamToFile(file.getInputStream(), sourceFile);
 		String fileName = sourceFile.getName();
 			
