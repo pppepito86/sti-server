@@ -54,11 +54,11 @@
                 <tr th:each="user: ${users}">
                   <td><a th:href="@{'/admin/users/'+${user.get('id')}}" th:text="${user.get('id')}"></a></td>
                   <td th:text="${user.get('display_name')}"></td>
-                  <td th:text="${user.get('name')}"></td>
+                  <td th:text="${user.get('city')}"></td>
                   <td th:text="${user.get('school')}"></td>
                   <td th:text="${user.get('grade')}"></td>
-                  <td th:text="${user.get('city')}"></td>
                   <td th:text="${user.get('contest')}"></td>
+                  <td th:text="${user.get('name')}"></td>
                 </tr>
                 </table>
                 </div>
@@ -70,19 +70,27 @@
               <div class="box-body">
               	<div class="form-group">
                   <label for="name-column-index">Name column index (0 based)</label>
-                  <input type="number" class="form-control" name="name-column-index" id="name-column-index" placeholder="0" />
+                  <input type="number" class="form-control" name="name-column-index" id="name-column-index" placeholder="1" />
                 </div>
-                <div class="form-group">
-                  <label for="group-column-index">Group column index (0 based)</label>
-                  <input type="number" class="form-control" name="group-column-index" id="group-column-index" placeholder="1" />
+              	<div class="form-group">
+                  <label for="city-column-index">City column index (0 based)</label>
+                  <input type="number" class="form-control" name="city-column-index" id="city-column-index" placeholder="2" />
                 </div>
                 <div class="form-group">
                   <label for="school-column-index">School column index (0 based)</label>
-                  <input type="number" class="form-control" name="school-column-index" id="group-column-index" placeholder="1" />
+                  <input type="number" class="form-control" name="school-column-index" id="school-column-index" placeholder="3" />
                 </div>
                 <div class="form-group">
                   <label for="grade-column-index">Grade column index (0 based)</label>
-                  <input type="number" class="form-control" name="grade-column-index" id="group-column-index" placeholder="1" />
+                  <input type="number" class="form-control" name="grade-column-index" id="group-column-index" placeholder="4" />
+                </div>
+                <div class="form-group">
+                  <label for="contest-column-index">Contest column index (0 based)</label>
+                  <input type="number" class="form-control" name="contest-column-index" id="contest-column-index" placeholder="5" />
+                </div>
+                <div class="form-group">
+                  <label for="initials-column-index">Initials column index (0 based)</label>
+                  <input type="number" class="form-control" name="initials-column-index" id="initials-column-index" placeholder="6" />
                 </div>
                 <div class="form-group">
                   <label for="file">Users CSV</label>

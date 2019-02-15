@@ -587,9 +587,11 @@ public class AdminHtmlService extends HtmlService {
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public synchronized String uploadUsers(@RequestPart("file") MultipartFile file, 
 			@RequestParam("name-column-index") int nameColumnIndex,
-			@RequestParam("group-column-index") int groupColumnIndex, 
+			@RequestParam("city-column-index") Optional<Integer> cityColumnIndex, 
 			@RequestParam("school-column-index") Optional<Integer> schoolColumnIndex,
 			@RequestParam("grade-column-index") Optional<Integer> gradeColumnIndex,
+			@RequestParam("contest-column-index") int contestColumnIndex, 
+			@RequestParam("initials-column-index") Optional<Integer> initialsColumnIndex,
 			Model model)
 			throws Exception {
 		
@@ -600,20 +602,26 @@ public class AdminHtmlService extends HtmlService {
 		
 		try {
 		    for (final CSVRecord record : csv) {
-		        String name = record.get(nameColumnIndex);
-		        String group = record.get(groupColumnIndex);
-		        group = group.substring(0, 1);
-		        group = new HomographTranslator().translate(group);
+		        String name = record.get(nameColumnIndex).trim();
+		        String contest = record.get(contestColumnIndex).trim();
+		        contest = new HomographTranslator().translate(contest);
 		        
 		        String password = Long.toHexString(Double.doubleToLongBits(Math.random()));
 		        
-		        
-		        if (!groupNumUsersMap.containsKey(group)) {
-		        	groupNumUsersMap.put(group, 0);
+		        if (!groupNumUsersMap.containsKey(contest)) {
+		        	groupNumUsersMap.put(contest, 0);
 		        }
-		        int id = groupNumUsersMap.get(group);
-		        groupNumUsersMap.put(group, id+1);
-		        String username = group + String.format("%03d", id);
+		        int id = groupNumUsersMap.get(contest);
+		        groupNumUsersMap.put(contest, id+1);
+		        String username = contest + String.format("%03d", id);
+		        if (initialsColumnIndex.isPresent()) {
+		        	username = record.get(initialsColumnIndex.get());
+		        }
+		        
+		        String city = null;
+		        if (cityColumnIndex.isPresent()) {
+		        	city = record.get(cityColumnIndex.get());
+		        }
 		        
 		        String school = null;
 		        if (schoolColumnIndex.isPresent()) {
@@ -625,7 +633,7 @@ public class AdminHtmlService extends HtmlService {
 		        	grade = record.get(gradeColumnIndex.get());
 		        }
 		        
-		        repository.addUser(username, password, name, group, school, grade);
+		        repository.addUser(username, password, name, contest, city, school, grade);
 		    }
 		} finally {
 		    csv.close();
