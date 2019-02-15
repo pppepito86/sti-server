@@ -101,7 +101,7 @@
               	<div class="form-group">
                   <label for="problem_id">Problem Id</label>
                   <select class="form-control" name="problem_id" id="problem_id">
-                  	<option th:each="problem: ${problems}" th:value="${problem.get('id')}" th:text="${problem.get('contest.name')+ '/' + problem.get('name')}" />
+                  	<option th:each="problem: ${problems}" th:value="${problem.get('id')}" th:text="${problem.get('contest_name')+ '/' + problem.get('problem_name')}" />
                   </select>
                </div>
                 <div class="form-group">

@@ -76,7 +76,7 @@ public class Repository {
 	}
 
 	public List<Map<String, Object>> listProblemsWithContest() {
-        return template.queryForList("SELECT * from problems inner join contests on contests.id=problems.contest_id");
+        return template.queryForList("SELECT problems.id as id, problems.name as problem_name, contests.name as contest_name from problems inner join contests on contests.id=problems.contest_id");
 	}
 	
 	public List<Map<String, Object>> listContestProblems(int contestId) {
