@@ -225,7 +225,7 @@ public class AdminHtmlService extends HtmlService {
 				String displayName = Optional.ofNullable(user.get("display_name")).map(Object::toString).orElse("");
 				String grade = Optional.ofNullable(user.get("grade")).map(Object::toString).orElse("");
 				String school = Optional.ofNullable(user.get("school")).map(Object::toString).orElse("");
-				totals.get(key).put("name", displayName);
+				totals.get(key).put("display_name", displayName);
 				totals.get(key).put("grade", grade);
 				totals.get(key).put("school", school);
 			} else {
@@ -418,7 +418,7 @@ public class AdminHtmlService extends HtmlService {
 				String displayName = Optional.ofNullable(user.get("display_name")).map(Object::toString).orElse("");
 				String grade = Optional.ofNullable(user.get("grade")).map(Object::toString).orElse("");
 				String school = Optional.ofNullable(user.get("school")).map(Object::toString).orElse("");
-				totals.get(key).put("name", displayName);
+				totals.get(key).put("display_name", displayName);
 				totals.get(key).put("grade", grade);
 				totals.get(key).put("school", school);
 			} else {
