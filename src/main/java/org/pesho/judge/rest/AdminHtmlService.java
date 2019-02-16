@@ -241,7 +241,7 @@ public class AdminHtmlService extends HtmlService {
 				userInfo.put("grade", grade);
 				userInfo.put("school", school);
 				userInfo.put("city", city);
-				userInfo.put("contest", contest);
+				userInfo.put("contest_name", contest);
 				totals.put(key, userInfo);
 			}
 			totals.get(key).put("total", 0);
@@ -433,7 +433,7 @@ public class AdminHtmlService extends HtmlService {
 				userInfo.put("grade", grade);
 				userInfo.put("school", school);
 				userInfo.put("city", city);
-				userInfo.put("contest", contest);
+				userInfo.put("contest_name", contest);
 				totals.put(key, userInfo);
 			}
 			totals.get(key).put("total", 0);
