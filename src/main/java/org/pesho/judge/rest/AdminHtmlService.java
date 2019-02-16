@@ -152,6 +152,7 @@ public class AdminHtmlService extends HtmlService {
 		List<Map<String,Object>> contests = repository.listContests();
 		List<Map<String,Object>> submissions = repository.listDetailedSubmissions().stream()
 				.filter(x -> !"author".equalsIgnoreCase(x.get("city").toString()))
+				.filter(x -> !"admin".equalsIgnoreCase(x.get("city").toString()))
 				.filter(x -> !"test".equalsIgnoreCase(x.get("city").toString()))
 				.collect(Collectors.toList());
 		int problemsCount = repository.maxProblemNumber();
@@ -246,6 +247,7 @@ public class AdminHtmlService extends HtmlService {
 		List<Map<String,Object>> contests = repository.listContests();
 		List<Map<String,Object>> submissions = repository.listDetailedSubmissions().stream()
 				.filter(x -> !"author".equalsIgnoreCase(x.get("city").toString()))
+				.filter(x -> !"admin".equalsIgnoreCase(x.get("city").toString()))
 				.filter(x -> !"test".equalsIgnoreCase(x.get("city").toString()))
 				.filter(x -> contest.equalsIgnoreCase(x.get("contest_name").toString()))
 				.collect(Collectors.toList());
