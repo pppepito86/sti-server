@@ -910,7 +910,7 @@ public class AdminHtmlService extends HtmlService {
 			String problemName = sourceFile.getName().substring(0, sourceFile.getName().lastIndexOf('.'));
 			problemName = new HomographTranslator().translate(problemName);
 			
-			String fileName = sourceFile.getName();
+			String fileName = sourceFile.getName().toLowerCase();
 			
 			String city = givenCity;
 			if (city.equalsIgnoreCase("all")) city = sourceFile.getParentFile().getParentFile().getParentFile().getName();
