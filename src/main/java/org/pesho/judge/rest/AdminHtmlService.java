@@ -581,8 +581,7 @@ public class AdminHtmlService extends HtmlService {
 		return new ResponseEntity<InputStreamResource>(inputStreamResource, 
 	    		respHeaders, HttpStatus.OK);
 	}
-			
-			
+
 	@PostMapping("/admin/upload-users")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public synchronized String uploadUsers(@RequestPart("file") MultipartFile file, 
@@ -594,7 +593,6 @@ public class AdminHtmlService extends HtmlService {
 			@RequestParam("initials-column-index") Optional<Integer> initialsColumnIndex,
 			Model model)
 			throws Exception {
-		
 		
 		InputStreamReader reader = new InputStreamReader(file.getInputStream());
 		CSVParser csv = new CSVParser(reader, CSVFormat.DEFAULT.withHeader());
