@@ -41,22 +41,28 @@
               <table id="example1" class="table table-bordered table-striped">
               <thead>
                 <tr>
-                  <th>Contest</th>
-                  <th>User</th>
-                  <th>City</th>
-                  <th th:each="problem: ${problems}" th:text="${problem}"></th>
-                  <th th:each="problem: ${problems}" th:text="${problem}"></th>
-                  <th>Total</th>
+                  <th style="width: 3%">Contest</th>
+                  <th style="width: 5%">User</th>
+                  <th style="width: 18%">Name</th>
+                  <th style="width: 8%">City</th>
+                  <th style="width: 10%">School</th>
+                  <th style="width: 3%">Grade</th>
+                  <th style="width: 5%">Total</th>
+                  <th style="width: 4%" th:each="problem: ${problems}" th:text="${problem}"></th>
+                  <th style="width: 12%" th:each="problem: ${problems}" th:text="${problem}"></th>
                 </tr>
                 </thead>
                 <tr th:each="result: ${results}">
                   <!-- td><a th:href="@{'/admin/submissions/'+${submission.get('id')}}" th:text="${submission.get('id')}"></a></td-->
                   <td th:text="${totals.get(result.key).get('contest_name')}"></td>
                   <td th:text="${totals.get(result.key).get('username')}"></td>
+                  <td th:text="${totals.get(result.key).get('name')}"></td>
                   <td th:text="${totals.get(result.key).get('city')}"></td>
+                  <td th:text="${totals.get(result.key).get('school')}"></td>
+                  <td th:text="${totals.get(result.key).get('grade')}"></td>
+                  <td th:text="${totals.get(result.key).get('total')}"></td>
                   <td th:each="task: ${result.value}" th:text="${task.value.get('points')}"></td>
                   <td th:each="task: ${result.value}" th:text="${task.value.get('details')}"></td>
-                  <td th:text="${totals.get(result.key).get('total')}"></td>
                 </tr>
                 </table>
                 </div>

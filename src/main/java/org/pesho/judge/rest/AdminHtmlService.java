@@ -213,6 +213,36 @@ public class AdminHtmlService extends HtmlService {
 			info.put("contest_name", submission.get("contest_name").toString().toUpperCase());
 			totals.put(key, info);
 		}
+		List<Map<String,Object>> users = repository.listUsers();
+		for (Map<String, Object> user: users) {
+			if (user.get("name") == null || user.get("city") == null) continue;
+			String key = user.get("name").toString().toUpperCase() +
+					user.get("city").toString().toUpperCase() +
+					user.get("contest").toString().toUpperCase();
+			if (totals.containsKey(key)) {
+				String displayName = Optional.ofNullable(user.get("display_name")).map(Object::toString).orElse("");
+				String grade = Optional.ofNullable(user.get("grade")).map(Object::toString).orElse("");
+				String school = Optional.ofNullable(user.get("school")).map(Object::toString).orElse("");
+				totals.get(key).put("name", displayName);
+				totals.get(key).put("grade", grade);
+				totals.get(key).put("school", school);
+			} else {
+				String username = Optional.ofNullable(user.get("name")).map(Object::toString).orElse("");
+				String displayName = Optional.ofNullable(user.get("display_name")).map(Object::toString).orElse("");
+				String grade = Optional.ofNullable(user.get("grade")).map(Object::toString).orElse("");
+				String school = Optional.ofNullable(user.get("school")).map(Object::toString).orElse("");
+				String city = Optional.ofNullable(user.get("city")).map(Object::toString).orElse("");
+				String contest = Optional.ofNullable(user.get("contest")).map(Object::toString).orElse("");
+				Map<String,Object> userInfo = new HashMap<>();
+				userInfo.put("username", username);
+				userInfo.put("name", displayName);
+				userInfo.put("grade", grade);
+				userInfo.put("school", school);
+				userInfo.put("city", city);
+				userInfo.put("contest", contest);
+			}
+		}
+
 		Map<String, List<Map<String, Object>>> usersSubmissions = submissions.stream().collect(Collectors.groupingBy(s -> s.get("key").toString()));
 		Map<String, Map<Integer, Map<String, Object>>> results = new HashMap<>();
 		for (Map.Entry<String, List<Map<String, Object>>> userSubmissions: usersSubmissions.entrySet()) {
