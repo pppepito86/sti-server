@@ -102,6 +102,11 @@ public class Repository {
 	public List<Map<String, Object>> listCitySubmissions(String city) {
 		return template.queryForList("SELECT * from submissions where city=?", city);
 	}
+
+	public List<Map<String, Object>> lastSimilarSubmission(int problemId, String username, String city) {
+		return template.queryForList("SELECT * from submissions where city=? and username=? and problem_id=? order by id DESC", 
+				city, username, problemId);
+	}
 	
 	public List<Map<String, Object>> listUserSubmissionsForProblem(String username, int problemNumber) {
 		return template.queryForList("SELECT submissions.id,submissions.verdict,submissions.points,submissions.upload_time from submissions" +

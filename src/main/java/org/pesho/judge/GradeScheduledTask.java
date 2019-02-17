@@ -98,11 +98,28 @@ public class GradeScheduledTask {
 				
 				if (submission.get("points") != null) {
 					int previousPoints = (int) submission.get("points");
-					String s = previousPoints + " ->" + points;
+					String diff = previousPoints + " ->" + points;
 					if (points > previousPoints) {
-						repository.addLog("rejudge", "points increased("+s+") for " + submissionId, "");
+						repository.addLog("rejudge", "points increased("+diff+") for " + submissionId, "");
 					} else if (points < previousPoints) {
-						repository.addLog("rejudge", "points decreased("+s+") for " + submissionId, "");
+						repository.addLog("rejudge", "points decreased("+diff+") for " + submissionId, "");
+					}
+				}
+				
+				if (submission.get("city") != null && submission.get("username") != null) {
+					String city = submission.get("city").toString();
+					String username = submission.get("username").toString();
+					
+					List<Map<String, Object>> similarSubmissions = repository.lastSimilarSubmission(problemId, username, city);
+					if (!similarSubmissions.isEmpty()) {
+						Map<String, Object> similar = similarSubmissions.get(0);
+						if (similar.get("points") != null) {
+							int similarPoints = (int) similar.get("points");
+							if (similarPoints != points) {
+								String diff = similarPoints + " ->" + points;
+								repository.addLog("new score", "points changed("+diff+") for " + submissionId, "");
+							}
+						}
 					}
 				}
 				
