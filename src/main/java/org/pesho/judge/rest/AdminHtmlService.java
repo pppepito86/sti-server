@@ -477,7 +477,7 @@ public class AdminHtmlService extends HtmlService {
 	    
 	    final String[] displayColumnNames = new String[] {
 	    		"initials", "name", "city", "school", "grade", "total", 
-	    		"problem 1", "problem 2", "problem 3", "problem 1", "problem 2", "problem 3"};
+	    		"problem 1", "problem 2", "problem 3", "details 1", "details 2", "details 3"};
 	    
 	    try (
             CSVPrinter csvPrinter = new CSVPrinter(buffer, CSVFormat.DEFAULT
