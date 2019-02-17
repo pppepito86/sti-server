@@ -111,8 +111,8 @@ public class GradeScheduledTask {
 					String username = submission.get("username").toString();
 					
 					List<Map<String, Object>> similarSubmissions = repository.lastSimilarSubmission(problemId, username, city);
-					if (!similarSubmissions.isEmpty()) {
-						Map<String, Object> similar = similarSubmissions.get(0);
+					if (similarSubmissions.size() > 1) {
+						Map<String, Object> similar = similarSubmissions.get(1);
 						if (similar.get("points") != null) {
 							int similarPoints = (int) similar.get("points");
 							if (similarPoints != points) {
