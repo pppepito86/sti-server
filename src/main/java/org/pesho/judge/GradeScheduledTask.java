@@ -98,10 +98,11 @@ public class GradeScheduledTask {
 				
 				if (submission.get("points") != null) {
 					int previousPoints = (int) submission.get("points");
+					String s = previousPoints + " ->" + points;
 					if (points > previousPoints) {
-						repository.addLog("rejudge", "points increased for " + submissionId, "");
+						repository.addLog("rejudge", "points increased("+s+") for " + submissionId, "");
 					} else if (points < previousPoints) {
-						repository.addLog("rejudge", "points decreased for " + submissionId, "");
+						repository.addLog("rejudge", "points decreased("+s+") for " + submissionId, "");
 					}
 				}
 				
