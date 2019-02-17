@@ -95,6 +95,16 @@ public class GradeScheduledTask {
 				worker.get().setFree(true);
 				System.out.println("Judging " + worker.get().getUrl() + " " + result + " " + submissionId + " " + problemId);
 				System.out.println("Scoring " + worker.get().getUrl() + " " + submissionId + " " + problemId);
+				
+				if (submission.get("points") != null) {
+					int previousPoints = (int) submission.get("points");
+					if (points > previousPoints) {
+						repository.addLog("rejudge", "points increased for " + submissionId, "");
+					} else if (points < previousPoints) {
+						repository.addLog("rejudge", "points decreased for " + submissionId, "");
+					}
+				}
+				
 				repository.addScore(submissionId, result, details, points);
 				if (result.equals("CE")) {
 					repository.addLog("grade", "compilation error " + submissionId, "");
