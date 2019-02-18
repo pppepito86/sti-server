@@ -383,9 +383,9 @@ public class AdminHtmlService extends HtmlService {
 		model.addAttribute("problems", problems);
 		return "resultsfull";
 	}
+	
 	@GetMapping("/admin/resultsfullcsv/{contest}")
 	public ResponseEntity<InputStreamResource> adminResultsFullCsvPage(@PathVariable("contest") String contest) {
-		List<Map<String,Object>> contests = repository.listContests();
 		List<Map<String,Object>> submissions = repository.listDetailedSubmissions().stream()
 				.filter(x -> !"author".equalsIgnoreCase(x.get("city").toString()))
 				.filter(x -> !"admin".equalsIgnoreCase(x.get("city").toString()))
@@ -459,6 +459,7 @@ public class AdminHtmlService extends HtmlService {
 					user.get("city").toString().toUpperCase() +
 					user.get("contest").toString().toUpperCase();
 			if (results.containsKey(key)) continue;
+			if (!contest.equalsIgnoreCase(user.get("contest").toString())) continue;
 			
 			Map<Integer, Map<String, Object>> map = new TreeMap<>();
 			for (int i = 1; i <= problemsCount; i++) {
@@ -495,7 +496,9 @@ public class AdminHtmlService extends HtmlService {
 
 	    		for (int i = 1; i <= 3; i++) {
 		    		list.add(result.getValue().get(i).get("points"));
-		    		list.add(result.getValue().get(i).get("details"));
+	    		}
+	    		for (int i = 1; i <= 3; i++) {
+	    			list.add(result.getValue().get(i).get("details"));
 	    		}
 	    		
 //	    		Object[] values = Arrays
