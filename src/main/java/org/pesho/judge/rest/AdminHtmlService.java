@@ -927,7 +927,6 @@ public class AdminHtmlService extends HtmlService {
 
 	private void sanitize(File file) throws IOException {
  	   	File temp = File.createTempFile("temp-"+RandomStringUtils.randomAlphabetic(8), ".tmp"); 
- 	   	while (temp.exists()) temp = File.createTempFile("temp-"+RandomStringUtils.randomAlphabetic(8), ".tmp");
 
  	   	try (BufferedReader br = new BufferedReader(new FileReader(file));
  	   			PrintWriter pw = new PrintWriter(temp)) {
