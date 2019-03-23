@@ -1,10 +1,13 @@
 package org.pesho.judge.rest;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -28,6 +31,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.pesho.grader.SubmissionScore;
 import org.pesho.grader.task.TaskDetails;
 import org.pesho.grader.task.TaskParser;
@@ -922,10 +926,18 @@ public class AdminHtmlService extends HtmlService {
 	}
 
 	private void sanitize(File file) throws IOException {
-		String content = FileUtils.readFileToString(file);
-		content = content.replace("\r\n", "\n");
-		content = content.replace("\r", "\n");
-		FileUtils.writeStringToFile(file, content);
+ 	   	File temp = File.createTempFile("temp-"+RandomStringUtils.randomAlphabetic(8), ".tmp"); 
+ 	   	while (temp.exists()) temp = File.createTempFile("temp-"+RandomStringUtils.randomAlphabetic(8), ".tmp");
+
+ 	   	try (BufferedReader br = new BufferedReader(new FileReader(file));
+ 	   			PrintWriter pw = new PrintWriter(temp)) {
+ 	   		for (String line = br.readLine(); line != null; line = br.readLine()) {
+ 	   			pw.println(line);
+ 	   		}
+ 	   	}
+
+ 	   	FileUtils.copyFile(temp, file, true);
+ 	   	temp.delete();
 	}
 
 	@GetMapping("/admin/download-users")
