@@ -1,6 +1,7 @@
 package org.pesho.judge.rest;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
@@ -928,10 +929,16 @@ public class AdminHtmlService extends HtmlService {
 	private void sanitize(File file) throws IOException {
  	   	File temp = File.createTempFile("temp-"+RandomStringUtils.randomAlphabetic(8), ".tmp"); 
 
- 	   	try (BufferedReader br = new BufferedReader(new FileReader(file));
- 	   			PrintWriter pw = new PrintWriter(temp)) {
- 	   		for (String line = br.readLine(); line != null; line = br.readLine()) {
- 	   			pw.println(line);
+ 	   	try (BufferedReader in = new BufferedReader(new FileReader(file));
+ 	   			BufferedWriter out = new BufferedWriter(new PrintWriter(temp))) {
+ 	   		for (int character = in.read(); character != -1; character = in.read()) {
+ 	   			if (character == '\r') {
+ 	   				out.write('\n');
+ 	   				character = in.read();
+ 	   				if (character != '\n' && character != -1) out.write(character); 	   				
+ 	   			} else {
+ 	   				out.write(character);
+ 	   			}
  	   		}
  	   	}
 
