@@ -155,7 +155,7 @@ public class Repository {
 	public List<Map<String, Object>> listDetailedSubmissions() {
 		return template.queryForList("SELECT submissions.id, city, username, submissions.file, verdict, points, contests.name as contest_name, problems.name as problem_name, problems.number from submissions" + 
 				" inner join problems on submissions.problem_id=problems.id" +
-				" inner join contests on problems.contest_id=contests.id");
+				" inner join contests on problems.contest_id=contests.id order by id DESC");
 	}
 
 	public List<Map<String, Object>> listContestSubmissions(int contestId) {
