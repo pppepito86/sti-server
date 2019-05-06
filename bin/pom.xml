@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.pesho</groupId>
-	<artifactId>contest_user_server</artifactId>
+	<artifactId>noi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Contestant</name>
-	<description>Contestants Application</description>
+	<name>noi</name>
+	<description>Online Grader for NOI</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -33,6 +33,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -46,6 +47,14 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.integration</groupId>
@@ -70,6 +79,10 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>javax.ws.rs</groupId>
@@ -115,14 +128,6 @@
 		    <artifactId>commons-lang</artifactId>
 		    <version>2.6</version>
 		</dependency>
-		<dependency>
-		   <groupId>org.springframework.security.oauth</groupId>
-		   <artifactId>spring-security-oauth2</artifactId>
-		</dependency>
-		<dependency>
-		   <groupId>org.springframework.security</groupId>
-		   <artifactId>spring-security-jwt</artifactId>
-		</dependency>			
 	</dependencies>
 
 	<build>

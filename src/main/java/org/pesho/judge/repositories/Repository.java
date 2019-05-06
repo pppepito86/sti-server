@@ -1,7 +1,5 @@
 package org.pesho.judge.repositories;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +15,50 @@ public class Repository {
     @Autowired
     private JdbcTemplate template;
 
+    public Optional<Map<String, Object>> getUserDetails(String username) {
+    	return template.queryForList(
+    			"SELECT name, contest, display_name, grade, school, city FROM users WHERE name=?", username)
+    			.stream().findAny();
+    }
+
+    public Optional<String> getContestId(String username) {
+    	return template.queryForList(
+    			"SELECT c.id FROM contests as c" +
+    			" INNER JOIN users AS u on u.contest=c.name" +
+    			" WHERE u.name=?", username)
+    			.stream().map(c -> c.get("id")).map(Object::toString).findAny();
+    }
+
+	public Optional<Map<String, Object>> getContestTask(String userName, int problemNumber) {
+		return template.queryForList(
+				"SELECT p.name, p.number, c.id as contestId FROM problems as p" +
+				" INNER JOIN contests AS c ON c.id=p.contest_id" +
+				" INNER JOIN users AS u ON u.contest=c.name" +
+				" WHERE u.name=? AND p.number=?", userName, problemNumber)
+				.stream().findAny();
+	}
+    
+	public List<Map<String, Object>> listContestTasks(String contestName) {
+		return template.queryForList(
+				"SELECT p.name, p.number FROM problems as p" +
+				" INNER JOIN contests AS c ON c.id=p.contest_id" +
+				" WHERE c.name=? ORDER BY p.number ASC", contestName);
+	}
+
+	public List<Map<String, Object>> listSubmissions(String username, int problemNumber) {
+		return template.queryForList(
+				"SELECT s.id,s.verdict,s.points,s.upload_time,p.name,u.contest FROM submissions AS s" +
+				" INNER JOIN users AS u ON u.name=s.username" + 
+				" INNER JOIN problems AS p ON p.id=s.problem_id" +
+				" WHERE u.name=? and p.number=?" +
+				" ORDER BY s.upload_time DESC", username, problemNumber);
+	}
+    
+	
+	
+	
+	
+	
     public synchronized int addContest(String name, Timestamp start, Timestamp end) {
     	template.update("INSERT INTO contests(name, start_time, end_time) VALUES(?, ?, ?)", 
     			name, start, end);
@@ -140,90 +182,6 @@ public class Repository {
 		return 0;
 	}
 	
-	public boolean hasCitySubmissions(String city) {
-		return template.queryForList("SELECT id from submissions where city=?", city).stream().findAny().isPresent();
-	}
-	
-	public List<Map<String, Object>> listContestSubmissions(String city, String contest) {
-        return template.queryForList("SELECT * from submissions "
-        		+ "inner join problems on problems.id=submissions.problem_id "
-        		+ "inner join contests on contests.id=problems.contest_id "
-        		+ "where city=? AND contests.name=?",
-                city, contest);
-	}
-	
-	public List<Map<String, Object>> listDetailedSubmissions() {
-		return template.queryForList("SELECT submissions.id, city, username, submissions.file, verdict, points, contests.name as contest_name, problems.name as problem_name, problems.number from submissions" + 
-				" inner join problems on submissions.problem_id=problems.id" +
-				" inner join contests on problems.contest_id=contests.id order by id DESC");
-	}
-
-	public List<Map<String, Object>> listContestSubmissions(int contestId) {
-		return template.queryForList("SELECT submissions.id, city, username, verdict, points, problems.name from submissions" + 
-				" inner join problems on problems.contest_id=? AND submissions.problem_id=problems.id",
-			contestId);
-	}
-
-	public List<Map<String, Object>> submissionsToGrade() {
-		return template.queryForList(
-				"select * from submissions where verdict='waiting'");
-	}
-	
-	public List<Map<String, Object>> failedSubmissions() {
-		return template.queryForList(
-				"select * from submissions where verdict='system error'");
-	}
-
-	public synchronized void addStatus(int id, String verdict) {
-		template.update("UPDATE submissions SET verdict=? WHERE id=?", verdict, id);
-	}
-	
-	public synchronized void addScore(int id, String result, String details, int points) {
-		//String escapedDetails = StringEscapeUtils.escapeSql(details);
-		String escapedDetails = details;
-		try {
-			escapedDetails = new String(StandardCharsets.UTF_8.encode(details).array(), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		template.update("UPDATE submissions SET verdict=?, details=?, points=? WHERE id=?", result, escapedDetails, points, id);
-	}
-	
-	public synchronized void addWorker(String url, String type) {
-		if (findWorkers(url).isPresent()) {
-			template.update("UPDATE workers SET type=?, deleted=false where url=?", type, url);
-		} else {
-			template.update("INSERT INTO workers(url, type) VALUES(?, ?)", url, type);
-		}
-	}
-	
-	public void deleteWorker(String url) {
-        template.update("UPDATE workers SET deleted=true where url=?", url);
-	}
-
-	public Optional<Map<String, Object>> findWorkers(String url) {
-		return template.queryForList("select * from workers where url=?", url).stream().findFirst();
-	}
-	
-	public List<Map<String, Object>> listWorkers() {
-		return template.queryForList("select * from workers where deleted=false");
-	}
-	
-	public List<Map<String, Object>> listActiveWorkers() {
-		return template.queryForList("select * from workers where active=true AND deleted=false");
-	}
-	
-	public int maxProblemNumber() {
-		return template.queryForList("select max(number) from problems").stream().findFirst().map(x -> (int) x.get("max(number)")).orElse(0);
-	}
-
-	public Optional<Map<String, Object>> getSubmission(int id) {
-		return template.queryForList("SELECT submissions.id, city, username, submissions.file, problem_id, verdict, details, points, submissions.upload_time, contests.name as contest_name, problems.name as problem_name from submissions" +
-				" inner join problems on submissions.problem_id=problems.id" +
-				" inner join contests on problems.contest_id=contests.id" +
-				"  where submissions.id=?", id).stream().findFirst();
-	}
-	
     public synchronized void addLog(String topic, String title, String message) {
     	template.update("INSERT INTO logs(topic, title, message) VALUES(?, ?, ?)", 
     			topic, title, message);
@@ -233,45 +191,5 @@ public class Repository {
     	template.update("INSERT INTO ips(username, operation, local_ip, public_ip) VALUES(?, ?, ?, ?)", 
     			username, operation, localIp, publicIp);
     }
-    
-    public List<Map<String, Object>> listLogs() {
-		return template.queryForList("select * from logs");
-	}
-    
-    public List<Map<String, Object>> listUsers() {
-		return template.queryForList("select * from users");
-	}
-	
-    public synchronized int addUser(String username, 
-    		String password, String displayName, String group, 
-    		String city, String school, String grade) {
-    	
-    	template.update("INSERT INTO users(name, display_name, password, contest, role, city, school, grade) "
-    			+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?)", 
-    			username, displayName, password, group, "USER", city, school, grade);
-    	
-    	Optional<Object> last = template.queryForList("SELECT MAX(id) FROM users").stream()
-    			.map(x -> x.get("MAX(id)")).findFirst();
-    	
-    	return (int) last.get();
-	}
-    
-    public Optional<String> getUserContest(String username) {
-    	return template.queryForList("select contest from users where name=?", username).stream().map(x -> x.get("contest").toString()).findFirst();
-    }
-
-    public Optional<String> getUserDisplayName(String username) {
-    	return template.queryForList("select display_name from users where name=?", username).stream().map(x -> x.get("display_name").toString()).findFirst();
-    }
-    
-    public List<Map<String, Object>> getUserSubmissions(String name) {
-    	return template.queryForList("SELECT upload_time from submissions" +
-				"  where username=? order by upload_time desc", name);
-    }
-
-	public void updateContest(int id, Timestamp start, Timestamp end) {
-		template.update("UPDATE contests SET start_time=?, end_time=? where id=?", 
-				start, end, id);
-	}
     
 }
