@@ -3,6 +3,7 @@ package org.pesho.judge.rest;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +108,19 @@ public class RestService {
 			}
 			submission.put("compile", score.getScoreSteps().get("Compile"));
 			score.getScoreSteps().remove("Compile");
-			submission.put("tests", score.getScoreSteps());
+			
+			LinkedHashMap<String,StepResult> scoreSteps = score.getScoreSteps();
+			ArrayList<HashMap<String, Object>> newScoreSteps = new ArrayList<>();
+			for (Map.Entry<String, StepResult> entry: scoreSteps.entrySet()) {
+				HashMap<String, Object> m = new HashMap<>();
+				m.put("name", entry.getKey());
+				m.put("verdict", entry.getValue().getVerdict());
+				m.put("reason", entry.getValue().getReason());
+				m.put("time", entry.getValue().getTime());
+				newScoreSteps.add(m);
+			}
+			
+			submission.put("tests", newScoreSteps);
 			
 			LinkedHashMap<String, StepResult> steps = new LinkedHashMap<>();
 			if (groups.size() <= score.getScoreSteps().size()) {
