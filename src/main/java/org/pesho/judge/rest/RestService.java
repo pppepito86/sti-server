@@ -1,6 +1,8 @@
 package org.pesho.judge.rest;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,11 +20,16 @@ import org.pesho.grader.task.TaskParser;
 import org.pesho.judge.repositories.Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,14 +44,15 @@ public class RestService {
 	protected Repository repository;
 	
 	protected ObjectMapper mapper = new ObjectMapper();
-	
+
 	@RequestMapping("/me")
 	public ResponseEntity<?> me() {
 		return repository.getUserDetails(getUsername())
 				.map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
 	}
-	
+
+	//TODO check contest is started
 	@RequestMapping("/tasks")
 	public ResponseEntity<?> tasks() {
 		Optional<String> contest = getContest();
@@ -61,9 +69,51 @@ public class RestService {
 			task.put("memory", details.getMemory());
 			return task;
 		}).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-		
 	}
-	
+
+    @GetMapping("/task/{taskNumber}/pdf")
+    public ResponseEntity<?> downloadPdf(@PathVariable("taskNumber") int number,
+			@RequestParam(value = "download", defaultValue = "false") boolean download) throws Exception {
+
+    	String contestId = repository.getContestId(getUsername()).get();
+	    return downloadPdf(Integer.valueOf(contestId), number, download);
+    }
+    
+    public ResponseEntity<?> downloadPdf(int contestId, int number, boolean download) throws Exception {
+    	HttpHeaders respHeaders = new HttpHeaders();
+    	if (download) {
+    		respHeaders.setContentDispositionFormData("attachment", "problem" + number + ".pdf");
+    	} else {
+    		respHeaders.setContentType(org.springframework.http.MediaType.APPLICATION_PDF);
+    	}
+	    
+	    File problemDir = getFile("problem", String.valueOf(contestId), String.valueOf(number));
+	    File pdf = findPdf(problemDir);
+	    if (pdf == null) return ResponseEntity.noContent().build();
+	    
+	    InputStream is = new FileInputStream(pdf);
+		InputStreamResource inputStreamResource = new InputStreamResource(is);
+	    
+		return new ResponseEntity<InputStreamResource>(inputStreamResource, 
+	    		respHeaders, HttpStatus.OK);
+    }
+
+	protected File findPdf(File problemDir) {
+		File[] files = problemDir.listFiles();
+		if (files == null) return null;
+		
+		for (File file: files) {
+			if (file.isFile() && file.getName().endsWith(".pdf")) {
+				return file;
+			}
+			if (file.isDirectory()) {
+				File pdf = findPdf(file);
+				if (pdf != null) return pdf;
+			}
+		}
+		return null;
+	}
+    
 	@RequestMapping("/tasks/{problemNumber}/solutions")
 	public ResponseEntity<?> taskSolutions(
 			@PathVariable int problemNumber) {
