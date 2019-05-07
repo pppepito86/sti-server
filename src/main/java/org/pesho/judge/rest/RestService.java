@@ -71,7 +71,7 @@ public class RestService {
 		}).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
-    @GetMapping("/task/{taskNumber}/pdf")
+    @GetMapping("/tasks/{taskNumber}/pdf")
     public ResponseEntity<?> downloadPdf(@PathVariable("taskNumber") int number,
 			@RequestParam(value = "download", defaultValue = "false") boolean download) throws Exception {
 
