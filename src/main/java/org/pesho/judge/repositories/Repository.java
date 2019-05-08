@@ -47,7 +47,7 @@ public class Repository {
 
 	public List<Map<String, Object>> listSubmissions(String username, int problemNumber) {
 		return template.queryForList(
-				"SELECT s.id,s.verdict,s.details,s.points,s.upload_time,p.name,p.id as problem_id,u.contest FROM submissions AS s" +
+				"SELECT s.id,s.file,s.verdict,s.details,s.points,s.upload_time,p.name,p.id as problem_id,u.contest FROM submissions AS s" +
 				" INNER JOIN users AS u ON u.name=s.username" + 
 				" INNER JOIN problems AS p ON p.id=s.problem_id" +
 				" WHERE u.name=? and p.number=?" +
