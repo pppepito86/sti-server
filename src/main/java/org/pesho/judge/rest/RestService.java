@@ -3,6 +3,7 @@ package org.pesho.judge.rest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.TreeSet;
 
+import org.apache.commons.io.FileUtils;
 import org.pesho.grader.SubmissionScore;
 import org.pesho.grader.step.StepResult;
 import org.pesho.grader.step.Verdict;
@@ -194,6 +196,10 @@ public class RestService {
 			}
 			submission.put("steps", steps);
 		}
+		
+		File sourceFile = getFile("submissions", String.valueOf(submission.get("id")), submission.get("file").toString());
+		String source = FileUtils.readFileToString(sourceFile, Charset.forName("UTF-8"));
+		submission.put("source", source);
     	
 		return ResponseEntity.ok(submission);
     }
