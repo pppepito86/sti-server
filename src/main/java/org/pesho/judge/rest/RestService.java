@@ -128,7 +128,7 @@ public class RestService {
     		@PathVariable int problemNumber,
     		@PathVariable int solutionNumber) throws Exception {
     	List<Map<String,Object>> submissions = taskSubmissions(problemNumber);
-    	Map<String, Object> submission = submissions.get(solutionNumber-1);
+    	Map<String, Object> submission = submissions.get(submissions.size()-solutionNumber);
     	
 		List<List<Integer>> groups = groups(Integer.valueOf(submission.get("problem_id").toString()));
 		submission.put("groups", groups);
@@ -292,13 +292,13 @@ public class RestService {
 	
 	private List<Map<String, Object>> taskSubmissions(int problemNumber) {
 		List<Map<String,Object>> submissions = repository.listSubmissions(getUsername(), problemNumber);
-    	for (int i = submissions.size()-1; i >= 0; i--) {
-    		submissions.get(i).put("number", i+1);
+    	for (int i = 0; i < submissions.size(); i++) {
+    		submissions.get(i).put("number", submissions.size()-i);
     	}
     	String contestId = repository.getContestId(getUsername()).orElse(null);
     	TaskDetails details = getTaskDetails(contestId, String.valueOf(problemNumber));
     	submissions.forEach(submission -> {
-    	TreeSet<Integer> feedback = feedback(details.getFeedback());
+    		TreeSet<Integer> feedback = feedback(details.getFeedback());
 			submission.put("verdict", fixVerdict(submission.get("verdict").toString(), feedback));
 			if (feedback.size() != 0) submission.put("points", "?");
     	});
