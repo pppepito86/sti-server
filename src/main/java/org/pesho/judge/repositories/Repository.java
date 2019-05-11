@@ -21,6 +21,15 @@ public class Repository {
     			.stream().findAny();
     }
 
+    public Optional<Map<String, Object>> getContest(String username) {
+    	return template.queryForList(
+    			"SELECT c.id, c.start_time, c.end_time FROM contests as c" +
+    			" INNER JOIN users AS u on u.contest=c.name" +
+    			" WHERE u.name=?", username)
+    			.stream().findAny();
+    }
+
+    
     public Optional<String> getContestId(String username) {
     	return template.queryForList(
     			"SELECT c.id FROM contests as c" +
@@ -133,9 +142,9 @@ public class Repository {
 		return template.queryForList("SELECT * from contests where id=?", id).stream().findFirst();
 	}
 
-	public Optional<Map<String, Object>> getContest(String contest) {
-		return template.queryForList("SELECT * from contests where name=?", contest).stream().findFirst();
-	}
+//	public Optional<Map<String, Object>> getContest(String contest) {
+//		return template.queryForList("SELECT * from contests where name=?", contest).stream().findFirst();
+//	}
 	
 	public List<Map<String, Object>> listSubmissions() {
 		return template.queryForList("SELECT * from submissions");

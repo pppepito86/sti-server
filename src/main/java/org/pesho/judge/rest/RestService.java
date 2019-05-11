@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -304,5 +305,25 @@ public class RestService {
     	});
 		return submissions;
 	}
+
+	@RequestMapping("/time")
+	public ResponseEntity<?> timeLeft() {
+		return ResponseEntity.ok(getTimes());
+	}
+	
+	private HashMap<String, Object> getTimes() {
+		long currentTime = System.currentTimeMillis();
+		Timestamp startTime = (Timestamp) repository.getContest(getUsername()).get().get("start_time");
+		Timestamp endTime = (Timestamp) repository.getContest(getUsername()).get().get("end_time");
+		long timeTillStart = startTime.getTime() - currentTime;
+		long timeTillEnd = endTime.getTime() - currentTime;
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("timeTillStart", timeTillStart);
+		map.put("timeTillEnd", timeTillEnd);
+		
+		return map;
+	}
+	
     
 }
