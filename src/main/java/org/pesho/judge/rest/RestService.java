@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
+@RequestMapping("/api")
 public class RestService {
 	
 	@Value("${work.dir}")
