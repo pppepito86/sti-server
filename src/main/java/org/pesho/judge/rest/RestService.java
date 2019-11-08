@@ -48,13 +48,23 @@ public class RestService {
 	protected Repository repository;
 	
 	protected ObjectMapper mapper = new ObjectMapper();
-
-	@RequestMapping("/me")
-	public ResponseEntity<?> me() {
-		return repository.getUserDetails(getUsername())
-				.map(ResponseEntity::ok)
-				.orElse(ResponseEntity.notFound().build());
-	}
+	
+    @GetMapping("/user")
+    public Map<String, Object> test() {
+    	System.out.println("in");
+    	return repository.getUserDetails(getUsername()).orElse(null);
+    }
+    
+    @GetMapping("tasks/{taskId}")
+    public Map<String, Object> getTask(@PathVariable int taskId) {
+		return repository.getContestTask(getUsername(), taskId).map(task -> {
+			TaskDetails details = getTaskDetails(task.get("contestId").toString(), task.get("number").toString());
+			task.put("time", details.getTime());
+			task.put("memory", details.getMemory());
+			task.put("submissions", taskSubmissions(taskId));
+			return task;
+		}).orElse(null);
+    }
 
 	//TODO check contest is started
 	@RequestMapping("/tasks")
@@ -63,16 +73,6 @@ public class RestService {
 		return contest.map(c -> repository.listContestTasks(c))
 				.map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
-	}
-	
-	@RequestMapping("/tasks/{problemNumber}")
-	public ResponseEntity<?> taskDetails(@PathVariable int problemNumber) {
-		return repository.getContestTask(getUsername(), problemNumber).map(task -> {
-			TaskDetails details = getTaskDetails(task.get("contestId").toString(), task.get("number").toString());
-			task.put("time", details.getTime());
-			task.put("memory", details.getMemory());
-			return task;
-		}).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 
     @GetMapping("/tasks/{taskNumber}/pdf")
