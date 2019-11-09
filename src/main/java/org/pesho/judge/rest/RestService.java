@@ -55,8 +55,8 @@ public class RestService {
     	return repository.getUserDetails(getUsername()).orElse(null);
     }
     
-    @GetMapping("tasks/{taskId}")
-    public Map<String, Object> getTask(@PathVariable int taskId) {
+    @GetMapping("tasks/{taskId}/full")
+    public Map<String, Object> getTaskFull(@PathVariable int taskId) {
 		return repository.getContestTask(getUsername(), taskId).map(task -> {
 			TaskDetails details = getTaskDetails(task.get("contestId").toString(), task.get("number").toString());
 			task.put("time", details.getTime());
@@ -65,6 +65,24 @@ public class RestService {
 			return task;
 		}).orElse(null);
     }
+    
+    @GetMapping("tasks/{taskId}")
+    public Map<String, Object> getTask(@PathVariable int taskId) {
+		return repository.getContestTask(getUsername(), taskId).map(task -> {
+			TaskDetails details = getTaskDetails(task.get("contestId").toString(), task.get("number").toString());
+			task.put("time", details.getTime());
+			task.put("memory", details.getMemory());
+			return task;
+		}).orElse(null);
+    }
+    
+    @GetMapping("tasks/{taskId}/submissions")
+    public List<Map<String, Object>> getTaskSubmissions(@PathVariable int taskId) {
+		return repository.getContestTask(getUsername(), taskId).map(task -> {
+			return taskSubmissions(taskId);
+		}).orElse(null);
+    }
+    
 
 	//TODO check contest is started
 	@RequestMapping("/tasks")
