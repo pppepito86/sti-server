@@ -108,6 +108,14 @@ public class Repository {
 				"select * from problems where contest_id=? AND number=?", 
 				contestId, number).stream().findFirst();
 	}
+	
+	public Optional<Map<String, Object>> getProblem(String contestName, int problemNumber) {
+		return template.queryForList(
+				"select problems.id, problems.name from problems" +
+				" inner join contests on contests.name=? and contests.id=problems.contest_id" +
+				" where problems.number=?", 
+				contestName, problemNumber).stream().findFirst();
+	}
 
 	public Optional<Map<String, Object>> getProblem(String contestName, String problemName) {
 		return template.queryForList(
@@ -199,6 +207,11 @@ public class Repository {
     public synchronized void addIpLog(String username, String operation, String localIp, String publicIp) {
     	template.update("INSERT INTO ips(username, operation, local_ip, public_ip) VALUES(?, ?, ?, ?)", 
     			username, operation, localIp, publicIp);
+    }
+    
+    public List<Map<String, Object>> getUserSubmissions(String name) {
+    	return template.queryForList("SELECT upload_time from submissions" +
+				"  where username=? order by upload_time desc", name);
     }
     
 }

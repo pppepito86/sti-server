@@ -2,6 +2,7 @@ package org.pesho.judge.rest;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
@@ -13,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeSet;
+import java.util.stream.Stream;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.pesho.grader.SubmissionScore;
@@ -31,9 +35,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -49,9 +58,8 @@ public class RestService {
 	
 	protected ObjectMapper mapper = new ObjectMapper();
 	
-    @GetMapping("/user")
-    public Map<String, Object> test() {
-    	System.out.println("in");
+    @GetMapping("user")
+    public Map<String, Object> getUser() {
     	return repository.getUserDetails(getUsername()).orElse(null);
     }
     
@@ -343,6 +351,99 @@ public class RestService {
 		
 		return map;
 	}
+		
+	@PostMapping("/tasks/{problemNumber}/solutions")
+	public Map<String, Object> submitCode(
+			@PathVariable("problemNumber") Integer problemNumber,
+			@RequestParam("ip") String localIp,
+			@RequestParam("code") Optional<String> maybeCode,
+			@RequestPart("file") Optional<MultipartFile> maybeFile) throws Exception {
+		
+		if (maybeFile.isPresent()) {
+			MultipartFile file = maybeFile.get();
+			if (file.getSize() > 64 * 1024) {
+				throw new RuntimeException("{\"error\":6}");
+			}
+			
+			if (file.isEmpty()) {
+				throw new RuntimeException("{\"error\":4}");
+			}
+			
+			if (!file.getOriginalFilename().toLowerCase().endsWith(".cpp") && !file.getOriginalFilename().toLowerCase().endsWith(".c")) {
+				throw new RuntimeException("{\"error\":5}");
+			}
+			
+			return addSubmission(file, null, problemNumber, localIp);
+		} else if (maybeCode.isPresent()) {
+			String code = maybeCode.get();
+			if (code.trim().isEmpty()) {
+				throw new RuntimeException("{\"error\":7}");
+			}
+			return addSubmission(null, code, problemNumber, localIp);
+		} else {
+			throw new RuntimeException("{\"error\":\"no code\"}");
+		}
+	}
 	
+	public Map<String, Object> addSubmission(MultipartFile file, String code, Integer problemNumber, String localIp) throws IOException {
+		long submissionTime = System.currentTimeMillis();
+		
+		Map<String, Object> user = repository.getUserDetails(getUsername()).orElse(null);
+		String username = user.get("name").toString();
+		String city = user.get("city").toString();
+		
+		String contest = user.get("contest").toString();
+		String problemName = repository.getProblem(contest, problemNumber).get().get("name").toString();
+		
+		String fileName = problemName + ".cpp";
+		if (file != null && file.getOriginalFilename() != null && file.getOriginalFilename().toLowerCase().endsWith(".c")) {
+			fileName = problemName + ".c";
+		}
+		
+		List<Map<String,Object>> submission = repository.getUserSubmissions(SecurityContextHolder.getContext().getAuthentication().getName());
+		if (!submission.isEmpty()) {
+			Timestamp lastSubmissionTime = (Timestamp) submission.get(0).get("upload_time");
+			if (lastSubmissionTime.getTime() + 60 * 1000 > submissionTime) {
+				throw new RuntimeException("{\"error\":1}");
+			}
+		}
+		if (submission.size() >= 50) {
+			throw new RuntimeException("{\"error\":7}");
+		}
+				
+		Timestamp endTime = (Timestamp) repository.getContest(getUsername()).get().get("end_time");
+		if (submissionTime > endTime.getTime()) {
+//			throw new RuntimeException("{\"error\":\"contest is over\"}");
+		}
+		
+		int submissionId = repository.addSubmission(city, username, contest, problemName, fileName);
+		if (localIp == null) localIp = "";
+		repository.addIpLog(username, "SUBMISSION " + submissionId, localIp, getPublicIp());
+		
+		if (submissionId == 0) {
+			String details = String.format("%s_%s_%s_%s", city, contest, username, problemName);
+			repository.addLog("submission", "problem not found for " + details, "");
+			throw new RuntimeException("{\"error\":\"problem not found for "+details+"\"}");
+		}
+		
+		File sourceFile = getFile("submissions", String.valueOf(submissionId), fileName);
+		if (file != null) {
+			FileUtils.copyInputStreamToFile(file.getInputStream(), sourceFile);
+		} else {
+			FileUtils.writeStringToFile(sourceFile, code);
+		}
+		int submissionNumber = repository.userSubmissionsNumberForProblem(username, problemNumber, submissionId);
+		HashMap<String, Object> response = new HashMap<>();
+		response.put("sid", submissionNumber);
+		return response;
+	}
     
+	public String getPublicIp() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+		        .getRequest();
+		String publicIp = request.getRemoteAddr();
+		if (publicIp == null) publicIp = "";
+		return publicIp;
+	}
+	
 }
