@@ -227,6 +227,11 @@ public class Repository {
     	
     	return (int) last.get();
     }
+    
+	public long unreadQuestions(String username) {
+        List<Map<String, Object>> tmp = template.queryForList("SELECT COUNT(*) from questions where username=? and answer IS NOT NULL and seen=0", username);
+		return tmp.stream().map(x -> x.get("COUNT(*)")).mapToLong(x -> (long) x).findFirst().orElse(0);
+	}
 
     
 }

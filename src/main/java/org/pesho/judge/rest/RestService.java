@@ -483,5 +483,11 @@ public class RestService {
 		return ans;
 	}
 
+	@GetMapping("/unread")
+	public Map<String, Object> unreedQuestions() throws Exception {
+		HashMap<String, Object> ans = new HashMap<>();
+		ans.put("questions", repository.unreadQuestions(getUsername()));
+		return ans;
+	}
 	
 }
