@@ -214,4 +214,19 @@ public class Repository {
 				"  where username=? order by upload_time desc", name);
     }
     
+	public List<Map<String, Object>> listQuestions(String username) {
+        return template.queryForList("SELECT * from questions where username=? order by id asc", username);
+	}
+    
+    public synchronized int addQuestion(String username, String topic, String question) {
+    	template.update("INSERT INTO questions(topic, username, question) VALUES(?, ?, ?)", 
+    			topic, username, question);
+    	
+    	Optional<Object> last = template.queryForList("SELECT MAX(id) FROM questions").stream()
+    			.map(x -> x.get("MAX(id)")).findFirst();
+    	
+    	return (int) last.get();
+    }
+
+    
 }

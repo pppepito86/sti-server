@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeSet;
-import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -90,8 +89,28 @@ public class RestService {
 			return taskSubmissions(taskId);
 		}).orElse(null);
     }
-    
 
+    @GetMapping("timeToSubmit")
+    public Map<String, Object> getTimeToNextSubmit() {
+    	HashMap<String, Object> ans = new HashMap<>();
+    	
+		Map<String, Object> contest = repository.getContest(getUsername()).get();
+		Timestamp endTime = (Timestamp) contest.get("end_time");
+		long timeLeft = endTime.getTime() - System.currentTimeMillis();
+		ans.put("timeLeft", timeLeft);
+
+		List<Map<String,Object>> submission = repository.getUserSubmissions(getUsername());
+		if (submission.isEmpty()) {
+			ans.put("timeToSubmit", 0);
+		} else {
+			Timestamp lastSubmissionTime = (Timestamp) submission.get(0).get("upload_time");
+			long diff = lastSubmissionTime.getTime() + 60 * 1000 - System.currentTimeMillis();
+			if (diff > 0) ans.put("timeToSubmit", diff);
+			else ans.put("timeToSubmit", 0);
+		}
+		return ans;
+	}
+    
 	//TODO check contest is started
 	@RequestMapping("/tasks")
 	public ResponseEntity<?> tasks() {
@@ -413,7 +432,7 @@ public class RestService {
 				
 		Timestamp endTime = (Timestamp) repository.getContest(getUsername()).get().get("end_time");
 		if (submissionTime > endTime.getTime()) {
-//			throw new RuntimeException("{\"error\":\"contest is over\"}");
+			throw new RuntimeException("{\"error\":\"contest is over\"}");
 		}
 		
 		int submissionId = repository.addSubmission(city, username, contest, problemName, fileName);
@@ -445,5 +464,24 @@ public class RestService {
 		if (publicIp == null) publicIp = "";
 		return publicIp;
 	}
+
+	@GetMapping("/questions")
+	public List<Map<String, Object>> listQuestions() throws Exception {
+		return repository.listQuestions(getUsername());
+	}
+	
+	@PostMapping("/questions")
+	public Map<String, Object> submitQuestion(
+			@RequestParam("topic") String topic,
+			@RequestParam("question") String question,
+			@RequestParam("ip") String localIp) throws Exception {
+		int id = repository.addQuestion(getUsername(), topic, question);
+		if (id == 0) throw new RuntimeException("bad id");
+		
+		HashMap<String, Object> ans = new HashMap<>();
+		ans.put("id", id);
+		return ans;
+	}
+
 	
 }
