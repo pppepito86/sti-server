@@ -21,9 +21,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 		.authorizeRequests()
-        .anyRequest().authenticated()
+		.antMatchers("/api/**").authenticated()
         .and()
-        .httpBasic();
+        .httpBasic()
+        .authenticationEntryPoint(new NoPopupBasicAuthenticationEntryPoint());
 	}
 	
     @Override
