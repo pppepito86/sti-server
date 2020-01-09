@@ -46,7 +46,7 @@ function ScoreBoardBox({ points, maxPoints, hovered }) {
           color: 'black',
           backgroundImage: image,
           cursor: 'auto'
-    }}>{points?points:"N/A"}</span></td>
+    }}>{ (points === undefined || points === null)?"N/A":points}</span></td>
   )
 }
 
