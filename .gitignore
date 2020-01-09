@@ -45,6 +45,9 @@ submissions/
 .env.test.local
 .env.production.local
 
+/src/main/resources/static/built/bundle.js
+/src/main/resources/static/built/bundle.js.map
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

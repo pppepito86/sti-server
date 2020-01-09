@@ -47,10 +47,10 @@ const AuthProvider = ({children}) => {
     }
 
     function logout() {
-        localStorage.removeItem('display_name');
-        localStorage.removeItem('contest');
-        localStorage.removeItem('token');
         setIsAuth(false);
+        localStorage.removeItem("name");
+        localStorage.removeItem("contest");
+        localStorage.removeItem("token");
     }
 
     return (

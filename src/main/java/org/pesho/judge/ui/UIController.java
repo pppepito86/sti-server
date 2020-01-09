@@ -11,9 +11,4 @@ public class UIController {
 		return "index";
 	}
 	
-    @RequestMapping(value = "/{path:[^\\.]*}")
-    public String redirect() {
-        return "forward:/";
-    }
-	
 }
