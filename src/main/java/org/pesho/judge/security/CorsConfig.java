@@ -22,9 +22,8 @@ public class CorsConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/notFound").setViewName("index.html");
+    	registry.addViewController("/notFound").setViewName("forward:/index.html");
     }
-
 
     @Bean
     public EmbeddedServletContainerCustomizer containerCustomizer() {
