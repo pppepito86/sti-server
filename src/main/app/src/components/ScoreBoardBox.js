@@ -31,7 +31,7 @@ function getImage(ratio) {
 }
   
 function ScoreBoardBox({ points, maxPoints, hovered }) {
-  if (!points) return <td />;
+  if (points === undefined || points === null) return <td />;
 
   const ratio = points ? points * 1.0 / maxPoints : -1;
   const color = getColor(ratio);
