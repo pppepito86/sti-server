@@ -186,12 +186,12 @@ function TaskNoSubmissions() {
 }
 
 function TaskSubmissions({ tid, submissions }) {
-  if (!submissions) return <TaskNoSubmissions/>
+  if (!submissions || submissions.length === 0) return <TaskNoSubmissions/>
   
   return (
     <div className="box">
       <div className="box-header with-border">
-        <h3 className="box-title">Предадени решения{submissions.size}</h3>
+        <h3 className="box-title">Предадени решения</h3>
       </div>
       <div className="box-body box-responsive">
         <table className="table table-bordered table-hover" style={{ tableLayout: 'fixed', wordWrap: 'break-word' }}>
