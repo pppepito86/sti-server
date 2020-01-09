@@ -701,32 +701,6 @@ module.exports = _asyncToGenerator;
 
 /***/ }),
 
-/***/ "./src/main/app/node_modules/@babel/runtime/helpers/defineProperty.js":
-/*!****************************************************************************!*\
-  !*** ./src/main/app/node_modules/@babel/runtime/helpers/defineProperty.js ***!
-  \****************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-module.exports = _defineProperty;
-
-/***/ }),
-
 /***/ "./src/main/app/node_modules/@babel/runtime/helpers/esm/extends.js":
 /*!*************************************************************************!*\
   !*** ./src/main/app/node_modules/@babel/runtime/helpers/esm/extends.js ***!
@@ -67024,123 +66998,86 @@ function App() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppProvider", function() { return AppProvider; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useApp", function() { return useApp; });
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./src/main/app/node_modules/@babel/runtime/helpers/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./src/main/app/node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./src/main/app/node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./src/main/app/node_modules/@babel/runtime/helpers/slicedToArray.js");
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "./src/main/app/node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _useAsync__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./useAsync */ "./src/main/app/src/useAsync.js");
-/* harmony import */ var _useInterval__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./useInterval */ "./src/main/app/src/useInterval.js");
-/* harmony import */ var _rest__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./rest */ "./src/main/app/src/rest.js");
-/* harmony import */ var _ip__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ip */ "./src/main/app/src/ip.js");
-
-
-
-
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./src/main/app/node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./src/main/app/node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./src/main/app/node_modules/@babel/runtime/helpers/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "./src/main/app/node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _useAsync__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./useAsync */ "./src/main/app/src/useAsync.js");
+/* harmony import */ var _useInterval__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./useInterval */ "./src/main/app/src/useInterval.js");
+/* harmony import */ var _rest__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./rest */ "./src/main/app/src/rest.js");
+/* harmony import */ var _ip__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ip */ "./src/main/app/src/ip.js");
+/* harmony import */ var _useContestTime__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./useContestTime */ "./src/main/app/src/useContestTime.js");
 
 
 
 
 
 
-var AppContext = react__WEBPACK_IMPORTED_MODULE_4___default.a.createContext();
+
+
+
+var AppContext = react__WEBPACK_IMPORTED_MODULE_3___default.a.createContext();
 
 var AppProvider = function AppProvider(_ref) {
   var children = _ref.children;
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(),
-      _useState2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState, 2),
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_3__["useState"])(),
+      _useState2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState, 2),
       error = _useState2[0],
       setError = _useState2[1];
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(),
-      _useState4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState3, 2),
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_3__["useState"])(),
+      _useState4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState3, 2),
       ip = _useState4[0],
       setIp = _useState4[1];
 
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(Date.now()),
-      _useState6 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState5, 2),
-      now = _useState6[0],
-      setNow = _useState6[1];
+  var _useContestTime = Object(_useContestTime__WEBPACK_IMPORTED_MODULE_8__["default"])([]),
+      contestStartTime = _useContestTime.contestStartTime,
+      contestEndTime = _useContestTime.contestEndTime,
+      contestState = _useContestTime.contestState,
+      contestIsRunning = _useContestTime.contestIsRunning,
+      contestHasStarted = _useContestTime.contestHasStarted,
+      contestHasFinished = _useContestTime.contestHasFinished;
 
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(),
-      _useState8 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState7, 2),
-      time = _useState8[0],
-      setTime = _useState8[1];
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_3__["useState"])(0),
+      _useState6 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState5, 2),
+      unreadQuestions = _useState6[0],
+      setUnreadQuestions = _useState6[1];
 
-  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(false),
-      _useState10 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState9, 2),
-      contestIsRunning = _useState10[0],
-      setContestIsRunning = _useState10[1];
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_3__["useState"])([]),
+      _useState8 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState7, 2),
+      questions = _useState8[0],
+      setQuestions = _useState8[1];
 
-  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(false),
-      _useState12 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState11, 2),
-      contestIsFinished = _useState12[0],
-      setContestIsFinished = _useState12[1];
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_3__["useState"])(0),
+      _useState10 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState9, 2),
+      unreadAnnouncements = _useState10[0],
+      setUnreadAnnouncements = _useState10[1];
 
-  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(false),
-      _useState14 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState13, 2),
-      contestIsStarted = _useState14[0],
-      setContestIsStarted = _useState14[1];
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_3__["useState"])([]),
+      _useState12 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState11, 2),
+      announcements = _useState12[0],
+      setAnnouncements = _useState12[1];
 
-  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(0),
-      _useState16 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState15, 2),
-      unreadQuestions = _useState16[0],
-      setUnreadQuestions = _useState16[1];
+  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_3__["useState"])(false),
+      _useState14 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState13, 2),
+      shouldUpdateQuestions = _useState14[0],
+      setShouldUpdateQuestions = _useState14[1];
 
-  var _useState17 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])([]),
-      _useState18 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState17, 2),
-      questions = _useState18[0],
-      setQuestions = _useState18[1];
+  var _useAsync = Object(_useAsync__WEBPACK_IMPORTED_MODULE_4__["default"])(_rest__WEBPACK_IMPORTED_MODULE_6__["json"], 'questions', [shouldUpdateQuestions]),
+      questionsData = _useAsync.value;
 
-  var _useState19 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(0),
-      _useState20 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState19, 2),
-      unreadAnnouncements = _useState20[0],
-      setUnreadAnnouncements = _useState20[1];
+  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_3__["useState"])(false),
+      _useState16 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_2___default()(_useState15, 2),
+      shouldUpdateAnnouncements = _useState16[0],
+      setShouldUpdateAnnouncements = _useState16[1];
 
-  var _useState21 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])([]),
-      _useState22 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState21, 2),
-      announcements = _useState22[0],
-      setAnnouncements = _useState22[1];
-
-  var _useState23 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(false),
-      _useState24 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState23, 2),
-      shouldUpdateTime = _useState24[0],
-      setShouldUpdateTime = _useState24[1];
-
-  var _useAsync = Object(_useAsync__WEBPACK_IMPORTED_MODULE_5__["default"])(_rest__WEBPACK_IMPORTED_MODULE_7__["json"], 'time', [shouldUpdateTime]),
-      timeData = _useAsync.value;
-
-  var _useState25 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(false),
-      _useState26 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState25, 2),
-      shouldUpdateQuestions = _useState26[0],
-      setShouldUpdateQuestions = _useState26[1];
-
-  var _useAsync2 = Object(_useAsync__WEBPACK_IMPORTED_MODULE_5__["default"])(_rest__WEBPACK_IMPORTED_MODULE_7__["json"], 'questions', [shouldUpdateQuestions]),
-      questionsData = _useAsync2.value;
-
-  var _useState27 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(false),
-      _useState28 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState27, 2),
-      shouldUpdateAnnouncements = _useState28[0],
-      setShouldUpdateAnnouncements = _useState28[1];
-
-  var _useAsync3 = Object(_useAsync__WEBPACK_IMPORTED_MODULE_5__["default"])(_rest__WEBPACK_IMPORTED_MODULE_7__["json"], 'announcements', [shouldUpdateAnnouncements]),
-      announcementsData = _useAsync3.value;
-
-  function updateTime() {
-    setShouldUpdateTime(function (shouldUpdateTime) {
-      return !shouldUpdateTime;
-    });
-  }
+  var _useAsync2 = Object(_useAsync__WEBPACK_IMPORTED_MODULE_4__["default"])(_rest__WEBPACK_IMPORTED_MODULE_6__["json"], 'announcements', [shouldUpdateAnnouncements]),
+      announcementsData = _useAsync2.value;
 
   function updateQuestions() {
     setShouldUpdateQuestions(function (shouldUpdateQuestions) {
@@ -67159,11 +67096,11 @@ var AppProvider = function AppProvider(_ref) {
   }
 
   function _markQuestionsSeen() {
-    _markQuestionsSeen = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
+    _markQuestionsSeen = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee3() {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
       var i;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee3$(_context3) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
@@ -67207,18 +67144,18 @@ var AppProvider = function AppProvider(_ref) {
   var markQuestionSeen =
   /*#__PURE__*/
   function () {
-    var _ref2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
+    var _ref2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee(id) {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(id) {
       var formData;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee$(_context) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               formData = new FormData();
               formData.append('id', id);
               _context.next = 4;
-              return Object(_rest__WEBPACK_IMPORTED_MODULE_7__["post"])("questions/seen", formData);
+              return Object(_rest__WEBPACK_IMPORTED_MODULE_6__["post"])("questions/seen", formData);
 
             case 4:
             case "end":
@@ -67238,11 +67175,11 @@ var AppProvider = function AppProvider(_ref) {
   }
 
   function _markAnnouncementsSeen() {
-    _markAnnouncementsSeen = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
+    _markAnnouncementsSeen = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee4() {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
       var i;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee4$(_context4) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
@@ -67286,18 +67223,18 @@ var AppProvider = function AppProvider(_ref) {
   var markAnnouncementSeen =
   /*#__PURE__*/
   function () {
-    var _ref3 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
+    var _ref3 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
     /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee2(id) {
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(id) {
       var formData;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee2$(_context2) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               formData = new FormData();
               formData.append('id', id);
               _context2.next = 4;
-              return Object(_rest__WEBPACK_IMPORTED_MODULE_7__["post"])("announcements/seen", formData);
+              return Object(_rest__WEBPACK_IMPORTED_MODULE_6__["post"])("announcements/seen", formData);
 
             case 4:
             case "end":
@@ -67312,49 +67249,16 @@ var AppProvider = function AppProvider(_ref) {
     };
   }();
 
-  Object(_useInterval__WEBPACK_IMPORTED_MODULE_6__["default"])(function () {
-    setNow(Date.now());
-    updateTime();
+  Object(_useInterval__WEBPACK_IMPORTED_MODULE_5__["default"])(function () {
     updateQuestions();
     updateAnnouncements();
   }, 10000);
-  Object(_useInterval__WEBPACK_IMPORTED_MODULE_6__["default"])(function () {
-    if (!contestIsRunning) setContestIsRunning(true);
-    if (!contestIsFinished) setContestIsFinished(false);
-    if (!contestIsStarted) setContestIsStarted(true);
-  }, time && !contestIsRunning && !contestIsFinished ? time.timeTillStart : null);
-  Object(_useInterval__WEBPACK_IMPORTED_MODULE_6__["default"])(function () {
-    if (contestIsRunning) setContestIsRunning(false);
-    if (!contestIsFinished) setContestIsFinished(true);
-    if (!contestIsStarted) setContestIsStarted(true);
-  }, time && contestIsRunning ? time.timeTillEnd : null);
-  Object(react__WEBPACK_IMPORTED_MODULE_4__["useEffect"])(function () {
-    Object(_ip__WEBPACK_IMPORTED_MODULE_8__["getLocalIp"])().then(function (ip) {
+  Object(react__WEBPACK_IMPORTED_MODULE_3__["useEffect"])(function () {
+    Object(_ip__WEBPACK_IMPORTED_MODULE_7__["getLocalIp"])().then(function (ip) {
       setIp(ip);
     });
   }, []);
-  Object(react__WEBPACK_IMPORTED_MODULE_4__["useEffect"])(function () {
-    if (timeData) {
-      setTime(_objectSpread({}, timeData, {
-        startTime: Date.now() + timeData.timeTillStart,
-        endTime: now + timeData.timeTillEnd
-      }));
-
-      if (!contestIsRunning && timeData.timeTillStart <= 0 && timeData.timeTillEnd > 0) {
-        setContestIsRunning(true);
-      }
-
-      if (contestIsRunning && !(timeData.timeTillStart <= 0 && timeData.timeTillEnd > 0)) {
-        setContestIsRunning(false);
-      }
-
-      if (!contestIsFinished && timeData.timeTillEnd <= 0) setContestIsFinished(true);
-      if (contestIsFinished && timeData.timeTillEnd > 0) setContestIsFinished(false);
-      if (!contestIsStarted && (contestIsRunning || contestIsFinished)) setContestIsStarted(true);
-      if (contestIsStarted && !(contestIsRunning || contestIsFinished)) setContestIsStarted(false);
-    }
-  }, [timeData]);
-  Object(react__WEBPACK_IMPORTED_MODULE_4__["useEffect"])(function () {
+  Object(react__WEBPACK_IMPORTED_MODULE_3__["useEffect"])(function () {
     if (questionsData) {
       setQuestions(questionsData);
       setUnreadQuestions(questionsData.slice().filter(function (q) {
@@ -67364,7 +67268,7 @@ var AppProvider = function AppProvider(_ref) {
       }).length);
     }
   }, [questionsData]);
-  Object(react__WEBPACK_IMPORTED_MODULE_4__["useEffect"])(function () {
+  Object(react__WEBPACK_IMPORTED_MODULE_3__["useEffect"])(function () {
     if (announcementsData) {
       setAnnouncements(announcementsData);
       setUnreadAnnouncements(announcementsData.slice().filter(function (a) {
@@ -67372,14 +67276,16 @@ var AppProvider = function AppProvider(_ref) {
       }).length);
     }
   }, [announcementsData]);
-  return react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(AppContext.Provider, {
+  return react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement(AppContext.Provider, {
     value: {
       error: error,
       setError: setError,
-      time: time,
       contestIsRunning: contestIsRunning,
-      contestIsFinished: contestIsFinished,
-      contestIsStarted: contestIsStarted,
+      contestHasStarted: contestHasStarted,
+      contestHasFinished: contestHasFinished,
+      contestStartTime: contestStartTime,
+      contestEndTime: contestEndTime,
+      contestState: contestState,
       questions: questions,
       unreadQuestions: unreadQuestions,
       markQuestionsSeen: markQuestionsSeen,
@@ -67393,7 +67299,7 @@ var AppProvider = function AppProvider(_ref) {
 };
 
 var useApp = function useApp() {
-  return react__WEBPACK_IMPORTED_MODULE_4___default.a.useContext(AppContext);
+  return react__WEBPACK_IMPORTED_MODULE_3___default.a.useContext(AppContext);
 };
 
 
@@ -67592,10 +67498,10 @@ var AuthProvider = function AuthProvider(_ref) {
   }
 
   function logout() {
-    localStorage.removeItem('display_name');
-    localStorage.removeItem('contest');
-    localStorage.removeItem('token');
     setIsAuth(false);
+    localStorage.removeItem("name");
+    localStorage.removeItem("contest");
+    localStorage.removeItem("token");
   }
 
   return react__WEBPACK_IMPORTED_MODULE_4___default.a.createElement(AuthContext.Provider, {
@@ -67762,7 +67668,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var ContestCountdown = function ContestCountdown() {
-  var time = Object(_AppContext__WEBPACK_IMPORTED_MODULE_2__["useApp"])().time;
+  var contestState = Object(_AppContext__WEBPACK_IMPORTED_MODULE_2__["useApp"])().contestState;
+  var contestStartTime = Object(_AppContext__WEBPACK_IMPORTED_MODULE_2__["useApp"])().contestStartTime;
+  var contestEndTime = Object(_AppContext__WEBPACK_IMPORTED_MODULE_2__["useApp"])().contestEndTime;
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     id: "timer",
     style: {
@@ -67770,13 +67678,13 @@ var ContestCountdown = function ContestCountdown() {
       textAlign: 'center',
       fontSize: '36px'
     }
-  }, time && time.timeTillStart > 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_countdown_now__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    date: time.startTime,
+  }, contestState === "NOT_STARTED" && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_countdown_now__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    date: contestStartTime,
     daysInHours: true
-  }), time && time.timeTillStart <= 0 && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_countdown_now__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    date: time.endTime,
+  }), contestState === "RUNNING" && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_countdown_now__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    date: contestEndTime,
     daysInHours: true
-  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "\u0421\u044A\u0441\u0442\u0435\u0437\u0430\u043D\u0438\u0435\u0442\u043E \u043F\u0440\u0438\u043A\u043B\u044E\u0447\u0438")));
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "\u0421\u044A\u0441\u0442\u0435\u0437\u0430\u043D\u0438\u0435\u0442\u043E \u043F\u0440\u0438\u043A\u043B\u044E\u0447\u0438")), contestState === "FINISHED" && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", null, "\u0421\u044A\u0441\u0442\u0435\u0437\u0430\u043D\u0438\u0435\u0442\u043E \u043F\u0440\u0438\u043A\u043B\u044E\u0447\u0438"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (ContestCountdown);
@@ -67812,10 +67720,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var DashboardContent = function DashboardContent() {
-  var contestIsRunning = Object(_AppContext__WEBPACK_IMPORTED_MODULE_3__["useApp"])().contestIsRunning;
-  var contestIsFinished = Object(_AppContext__WEBPACK_IMPORTED_MODULE_3__["useApp"])().contestIsFinished;
+  var contestHasStarted = Object(_AppContext__WEBPACK_IMPORTED_MODULE_3__["useApp"])().contestHasStarted;
 
-  var _useAsync = Object(_useAsync__WEBPACK_IMPORTED_MODULE_5__["default"])(_rest__WEBPACK_IMPORTED_MODULE_4__["json"], "tasks/info", [contestIsRunning]),
+  var _useAsync = Object(_useAsync__WEBPACK_IMPORTED_MODULE_5__["default"])(_rest__WEBPACK_IMPORTED_MODULE_4__["json"], "tasks/info", [contestHasStarted]),
       tasks = _useAsync.value;
 
   if (!tasks) return react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(_LoadingContent__WEBPACK_IMPORTED_MODULE_6__["default"], null);
@@ -67830,9 +67737,9 @@ var DashboardContent = function DashboardContent() {
     className: "row"
   }, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement("div", {
     className: "col-md-8"
-  }, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(Announcements, null), (contestIsRunning || contestIsFinished) && tasks && tasks.length > 0 && react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(TasksInfo, {
+  }, react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(Announcements, null), contestHasStarted && tasks.length > 0 && react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(TasksInfo, {
     tasks: tasks
-  })), (contestIsRunning || contestIsFinished) && tasks && tasks.length > 0 && react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(TasksPoints, {
+  })), contestHasStarted && tasks.length > 0 && react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement(TasksPoints, {
     tasks: tasks
   }))));
 };
@@ -68353,10 +68260,9 @@ var SeenQuestion = function SeenQuestion(_ref2) {
 
 var SendQuestion = function SendQuestion() {
   var updateQuestions = Object(_AppContext__WEBPACK_IMPORTED_MODULE_7__["useApp"])().updateQuestions;
-  var contestIsRunning = Object(_AppContext__WEBPACK_IMPORTED_MODULE_7__["useApp"])().contestIsRunning;
-  var contestIsStarted = Object(_AppContext__WEBPACK_IMPORTED_MODULE_7__["useApp"])().contestIsStarted;
+  var contestHasStarted = Object(_AppContext__WEBPACK_IMPORTED_MODULE_7__["useApp"])().contestHasStarted;
 
-  var _useAsync = Object(_useAsync__WEBPACK_IMPORTED_MODULE_4__["default"])(_rest__WEBPACK_IMPORTED_MODULE_5__["json"], 'tasks', [contestIsRunning]),
+  var _useAsync = Object(_useAsync__WEBPACK_IMPORTED_MODULE_4__["default"])(_rest__WEBPACK_IMPORTED_MODULE_5__["json"], 'tasks', [contestHasStarted]),
       tasks = _useAsync.value;
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_3__["useState"])("избери"),
@@ -68892,14 +68798,13 @@ var Sidebar = function Sidebar() {
       tid = _useParams.tid;
 
   var location = Object(react_router__WEBPACK_IMPORTED_MODULE_1__["useLocation"])();
-  var contestIsRunning = Object(_AppContext__WEBPACK_IMPORTED_MODULE_8__["useApp"])().contestIsRunning;
-  var contestIsFinished = Object(_AppContext__WEBPACK_IMPORTED_MODULE_8__["useApp"])().contestIsFinished;
+  var contestHasStarted = Object(_AppContext__WEBPACK_IMPORTED_MODULE_8__["useApp"])().contestHasStarted;
   var unreadQuestions = Object(_AppContext__WEBPACK_IMPORTED_MODULE_8__["useApp"])().unreadQuestions;
   var unreadAnnouncements = Object(_AppContext__WEBPACK_IMPORTED_MODULE_8__["useApp"])().unreadAnnouncements;
   var markQuestionsSeen = Object(_AppContext__WEBPACK_IMPORTED_MODULE_8__["useApp"])().markQuestionsSeen;
   var markAnnouncementsSeen = Object(_AppContext__WEBPACK_IMPORTED_MODULE_8__["useApp"])().markAnnouncementsSeen;
 
-  var _useAsync = Object(_useAsync__WEBPACK_IMPORTED_MODULE_4__["default"])(_rest__WEBPACK_IMPORTED_MODULE_3__["json"], 'tasks', [contestIsRunning]),
+  var _useAsync = Object(_useAsync__WEBPACK_IMPORTED_MODULE_4__["default"])(_rest__WEBPACK_IMPORTED_MODULE_3__["json"], 'tasks', [contestHasStarted]),
       tasks = _useAsync.value,
       loading = _useAsync.loading;
 
@@ -68936,7 +68841,7 @@ var Sidebar = function Sidebar() {
     className: "label pull-right bg-red"
   }, "\u043D\u043E\u0432\u043E")))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
     className: "header"
-  }, "\u0417\u0410\u0414\u0410\u0427\u0418"), (contestIsRunning || contestIsFinished) && !loading && tasks.map(function (t) {
+  }, "\u0417\u0410\u0414\u0410\u0427\u0418"), contestHasStarted && !loading && tasks.map(function (t) {
     return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
       key: t.number,
       className: t.number + "" === tid ? 'active' : ''
@@ -69083,8 +68988,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function SubmissionContent() {
-  var contestIsRunning = Object(_AppContext__WEBPACK_IMPORTED_MODULE_8__["useApp"])().contestIsRunning;
-  var contestIsFinished = Object(_AppContext__WEBPACK_IMPORTED_MODULE_8__["useApp"])().contestIsFinished;
+  var contestHasStarted = Object(_AppContext__WEBPACK_IMPORTED_MODULE_8__["useApp"])().contestHasStarted;
 
   var _useParams = Object(react_router__WEBPACK_IMPORTED_MODULE_2__["useParams"])(),
       tid = _useParams.tid,
@@ -69101,7 +69005,7 @@ function SubmissionContent() {
   Object(_useInterval__WEBPACK_IMPORTED_MODULE_6__["default"])(function () {
     setRefresh(refresh + 1);
   }, submission && !submission.points ? 5000 : null);
-  if (!contestIsRunning && !contestIsFinished || !submission) return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_LoadingContent__WEBPACK_IMPORTED_MODULE_4__["default"], null);
+  if (!contestHasStarted || !submission) return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_LoadingContent__WEBPACK_IMPORTED_MODULE_4__["default"], null);
   return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "content-wrapper",
     style: {
@@ -69154,10 +69058,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _rest__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../rest */ "./src/main/app/src/rest.js");
 /* harmony import */ var _Verdict__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Verdict */ "./src/main/app/src/components/Verdict.js");
-/* harmony import */ var _AppContext__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../AppContext */ "./src/main/app/src/AppContext.js");
-/* harmony import */ var _Scoreboard__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Scoreboard */ "./src/main/app/src/components/Scoreboard.js");
-/* harmony import */ var _ScoreBoardBox__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./ScoreBoardBox */ "./src/main/app/src/components/ScoreBoardBox.js");
-
+/* harmony import */ var _ScoreBoardBox__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./ScoreBoardBox */ "./src/main/app/src/components/ScoreBoardBox.js");
+/* harmony import */ var _AppErrorContext__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../AppErrorContext */ "./src/main/app/src/AppErrorContext.js");
 
 
 
@@ -69317,6 +69219,8 @@ function TaskSubmitFile(_ref4) {
       file = _useState2[0],
       setFile = _useState2[1];
 
+  var setError = Object(_AppErrorContext__WEBPACK_IMPORTED_MODULE_10__["useAppError"])().setError;
+
   function submit(_x2) {
     return _submit.apply(this, arguments);
   }
@@ -69331,27 +69235,42 @@ function TaskSubmitFile(_ref4) {
           switch (_context.prev = _context.next) {
             case 0:
               e.preventDefault();
-              console.log(file);
 
               if (file) {
                 _context.next = 4;
                 break;
               }
 
+              setError({
+                title: "Няма файл",
+                message: "Не сте изброли файл!"
+              });
               return _context.abrupt("return");
 
             case 4:
+              if (!(file.size > 64 * 1024)) {
+                _context.next = 7;
+                break;
+              }
+
+              setError({
+                title: "Твърде голям файл",
+                message: "\u041F\u0440\u0435\u0432\u0438\u0448\u0430\u0432\u0430\u0442\u0435 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u043D\u0430\u0442\u0430 \u0433\u043E\u043B\u0435\u043C\u0438\u043D\u0430 \u043D\u0430 \u0444\u0430\u0439\u043B! \u0412\u0430\u0448\u0438\u044F\u0442 \u0444\u0430\u0439\u043B \u0435 ".concat(file.size, "B \u043F\u0440\u0438 \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u043D\u043E \u043F\u043E\u0437\u0432\u043E\u043B\u0435\u043D\u0438 ").concat(64 * 1024, "B.")
+              });
+              return _context.abrupt("return");
+
+            case 7:
               formData = new FormData();
               formData.append('file', new Blob([file]), file.name);
               formData.append('ip', '127.0.0.1');
-              _context.next = 9;
+              _context.next = 12;
               return Object(_rest__WEBPACK_IMPORTED_MODULE_7__["post"])("tasks/".concat(tid, "/solutions"), formData);
 
-            case 9:
+            case 12:
               data = _context.sent;
               history.push("/task/".concat(tid, "/submission/").concat(data.sid));
 
-            case 11:
+            case 14:
             case "end":
               return _context.stop();
           }
@@ -69406,8 +69325,9 @@ function TaskSubmitCode(_ref5) {
   var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_3__["useState"])(""),
       _useState4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_1___default()(_useState3, 2),
       code = _useState4[0],
-      setCode = _useState4[1]; //const setError = useApp().setError;
+      setCode = _useState4[1];
 
+  var setError = Object(_AppErrorContext__WEBPACK_IMPORTED_MODULE_10__["useAppError"])().setError;
 
   function submit(_x3) {
     return _submit2.apply(this, arguments);
@@ -69425,25 +69345,28 @@ function TaskSubmitCode(_ref5) {
               e.preventDefault();
 
               if (!(!code || !code.trim().length)) {
-                _context2.next = 3;
+                _context2.next = 4;
                 break;
               }
 
+              setError({
+                title: "Няма код",
+                message: "Не сте въвели код!"
+              });
               return _context2.abrupt("return");
 
-            case 3:
+            case 4:
               formData = new FormData();
               formData.append('code', code);
-              formData.append('ip', '127.0.0.1'); //setError({topic:'Качването неуспешно!', message: 'Файлът е твърде голям'});
-
-              _context2.next = 8;
+              formData.append('ip', '127.0.0.1');
+              _context2.next = 9;
               return Object(_rest__WEBPACK_IMPORTED_MODULE_7__["post"])("tasks/".concat(tid, "/solutions"), formData);
 
-            case 8:
+            case 9:
               data = _context2.sent;
               history.push("/task/".concat(tid, "/submission/").concat(data.sid));
 
-            case 10:
+            case 11:
             case "end":
               return _context2.stop();
           }
@@ -69546,9 +69469,9 @@ function TaskSubmissions(_ref7) {
   }, react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement("h3", {
     className: "box-title"
   }, "\u041F\u0440\u0435\u0434\u0430\u0434\u0435\u043D\u0438 \u0440\u0435\u0448\u0435\u043D\u0438\u044F", submissions.size)), react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement("div", {
-    className: "box-body"
+    className: "box-body box-responsive"
   }, react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement("table", {
-    className: "table table-bordered",
+    className: "table table-bordered table-hover",
     style: {
       tableLayout: 'fixed',
       wordWrap: 'break-word'
@@ -69576,7 +69499,7 @@ function TaskSubmissions(_ref7) {
       to: "/task/".concat(tid, "/submission/").concat(submissions.length - i)
     }, submissions.length - i)), react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement("td", null, moment__WEBPACK_IMPORTED_MODULE_6___default.a.unix(s.upload_time / 1000).format("DD MMM YYYY hh:mm:ss")), react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement(_Verdict__WEBPACK_IMPORTED_MODULE_8__["default"], {
       verdict: s.verdict
-    })), react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement(_ScoreBoardBox__WEBPACK_IMPORTED_MODULE_11__["default"], {
+    })), react__WEBPACK_IMPORTED_MODULE_3___default.a.createElement(_ScoreBoardBox__WEBPACK_IMPORTED_MODULE_9__["default"], {
       points: s.points,
       maxPoints: 100,
       hovered: false
@@ -69607,12 +69530,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router */ "./src/main/app/node_modules/react-router/esm/react-router.js");
 /* harmony import */ var _Task__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Task */ "./src/main/app/src/components/Task.js");
 /* harmony import */ var _LoadingContent__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./LoadingContent */ "./src/main/app/src/components/LoadingContent.js");
-/* harmony import */ var _rest__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../rest */ "./src/main/app/src/rest.js");
-/* harmony import */ var _useAsync__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../useAsync */ "./src/main/app/src/useAsync.js");
-/* harmony import */ var _AppContext__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../AppContext */ "./src/main/app/src/AppContext.js");
-/* harmony import */ var _useTask__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../useTask */ "./src/main/app/src/useTask.js");
-
-
+/* harmony import */ var _AppContext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../AppContext */ "./src/main/app/src/AppContext.js");
+/* harmony import */ var _useTask__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../useTask */ "./src/main/app/src/useTask.js");
 
 
 
@@ -69621,19 +69540,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var TaskContent = function TaskContent() {
-  var contestIsRunning = Object(_AppContext__WEBPACK_IMPORTED_MODULE_6__["useApp"])().contestIsRunning;
-  var contestIsFinished = Object(_AppContext__WEBPACK_IMPORTED_MODULE_6__["useApp"])().contestIsFinished;
+  var contestIsRunning = Object(_AppContext__WEBPACK_IMPORTED_MODULE_4__["useApp"])().contestIsRunning;
+  var contestHasStarted = Object(_AppContext__WEBPACK_IMPORTED_MODULE_4__["useApp"])().contestHasStarted;
 
   var _useParams = Object(react_router__WEBPACK_IMPORTED_MODULE_1__["useParams"])(),
       tid = _useParams.tid;
 
-  var _useTask = Object(_useTask__WEBPACK_IMPORTED_MODULE_7__["default"])(tid),
+  var _useTask = Object(_useTask__WEBPACK_IMPORTED_MODULE_5__["default"])(tid),
       task = _useTask.task,
       submissions = _useTask.submissions,
       nextSubmissionTime = _useTask.nextSubmissionTime,
       loading = _useTask.loading;
 
-  if (loading || !contestIsRunning && !contestIsFinished) return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_LoadingContent__WEBPACK_IMPORTED_MODULE_3__["default"], null);
+  if (loading || !contestHasStarted) return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_LoadingContent__WEBPACK_IMPORTED_MODULE_3__["default"], null);
   var points = submissions ? submissions.reduce(function (prev, current) {
     return Math.max(prev, current.points);
   }, 0) : 0;
@@ -69685,7 +69604,7 @@ var TaskContent = function TaskContent() {
     memory: task.memory
   })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col-md-6"
-  }, contestIsFinished && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Task__WEBPACK_IMPORTED_MODULE_2__["default"].TaskLimits, {
+  }, !contestIsRunning && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Task__WEBPACK_IMPORTED_MODULE_2__["default"].TaskLimits, {
     time: task.time,
     memory: task.memory
   }), contestIsRunning && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Task__WEBPACK_IMPORTED_MODULE_2__["default"].TaskSubmit, {
@@ -69886,8 +69805,6 @@ var AdminSidebar = function AdminSidebar() {
       tasks = _useAsync.value,
       loading = _useAsync.loading;
 
-  var contestIsRunning = Object(_AppContext__WEBPACK_IMPORTED_MODULE_8__["useApp"])().contestIsRunning;
-  var contestIsFinished = Object(_AppContext__WEBPACK_IMPORTED_MODULE_8__["useApp"])().contestIsFinished;
   var unreadQuestions = Object(_AppContext__WEBPACK_IMPORTED_MODULE_8__["useApp"])().unreadQuestions;
   var unreadAnnouncements = Object(_AppContext__WEBPACK_IMPORTED_MODULE_8__["useApp"])().unreadAnnouncements;
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("aside", {
@@ -70499,7 +70416,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 //const REST_URL = "http://35.158.118.93:8081/api/";
-var REST_URL = "http://localhost/api/";
+var REST_URL = "/api/";
 function json(_x) {
   return _json.apply(this, arguments);
 }
@@ -70865,6 +70782,223 @@ function useAsync(getMethod, url, params) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (useAsync);
+
+/***/ }),
+
+/***/ "./src/main/app/src/useContestTime.js":
+/*!********************************************!*\
+  !*** ./src/main/app/src/useContestTime.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./src/main/app/node_modules/@babel/runtime/helpers/toConsumableArray.js");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./src/main/app/node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./src/main/app/node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./src/main/app/node_modules/@babel/runtime/helpers/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "./src/main/app/node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _rest__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./rest */ "./src/main/app/src/rest.js");
+/* harmony import */ var _useInterval__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./useInterval */ "./src/main/app/src/useInterval.js");
+
+
+
+
+
+
+
+
+function useContestTime(params) {
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(null),
+      _useState2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState, 2),
+      contestStartTime = _useState2[0],
+      setContestStartTime = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(null),
+      _useState4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState3, 2),
+      contestEndTime = _useState4[0],
+      setContestEndTime = _useState4[1];
+
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(null),
+      _useState6 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState5, 2),
+      contestState = _useState6[0],
+      setContestState = _useState6[1];
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(false),
+      _useState8 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState7, 2),
+      contestIsRunning = _useState8[0],
+      setContestIsRunning = _useState8[1];
+
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(false),
+      _useState10 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState9, 2),
+      contestHasStarted = _useState10[0],
+      setContestHasStarted = _useState10[1];
+
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(false),
+      _useState12 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState11, 2),
+      contestHasFinished = _useState12[0],
+      setContestHasFinished = _useState12[1];
+
+  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(null),
+      _useState14 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState13, 2),
+      error = _useState14[0],
+      setError = _useState14[1];
+
+  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_4__["useState"])(true),
+      _useState16 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_3___default()(_useState15, 2),
+      loading = _useState16[0],
+      setLoading = _useState16[1];
+
+  function updateResource() {
+    return _updateResource.apply(this, arguments);
+  }
+
+  function _updateResource() {
+    _updateResource = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
+    /*#__PURE__*/
+    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee3() {
+      var startRequest, result, endRequest, newState, currentTime;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              startRequest = Date.now();
+              _context3.next = 4;
+              return Object(_rest__WEBPACK_IMPORTED_MODULE_5__["json"])('time');
+
+            case 4:
+              result = _context3.sent;
+              endRequest = Date.now();
+
+              if (contestStartTime == null || contestEndTime == null || endRequest - startRequest < 2000) {
+                setContestStartTime(endRequest + result.timeTillStart);
+                setContestEndTime(startRequest + result.timeTillEnd);
+                newState = result.timeTillEnd <= 0 ? "FINISHED" : result.timeTillStart <= 0 ? "RUNNING" : "NOT_STARTED";
+                if (newState !== contestState) setContestState(newState);
+              }
+
+              currentTime = Date.now();
+
+              if (contestStartTime <= currentTime && currentTime < contestEndTime) {
+                if (!contestIsRunning) setContestIsRunning(true);
+              } else {
+                if (contestIsRunning) setContestIsRunning(false);
+              }
+
+              if (contestStartTime <= currentTime) {
+                if (!contestHasStarted) setContestHasStarted(true);
+              } else {
+                if (contestHasStarted) setContestHasStarted(false);
+              }
+
+              if (contestEndTime <= currentTime) {
+                if (!contestHasFinished) setContestHasFinished(true);
+              } else {
+                if (contestHasFinished) setContestHasFinished(false);
+              }
+
+              _context3.next = 15;
+              break;
+
+            case 13:
+              _context3.prev = 13;
+              _context3.t0 = _context3["catch"](0);
+
+            case 15:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 13]]);
+    }));
+    return _updateResource.apply(this, arguments);
+  }
+
+  Object(react__WEBPACK_IMPORTED_MODULE_4__["useEffect"])(function () {
+    function getResource() {
+      return _getResource.apply(this, arguments);
+    }
+
+    function _getResource() {
+      _getResource = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                try {
+                  setLoading(true);
+                  updateResource();
+                } catch (e) {
+                  setError(e);
+                } finally {
+                  setLoading(false);
+                }
+
+              case 1:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+      return _getResource.apply(this, arguments);
+    }
+
+    getResource();
+  }, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0___default()(params));
+
+  function timeTillUpdate() {
+    var currentTime = Date.now();
+
+    if (contestState === "NOT_STARTED") {
+      return Math.min(10000, Math.max(contestStartTime - currentTime, 0));
+    } else if (contestState === "RUNNING") {
+      return Math.min(10000, Math.max(contestEndTime - currentTime, 0));
+    } else {
+      return 10000;
+    }
+  }
+
+  Object(_useInterval__WEBPACK_IMPORTED_MODULE_6__["default"])(
+  /*#__PURE__*/
+  _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
+  /*#__PURE__*/
+  _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee2() {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            updateResource();
+
+          case 1:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  })), timeTillUpdate());
+  return {
+    contestStartTime: contestStartTime,
+    contestEndTime: contestEndTime,
+    contestState: contestState,
+    contestIsRunning: contestIsRunning,
+    contestHasStarted: contestHasStarted,
+    contestHasFinished: contestHasFinished,
+    error: error,
+    loading: loading
+  };
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (useContestTime);
 
 /***/ }),
 
