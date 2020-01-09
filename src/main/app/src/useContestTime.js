@@ -27,22 +27,6 @@ function useContestTime(params) {
                 if (newState !== contestState) setContestState(newState);
             }
             
-            var currentTime = Date.now();
-            if (contestStartTime <= currentTime && currentTime < contestEndTime) {
-                if (!contestIsRunning) setContestIsRunning(true);
-            } else {
-                if (contestIsRunning) setContestIsRunning(false);
-            }
-            if (contestStartTime <= currentTime) {
-                if (!contestHasStarted) setContestHasStarted(true);
-            } else {
-                if (contestHasStarted) setContestHasStarted(false);
-            }
-            if (contestEndTime <= currentTime) {
-                if (!contestHasFinished) setContestHasFinished(true);
-            } else {
-                if (contestHasFinished) setContestHasFinished(false);
-            }
         } catch (e) {
         }
     }
@@ -50,7 +34,7 @@ function useContestTime(params) {
         async function getResource() {
             try {
                 setLoading(true);
-                updateResource();
+                await updateResource();
             } catch (e) {
                 setError(e);
             } finally {
@@ -60,6 +44,25 @@ function useContestTime(params) {
 
         getResource();
     }, [...params]);
+
+    useEffect(() => {
+        var currentTime = Date.now();
+        if (contestStartTime <= currentTime && currentTime < contestEndTime) {
+            if (!contestIsRunning) setContestIsRunning(true);
+        } else {
+            if (contestIsRunning) setContestIsRunning(false);
+        }
+        if (contestStartTime <= currentTime) {
+            if (!contestHasStarted) setContestHasStarted(true);
+        } else {
+            if (contestHasStarted) setContestHasStarted(false);
+        }
+        if (contestEndTime <= currentTime) {
+            if (!contestHasFinished) setContestHasFinished(true);
+        } else {
+            if (contestHasFinished) setContestHasFinished(false);
+        }
+    }, [contestStartTime, contestEndTime, contestIsRunning, contestHasStarted, contestHasFinished]);
 
     function timeTillUpdate() {
         var currentTime = Date.now();
@@ -74,7 +77,7 @@ function useContestTime(params) {
     }
 
     useInterval(async () => {
-        updateResource();
+        await updateResource();
     }, timeTillUpdate());
 
   
