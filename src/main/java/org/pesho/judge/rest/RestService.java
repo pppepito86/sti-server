@@ -12,8 +12,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -62,19 +65,73 @@ public class RestService {
     	return repository.getUserDetails(getUsername()).orElse(null);
     }
     
+    @GetMapping("tasks/info")
+    public List<Map<String, Object>> getTasksInfo() {
+    	if (!contestHasStarted()) {
+    		return new ArrayList<>();
+    	}
+    	
+		Optional<String> contest = getContest();
+		Optional<String> contestId = repository.getContestId(getUsername());
+		List<Map<String, Object>> tasks = contest.map(c -> repository.listContestTasks(c)).orElse(new ArrayList<>());
+
+		int totalPublicScore = 0;
+		int totalMaxPublicScore = 0;
+		for (Map<String, Object> task: tasks) {
+    		TaskDetails details = getTaskDetails(contestId.get(), task.get("number").toString());
+    		task.put("time", details.getTime());
+    		task.put("memory", details.getMemory());
+			TreeSet<Integer> feedback = feedback(details.getFeedback());
+			int totalTests = details.getTestGroups().stream().mapToInt(tg -> tg.getTestCases().size()).sum();
+			int publicTests = feedback.size() == 0 ? totalTests : feedback.size();
+			int publicScore = (int) (details.getPoints()*publicTests/totalTests+0.5);
+			task.put("feedback", publicScore+"/100");			
+			int currScore = taskSubmissions(Integer.parseInt(task.get("number").toString())).stream()
+					.map(s -> s.get("points"))
+					.filter(Objects::nonNull)
+					.mapToInt(p -> (int) p)
+					.max().orElse(0);
+			task.put("publicScore", currScore);
+			task.put("maxPublicScore", publicScore);
+			totalPublicScore += currScore;
+			totalMaxPublicScore += publicScore;
+		}
+		
+		Map<String, Object> common = new HashMap<>();
+		common.put("name", "общо");
+		common.put("time", "");
+		common.put("memory", "");
+		common.put("submissions", "50");
+		common.put("publicScore", totalPublicScore);
+		common.put("maxPublicScore", totalMaxPublicScore);
+		tasks.add(common);
+    	
+    	return tasks;
+    }
+
     @GetMapping("tasks/{taskId}/full")
     public Map<String, Object> getTaskFull(@PathVariable int taskId) {
+    	if (!contestHasStarted()) {
+    		return new HashMap<>();
+    	}
+    	
+    	List<Map<String, Object>> submissions = taskSubmissions(taskId);
+    	
 		return repository.getContestTask(getUsername(), taskId).map(task -> {
 			TaskDetails details = getTaskDetails(task.get("contestId").toString(), task.get("number").toString());
 			task.put("time", details.getTime());
 			task.put("memory", details.getMemory());
-			task.put("submissions", taskSubmissions(taskId));
+			task.put("submissions", submissions);
 			return task;
 		}).orElse(null);
     }
     
     @GetMapping("tasks/{taskId}")
     public Map<String, Object> getTask(@PathVariable int taskId) {
+    	if (!contestHasStarted()) {
+    		return new HashMap<>();
+    	}
+    	
 		return repository.getContestTask(getUsername(), taskId).map(task -> {
 			TaskDetails details = getTaskDetails(task.get("contestId").toString(), task.get("number").toString());
 			task.put("time", details.getTime());
@@ -111,19 +168,25 @@ public class RestService {
 		return ans;
 	}
     
-	//TODO check contest is started
 	@RequestMapping("/tasks")
-	public ResponseEntity<?> tasks() {
+	public List<Map<String, Object>> tasks() {
+    	if (!contestHasStarted()) {
+    		return new ArrayList<>();
+    	}
+		
 		Optional<String> contest = getContest();
 		return contest.map(c -> repository.listContestTasks(c))
-				.map(ResponseEntity::ok)
-				.orElse(ResponseEntity.notFound().build());
+				.orElse(null);
 	}
 
     @GetMapping("/tasks/{taskNumber}/pdf")
     public ResponseEntity<?> downloadPdf(@PathVariable("taskNumber") int number,
 			@RequestParam(value = "download", defaultValue = "false") boolean download) throws Exception {
-
+    	if (!contestHasStarted()) {
+    		throw new RuntimeException("Състезанието не е започнало");
+    	}
+    	
+    	
     	String contestId = repository.getContestId(getUsername()).get();
 	    return downloadPdf(Integer.valueOf(contestId), number, download);
     }
@@ -357,6 +420,11 @@ public class RestService {
 		return ResponseEntity.ok(getTimes());
 	}
 	
+	boolean contestHasStarted() {
+		Timestamp startTime = (Timestamp) repository.getContest(getUsername()).get().get("start_time");
+		return startTime.getTime() <= System.currentTimeMillis();
+	}
+	
 	private HashMap<String, Object> getTimes() {
 		long currentTime = System.currentTimeMillis();
 		Timestamp startTime = (Timestamp) repository.getContest(getUsername()).get().get("start_time");
@@ -470,6 +538,21 @@ public class RestService {
 		return repository.listQuestions(getUsername());
 	}
 	
+	@GetMapping("/announcements")
+	public List<Map<String, Object>> listAnnouncements() throws Exception {
+		List<Map<String,Object>> announcements = repository.listAnnouncements(getUsername());
+		List<Map<String,Object>> seenAnnouncements = repository.listSeenAnnouncements(getUsername());
+		Set<Integer> seen = seenAnnouncements.stream().map(a -> (Integer) a.get("announcement_id")).collect(Collectors.toSet());
+		
+		for (Map<String,Object> a : announcements) {
+			int id = (int) a.get("id");
+			boolean isSeen = seen.contains(id);
+			a.put("seen", isSeen);
+		}
+		
+		return announcements;
+	}
+	
 	@PostMapping("/questions")
 	public Map<String, Object> submitQuestion(
 			@RequestParam("topic") String topic,
@@ -490,4 +573,21 @@ public class RestService {
 		return ans;
 	}
 	
+	@PostMapping("/questions/seen")
+	public Map<String, Object> seenQuestion(
+			@RequestParam("id") int id) throws Exception {
+		repository.setAnswerSeen(id);
+		HashMap<String, Object> ans = new HashMap<>();
+		ans.put("id", id);
+		return ans;
+	}
+	
+	@PostMapping("/announcements/seen")
+	public Map<String, Object> seenAnnouncement(
+			@RequestParam("id") int id) throws Exception {
+		repository.setAnnouncementSeen(id, getUsername());
+		HashMap<String, Object> ans = new HashMap<>();
+		ans.put("id", id);
+		return ans;
+	}
 }

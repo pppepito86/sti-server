@@ -49,7 +49,7 @@ public class Repository {
     
 	public List<Map<String, Object>> listContestTasks(String contestName) {
 		return template.queryForList(
-				"SELECT p.name, p.number FROM problems as p" +
+				"SELECT p.id, p.name, p.number FROM problems as p" +
 				" INNER JOIN contests AS c ON c.id=p.contest_id" +
 				" WHERE c.name=? ORDER BY p.number ASC", contestName);
 	}
@@ -217,7 +217,19 @@ public class Repository {
 	public List<Map<String, Object>> listQuestions(String username) {
         return template.queryForList("SELECT * from questions where username=? order by id asc", username);
 	}
-    
+
+	public List<Map<String, Object>> listAnnouncements(String username) {
+		return template.queryForList("SELECT announcements.id,announcements.topic,announcements.announcement, announcements.time from announcements" +
+				" inner join contests on contests.id=announcements.contest_id" +
+				" inner join users on users.name=? and users.contest=contests.name" +
+				" order by announcements.id asc", username);
+	}
+
+	public List<Map<String, Object>> listSeenAnnouncements(String username) {
+		return template.queryForList("SELECT * from announcements_seen" +
+				" where username=?", username);
+	}
+	
     public synchronized int addQuestion(String username, String topic, String question) {
     	template.update("INSERT INTO questions(topic, username, question) VALUES(?, ?, ?)", 
     			topic, username, question);
@@ -231,6 +243,15 @@ public class Repository {
 	public long unreadQuestions(String username) {
         List<Map<String, Object>> tmp = template.queryForList("SELECT COUNT(*) from questions where username=? and answer IS NOT NULL and seen=0", username);
 		return tmp.stream().map(x -> x.get("COUNT(*)")).mapToLong(x -> (long) x).findFirst().orElse(0);
+	}
+
+	public void setAnswerSeen(int id) {
+		template.update("UPDATE questions set questions.seen=true where questions.id=?", id);
+	}
+	
+	public void setAnnouncementSeen(int id, String username) {
+		template.update("INSERT INTO announcements_seen(announcement_id, username) VALUES(?, ?)", 
+				id, username);
 	}
 
     
