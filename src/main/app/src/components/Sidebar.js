@@ -12,14 +12,13 @@ import { useApp } from '../AppContext';
 const Sidebar = () => {
   const { tid } = useParams();
   const location = useLocation();
-  const contestIsRunning = useApp().contestIsRunning;
-  const contestIsFinished = useApp().contestIsFinished;
+  const contestHasStarted = useApp().contestHasStarted;
   const unreadQuestions = useApp().unreadQuestions;
   const unreadAnnouncements = useApp().unreadAnnouncements;
   const markQuestionsSeen = useApp().markQuestionsSeen;
   const markAnnouncementsSeen = useApp().markAnnouncementsSeen;
 
-  const { value: tasks, loading } = useAsync(json, 'tasks', [contestIsRunning]);
+  const { value: tasks, loading } = useAsync(json, 'tasks', [contestHasStarted]);
 
   return (
     <aside className="main-sidebar">
@@ -51,8 +50,8 @@ const Sidebar = () => {
  
           <li className="header">ЗАДАЧИ</li>
           {
-            (contestIsRunning || contestIsFinished) &&
-            !loading && tasks.map((t) => {
+            contestHasStarted && !loading &&
+            tasks.map((t) => {
               return <li key={t.number} className={t.number + "" === tid ? 'active' : ''}>
                 <Link to={`/task/${t.number}`}>
                   <FontAwesomeIcon icon={faFile} /> &nbsp;<span>{t.name}</span>

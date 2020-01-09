@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams } from "react-router";
 import Task from './Task';
 import LoadingContent from './LoadingContent';
-import { json } from '../rest'
-import useAsync from '../useAsync'
 import { useApp } from '../AppContext';
 import useTask from '../useTask';
 
 const TaskContent = () => {
   const contestIsRunning = useApp().contestIsRunning;
-  const contestIsFinished = useApp().contestIsFinished;
+  const contestHasStarted = useApp().contestHasStarted;
 
   const { tid } = useParams();
   const { task, submissions, nextSubmissionTime, loading } = useTask(tid);
 
-  if (loading || (!contestIsRunning && !contestIsFinished)) return <LoadingContent />
+  if (loading || !contestHasStarted) return <LoadingContent />
 
   const points = submissions?submissions.reduce((prev, current) => Math.max(prev, current.points), 0) : 0;
   return (
@@ -38,7 +36,7 @@ const TaskContent = () => {
             {contestIsRunning && <Task.TaskLimits time={task.time} memory={task.memory} />}
           </div>
           <div className="col-md-6">
-            {contestIsFinished && <Task.TaskLimits time={task.time} memory={task.memory} />}
+            {!contestIsRunning && <Task.TaskLimits time={task.time} memory={task.memory} />}
             {contestIsRunning && <Task.TaskSubmit tid={tid} nextSubmissionTime={nextSubmissionTime} />}
           </div>
         </div>

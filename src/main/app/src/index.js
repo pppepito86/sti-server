@@ -4,12 +4,17 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { AuthProvider } from './AuthContext';
 import { TitleProvider } from './TitleContext';
+import { AppErrorProvider } from './AppErrorContext';
+import Modal from './components/Modal';
 
 ReactDOM.render(
     <TitleProvider>
-        <AuthProvider>
-            <App />
-        </AuthProvider>
+        <AppErrorProvider>
+            <AuthProvider>
+                <App />
+            </AuthProvider>
+            <Modal />
+        </AppErrorProvider>
     </TitleProvider>, 
     document.getElementById('root')
 );

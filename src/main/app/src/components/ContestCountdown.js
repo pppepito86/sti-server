@@ -3,18 +3,23 @@ import Countdown from 'react-countdown-now';
 import { useApp } from '../AppContext';
 
 const ContestCountdown = () => {
-    const time = useApp().time;
-   
+    const contestState = useApp().contestState;
+    const contestStartTime = useApp().contestStartTime;
+    const contestEndTime = useApp().contestEndTime;
+
     return (
         <div id="timer" style={{ color: '#b8c7ce', textAlign: 'center', fontSize: '36px' }}>
-            {time && time.timeTillStart > 0 &&
-                <Countdown date={time.startTime} daysInHours={true} />
+            {contestState==="NOT_STARTED" &&
+                <Countdown date={contestStartTime} daysInHours={true} />
             }
-            {time && time.timeTillStart <= 0 &&
-                <Countdown date={time.endTime} daysInHours={true} >
+            {contestState==="RUNNING" &&
+                <Countdown date={contestEndTime} daysInHours={true} >
                     <span>Състезанието приключи</span>
                 </Countdown>
-            }            
+            }
+            {contestState==="FINISHED" && 
+                <span>Състезанието приключи</span>
+            }
         </div>
     )
 }

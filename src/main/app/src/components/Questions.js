@@ -69,10 +69,9 @@ const SeenQuestion = ({id}) => {
 
 const SendQuestion = () => {
   const updateQuestions = useApp().updateQuestions;
-  const contestIsRunning = useApp().contestIsRunning;
-  const contestIsStarted = useApp().contestIsStarted;
+  const contestHasStarted = useApp().contestHasStarted;
 
-  const { value: tasks } = useAsync(json, 'tasks', [contestIsRunning]);
+  const { value: tasks } = useAsync(json, 'tasks', [contestHasStarted]);
   const [topic, setTopic] = useState("избери");
   const [question, setQuestion] = useState("");
 

@@ -8,8 +8,7 @@ import { json } from '../rest'
 import { useApp } from '../AppContext';
 
 function SubmissionContent() {
-  const contestIsRunning = useApp().contestIsRunning;
-  const contestIsFinished = useApp().contestIsFinished;
+  const contestHasStarted = useApp().contestHasStarted;
 
   const { tid, sid } = useParams();
   const [refresh, setRefresh] = useState(0);
@@ -19,7 +18,7 @@ function SubmissionContent() {
     setRefresh(refresh+1);
   }, submission && !submission.points ? 5000 : null);
 
-  if ((!contestIsRunning && !contestIsFinished) || !submission) return <LoadingContent />
+  if (!contestHasStarted || !submission) return <LoadingContent />
 
   return (
     <div className="content-wrapper" style={{ minHeight: '550px' }}>

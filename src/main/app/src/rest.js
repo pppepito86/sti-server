@@ -1,5 +1,5 @@
 //const REST_URL = "http://35.158.118.93:8081/api/";
-const REST_URL = "http://localhost/api/";
+const REST_URL = "/api/";
 
 export async function json(url) {
     const response = await sendRequest(url, "json");

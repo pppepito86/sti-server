@@ -27,6 +27,8 @@ submissions/
 
 # dependencies
 /node_modules
+/src/main/app/node_modules
+/src/main/app/yarn.lock
 /.pnp
 .pnp.js
 

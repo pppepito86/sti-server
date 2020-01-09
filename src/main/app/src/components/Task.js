@@ -4,9 +4,8 @@ import useInterval from '../useInterval'
 import moment from 'moment'
 import { json, blob, post } from '../rest'
 import Verdict from './Verdict';
-import { useApp } from '../AppContext';
-import Scoreboard from './Scoreboard';
 import ScoreBoardBox from './ScoreBoardBox';
+import { useAppError } from '../AppErrorContext';
 
 var FileSaver = require('file-saver');
 
@@ -79,11 +78,18 @@ function TaskSubmit({ tid, nextSubmissionTime }) {
 function TaskSubmitFile({ tid, nextSubmissionTime }) {
   const history = useHistory();
   const [file, setFile] = useState();
+  const setError = useAppError().setError;
 
   async function submit(e) {
     e.preventDefault();
-    console.log(file);
-    if (!file) return;
+    if (!file) {
+      setError({title: "Няма файл", message: "Не сте изброли файл!"});
+      return;
+    }
+    if (file.size > 64*1024) {
+      setError({title: "Твърде голям файл", message: `Превишавате максималната големина на файл! Вашият файл е ${file.size}B при максимално позволени ${64*1024}B.`});
+      return;
+    }
 
     const formData = new FormData();
     formData.append('file', new Blob([file]), file.name);
@@ -116,17 +122,19 @@ function TaskSubmitFile({ tid, nextSubmissionTime }) {
 function TaskSubmitCode({ tid, nextSubmissionTime }) {
   const history = useHistory();
   const [code, setCode] = useState("");
-  //const setError = useApp().setError;
+  const setError = useAppError().setError;
 
   async function submit(e) {
     e.preventDefault();
-    if (!code || !code.trim().length) return;
+    if (!code || !code.trim().length) {
+      setError({title: "Няма код", message: "Не сте въвели код!"});
+      return;
+    }
 
     const formData = new FormData();
     formData.append('code', code);
     formData.append('ip', '127.0.0.1');
 
-    //setError({topic:'Качването неуспешно!', message: 'Файлът е твърде голям'});
     const data = await post(`tasks/${tid}/solutions`, formData);
     history.push(`/task/${tid}/submission/${data.sid}`);
   }
@@ -185,8 +193,8 @@ function TaskSubmissions({ tid, submissions }) {
       <div className="box-header with-border">
         <h3 className="box-title">Предадени решения{submissions.size}</h3>
       </div>
-      <div className="box-body">
-        <table className="table table-bordered" style={{ tableLayout: 'fixed', wordWrap: 'break-word' }}>
+      <div className="box-body box-responsive">
+        <table className="table table-bordered table-hover" style={{ tableLayout: 'fixed', wordWrap: 'break-word' }}>
           <thead>
             <tr>
               <th style={{ width: '5%' }}>#</th>

@@ -6,10 +6,9 @@ import useAsync from '../useAsync';
 import LoadingContent from './LoadingContent';
 
 const DashboardContent = () => {
-  const contestIsRunning = useApp().contestIsRunning;
-  const contestIsFinished = useApp().contestIsFinished;
+  const contestHasStarted = useApp().contestHasStarted;
 
-  const { value: tasks } = useAsync(json, `tasks/info`, [contestIsRunning]);
+  const { value: tasks } = useAsync(json, `tasks/info`, [contestHasStarted]);
 
   if (!tasks) return <LoadingContent />
 
@@ -19,10 +18,10 @@ const DashboardContent = () => {
         <div className="row">
           <div className="col-md-8">
             <Announcements />
-            {(contestIsRunning || contestIsFinished) && tasks && tasks.length > 0 && <TasksInfo tasks={tasks} />}
+            {contestHasStarted && tasks.length > 0 && <TasksInfo tasks={tasks} />}
           </div>
 
-        {(contestIsRunning || contestIsFinished) && tasks && tasks.length > 0 &&  <TasksPoints tasks={tasks} />}
+        {contestHasStarted && tasks.length > 0 &&  <TasksPoints tasks={tasks} />}
         </div>
       </section>
     </div>

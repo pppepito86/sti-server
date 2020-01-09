@@ -3,6 +3,7 @@ import useAsync from './useAsync'
 import useInterval from './useInterval'
 import { json, post } from './rest'
 import { getLocalIp, getLocalIPs } from './ip'
+import useContestTime from './useContestTime';
 
 const AppContext = React.createContext()
 
@@ -11,29 +12,19 @@ const AppProvider = ({children}) => {
 
     const [ip, setIp] = useState();
 
-    const [now, setNow] = useState(Date.now());
-    const [time, setTime] = useState();
-    const [contestIsRunning, setContestIsRunning] = useState(false);
-    const [contestIsFinished, setContestIsFinished] = useState(false);
-    const [contestIsStarted, setContestIsStarted] = useState(false);
+    const { contestStartTime, contestEndTime, contestState, 
+        contestIsRunning, contestHasStarted, contestHasFinished } = useContestTime([]);
     
     const [unreadQuestions, setUnreadQuestions] = useState(0);
     const [questions, setQuestions] = useState([]);
     const [unreadAnnouncements, setUnreadAnnouncements] = useState(0);
     const [announcements, setAnnouncements] = useState([]);
 
-    const [shouldUpdateTime, setShouldUpdateTime] = useState(false);
-    const { value: timeData } = useAsync(json, 'time', [shouldUpdateTime]);
-
     const [shouldUpdateQuestions, setShouldUpdateQuestions] = useState(false);
     const { value: questionsData } = useAsync(json, 'questions', [shouldUpdateQuestions]);
 
     const [shouldUpdateAnnouncements, setShouldUpdateAnnouncements] = useState(false);
     const { value: announcementsData } = useAsync(json, 'announcements', [shouldUpdateAnnouncements]);
-
-    function updateTime() {
-        setShouldUpdateTime(shouldUpdateTime => !shouldUpdateTime);
-    }
 
     function updateQuestions() {
         setShouldUpdateQuestions(shouldUpdateQuestions => !shouldUpdateQuestions);
@@ -72,48 +63,15 @@ const AppProvider = ({children}) => {
     }
 
     useInterval(() => {
-        setNow(Date.now());
-        updateTime();
         updateQuestions();
         updateAnnouncements();
     }, 10000);
     
-    useInterval(() => {
-        if (!contestIsRunning) setContestIsRunning(true);
-        if (!contestIsFinished) setContestIsFinished(false);
-        if (!contestIsStarted) setContestIsStarted(true);
-    }, time && !contestIsRunning && !contestIsFinished ? time.timeTillStart : null);
-
-    useInterval(() => {
-        if (contestIsRunning) setContestIsRunning(false);
-        if (!contestIsFinished) setContestIsFinished(true);
-        if (!contestIsStarted) setContestIsStarted(true);
-    }, time && contestIsRunning ? time.timeTillEnd : null);
-
     useEffect(() => {
         getLocalIp().then(function(ip) {
             setIp(ip);
 		});
     }, []);
-
-    useEffect(() => {
-        if (timeData) {
-            setTime({...timeData,
-                startTime: Date.now() + timeData.timeTillStart,
-                endTime: now + timeData.timeTillEnd
-            });
-            if (!contestIsRunning && timeData.timeTillStart <= 0 && timeData.timeTillEnd > 0) {
-                setContestIsRunning(true);
-            }
-            if (contestIsRunning && !(timeData.timeTillStart <= 0 && timeData.timeTillEnd > 0)) {
-                setContestIsRunning(false);
-            }
-            if (!contestIsFinished && timeData.timeTillEnd <= 0) setContestIsFinished(true);
-            if (contestIsFinished && timeData.timeTillEnd > 0) setContestIsFinished(false);
-            if (!contestIsStarted && (contestIsRunning || contestIsFinished)) setContestIsStarted(true);
-            if (contestIsStarted && !(contestIsRunning || contestIsFinished)) setContestIsStarted(false);
-        }
-    }, [timeData]);
 
     useEffect(() => {
         if (questionsData) {
@@ -134,10 +92,12 @@ const AppProvider = ({children}) => {
             value={{
                 error: error,
                 setError: setError,
-                time: time,
                 contestIsRunning: contestIsRunning,
-                contestIsFinished: contestIsFinished,
-                contestIsStarted: contestIsStarted,
+                contestHasStarted: contestHasStarted,
+                contestHasFinished: contestHasFinished,
+                contestStartTime: contestStartTime, 
+                contestEndTime: contestEndTime,
+                contestState: contestState,
                 questions: questions,
                 unreadQuestions: unreadQuestions,
                 markQuestionsSeen: markQuestionsSeen,
