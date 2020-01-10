@@ -21,7 +21,7 @@ const TaskContent = () => {
         <h1 style={{ display: 'inline-block', verticalAlign: 'top' }}>Задача {tid} - <b>{task.name}</b></h1>
         <div className="progress-group" style={{ display: 'inline-block', height: '26px', verticalAlign: 'top', width: '48.5%' }}>
           <span className="progress-text">Точки от видими тестове</span>
-          <span className="progress-number"><b>{points}</b>/100</span>
+          <span className="progress-number"><b>{points}</b>/{task.maxPublicScore}</span>
 
           <div className="progress sm">
             <div className="progress-bar progress-bar-aqua" style={{ width: points + '%' }}></div>
@@ -42,7 +42,7 @@ const TaskContent = () => {
         </div>
         <div className="row">
           <div className="col-md-12">
-            {submissions && <Task.TaskSubmissions tid={tid} submissions={submissions} />}
+            {submissions && <Task.TaskSubmissions tid={tid} submissions={submissions} maxPublicScore={task.maxPublicScore} />}
           </div>
         </div>
       </section>

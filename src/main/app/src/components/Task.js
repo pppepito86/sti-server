@@ -185,7 +185,7 @@ function TaskNoSubmissions() {
   )
 }
 
-function TaskSubmissions({ tid, submissions }) {
+function TaskSubmissions({ tid, submissions, maxPublicScore }) {
   if (!submissions || submissions.length === 0) return <TaskNoSubmissions/>
   
   return (
@@ -210,7 +210,7 @@ function TaskSubmissions({ tid, submissions }) {
                   <td><Link to={`/task/${tid}/submission/${submissions.length - i}`}>{submissions.length - i}</Link></td>
                   <td>{moment.unix(s.upload_time / 1000).format("DD MMM YYYY hh:mm:ss")}</td>
                   <td><Verdict verdict={s.verdict} /></td>
-                  <ScoreBoardBox points={s.points} maxPoints={100} hovered={false} />
+                  <ScoreBoardBox points={s.points} maxPoints={maxPublicScore} hovered={false} />
                 </tr>
               })}
           </tbody>

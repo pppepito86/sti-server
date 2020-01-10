@@ -40,7 +40,7 @@ public class Repository {
 
 	public Optional<Map<String, Object>> getContestTask(String userName, int problemNumber) {
 		return template.queryForList(
-				"SELECT p.name, p.number, c.id as contestId FROM problems as p" +
+				"SELECT p.id, p.name, p.number, c.id as contestId FROM problems as p" +
 				" INNER JOIN contests AS c ON c.id=p.contest_id" +
 				" INNER JOIN users AS u ON u.contest=c.name" +
 				" WHERE u.name=? AND p.number=?", userName, problemNumber)

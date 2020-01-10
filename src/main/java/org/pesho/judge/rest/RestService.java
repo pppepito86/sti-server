@@ -136,6 +136,16 @@ public class RestService {
 			TaskDetails details = getTaskDetails(task.get("contestId").toString(), task.get("number").toString());
 			task.put("time", details.getTime());
 			task.put("memory", details.getMemory());
+	    	try {
+				TreeSet<Integer> feedback = feedback(Integer.valueOf(task.get("id").toString()));
+				int totalTests = details.getTestGroups().stream().mapToInt(tg -> tg.getTestCases().size()).sum();
+				int publicTests = feedback.size() == 0 ? totalTests : feedback.size();
+				int publicScore = (int) (details.getPoints()*publicTests/totalTests+0.5);
+				task.put("maxPublicScore", publicScore);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			return task;
 		}).orElse(null);
     }
@@ -344,6 +354,20 @@ public class RestService {
 		return String.join(",", split);
 	}
 	
+	protected int visibleScore(String verdict, TreeSet<Integer> feedback) {
+		if (feedback.size() == 0) return 0;
+		
+		String[] split = verdict.split(",");
+		if (split.length < feedback.last()) return 0;
+		
+		int okTests = 0;
+		for (int i = 1; i <= split.length; i++) {
+			if (feedback.contains(i) && split[i-1].equalsIgnoreCase("OK")) okTests++;
+		}
+		int ans = (int) (okTests*100/split.length+0.5);
+		return ans;
+	}
+	
 	private List<List<Integer>> groups(int problemId) throws Exception {
 		Map<String, Object> problem = repository.getProblem(problemId).get();
 		File problemDir = getFile("problem", problem.get("contest_id").toString(), problem.get("number").toString());
@@ -410,7 +434,7 @@ public class RestService {
     	submissions.forEach(submission -> {
     		TreeSet<Integer> feedback = feedback(details.getFeedback());
 			submission.put("verdict", fixVerdict(submission.get("verdict").toString(), feedback));
-			if (feedback.size() != 0) submission.put("points", "?");
+			if (feedback.size() != 0) submission.put("points", visibleScore(submission.get("verdict").toString(), feedback));
     	});
 		return submissions;
 	}
@@ -540,8 +564,8 @@ public class RestService {
 	
 	@GetMapping("/announcements")
 	public List<Map<String, Object>> listAnnouncements() throws Exception {
-		List<Map<String,Object>> announcements = repository.listAnnouncements(getUsername());
-		List<Map<String,Object>> seenAnnouncements = repository.listSeenAnnouncements(getUsername());
+		List<Map<String, Object>> announcements = repository.listAnnouncements(getUsername());
+		List<Map<String, Object>> seenAnnouncements = repository.listSeenAnnouncements(getUsername());
 		Set<Integer> seen = seenAnnouncements.stream().map(a -> (Integer) a.get("announcement_id")).collect(Collectors.toSet());
 		
 		for (Map<String,Object> a : announcements) {
