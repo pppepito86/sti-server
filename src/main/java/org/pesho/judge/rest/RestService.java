@@ -255,7 +255,7 @@ public class RestService {
     	TreeSet<Integer> feedback = feedback(Integer.valueOf(submission.get("problem_id").toString()));
 		submission.put("verdict", fixVerdict(submission.get("verdict").toString(), feedback));
 		
-    	String details = submission.get("details").toString();
+    	String details = repository.getSubmissionDetails(Integer.parseInt(submission.get("id").toString())).orElse(null);
 		if (details != null && !details.isEmpty()) {
 			SubmissionScore score = mapper.readValue(details, SubmissionScore.class);
 			for(String key: score.getScoreSteps().keySet()) {

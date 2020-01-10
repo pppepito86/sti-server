@@ -28,7 +28,13 @@ public class Repository {
     			" WHERE u.name=?", username)
     			.stream().findAny();
     }
-
+    
+    public Optional<String> getSubmissionDetails(int submissionId) {
+    	return template.queryForList(
+    			"SELECT details FROM submissions" +
+    			" WHERE submissions.id=?", submissionId)
+    			.stream().map(c -> c.get("details")).map(Object::toString).findAny();
+    }
     
     public Optional<String> getContestId(String username) {
     	return template.queryForList(
@@ -56,17 +62,12 @@ public class Repository {
 
 	public List<Map<String, Object>> listSubmissions(String username, int problemNumber) {
 		return template.queryForList(
-				"SELECT s.id,s.file,s.verdict,s.details,s.points,s.upload_time,p.name,p.id as problem_id,u.contest FROM submissions AS s" +
+				"SELECT s.id,s.file,s.verdict,s.points,s.upload_time,p.name,p.id as problem_id,u.contest FROM submissions AS s" +
 				" INNER JOIN users AS u ON u.name=s.username" + 
 				" INNER JOIN problems AS p ON p.id=s.problem_id" +
 				" WHERE u.name=? and p.number=?" +
 				" ORDER BY s.upload_time DESC", username, problemNumber);
 	}
-    
-	
-	
-	
-	
 	
     public synchronized int addContest(String name, Timestamp start, Timestamp end) {
     	template.update("INSERT INTO contests(name, start_time, end_time) VALUES(?, ?, ?)", 
