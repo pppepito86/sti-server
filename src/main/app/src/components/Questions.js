@@ -17,7 +17,7 @@ const ShowQuestion = ({ question }) => {
             <div className="direct-chat-info clearfix">
               <span className="direct-chat-name pull-left">Въпрос {question.topic==='избери'?'':' за ' +question.topic}</span>
               <span className="direct-chat-timestamp pull-right">
-                {moment.unix(question.time / 1000).format("DD MMM YYYY hh:mm:ss")}
+                {moment.unix(question.question_time / 1000).format("DD MMM YYYY HH:mm:ss")}
               </span>
             </div>
             <div className="direct-chat-text">
@@ -29,7 +29,7 @@ const ShowQuestion = ({ question }) => {
             <div className="direct-chat-info clearfix">
               <div className="direct-chat-name pull-right">Отговор</div>
               <span className="direct-chat-timestamp pull-left">
-                {moment.unix(question.answer_time / 1000).format("DD MMM YYYY hh:mm:ss")}
+                {moment.unix(question.answer_time / 1000).format("DD MMM YYYY HH:mm:ss")}
               </span>
             </div>
             <div className="direct-chat-text">
