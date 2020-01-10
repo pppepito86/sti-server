@@ -67,10 +67,6 @@ public class RestService {
     
     @GetMapping("tasks/info")
     public List<Map<String, Object>> getTasksInfo() {
-    	if (!contestHasStarted()) {
-    		return new ArrayList<>();
-    	}
-    	
 		Optional<String> contest = getContest();
 		Optional<String> contestId = repository.getContestId(getUsername());
 		List<Map<String, Object>> tasks = contest.map(c -> repository.listContestTasks(c)).orElse(new ArrayList<>());
@@ -128,10 +124,6 @@ public class RestService {
     
     @GetMapping("tasks/{taskId}")
     public Map<String, Object> getTask(@PathVariable int taskId) {
-    	if (!contestHasStarted()) {
-    		return new HashMap<>();
-    	}
-    	
 		return repository.getContestTask(getUsername(), taskId).map(task -> {
 			TaskDetails details = getTaskDetails(task.get("contestId").toString(), task.get("number").toString());
 			task.put("time", details.getTime());
@@ -184,10 +176,6 @@ public class RestService {
     
 	@RequestMapping("/tasks")
 	public List<Map<String, Object>> tasks() {
-    	if (!contestHasStarted()) {
-    		return new ArrayList<>();
-    	}
-		
 		Optional<String> contest = getContest();
 		return contest.map(c -> repository.listContestTasks(c))
 				.orElse(null);
@@ -199,7 +187,6 @@ public class RestService {
     	if (!contestHasStarted()) {
     		throw new RuntimeException("Състезанието не е започнало");
     	}
-    	
     	
     	String contestId = repository.getContestId(getUsername()).get();
 	    return downloadPdf(Integer.valueOf(contestId), number, download);
