@@ -152,6 +152,10 @@ public class RestService {
     
     @GetMapping("tasks/{taskId}/submissions")
     public List<Map<String, Object>> getTaskSubmissions(@PathVariable int taskId) {
+    	if (!contestHasStarted()) {
+    		return new ArrayList<>();
+    	}
+    	
 		return repository.getContestTask(getUsername(), taskId).map(task -> {
 			return taskSubmissions(taskId);
 		}).orElse(null);
@@ -239,6 +243,10 @@ public class RestService {
 	@RequestMapping("/tasks/{problemNumber}/solutions")
 	public ResponseEntity<?> taskSolutions(
 			@PathVariable int problemNumber) {
+    	if (!contestHasStarted()) {
+    		return ResponseEntity.ok(new ArrayList<>());
+    	}
+		
 		List<Map<String, Object>> submissions = taskSubmissions(problemNumber);
 		return ResponseEntity.ok(submissions);
 	}
@@ -247,6 +255,10 @@ public class RestService {
     public ResponseEntity<?> taskSolution(
     		@PathVariable int problemNumber,
     		@PathVariable int solutionNumber) throws Exception {
+    	if (!contestHasStarted()) {
+    		return ResponseEntity.ok(new ArrayList<>());
+    	}
+
     	List<Map<String,Object>> submissions = taskSubmissions(problemNumber);
     	Map<String, Object> submission = submissions.get(submissions.size()-solutionNumber);
     	
@@ -469,6 +481,10 @@ public class RestService {
 			@RequestParam("ip") String localIp,
 			@RequestParam("code") Optional<String> maybeCode,
 			@RequestPart("file") Optional<MultipartFile> maybeFile) throws Exception {
+    	if (!contestHasStarted()) {
+    		return new HashMap<>();
+    	}
+
 		
 		if (maybeFile.isPresent()) {
 			MultipartFile file = maybeFile.get();

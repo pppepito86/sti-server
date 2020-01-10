@@ -24,7 +24,7 @@ const TaskContent = () => {
           <span className="progress-number"><b>{points}</b>/{task.maxPublicScore}</span>
 
           <div className="progress sm">
-            <div className="progress-bar progress-bar-aqua" style={{ width: points + '%' }}></div>
+            <div className="progress-bar progress-bar-aqua" style={{ width: points*100/task.maxPublicScore + '%' }}></div>
           </div>
         </div>
       </section>
