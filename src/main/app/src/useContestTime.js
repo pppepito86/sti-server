@@ -46,6 +46,8 @@ function useContestTime(params) {
     }, [...params]);
 
     useEffect(() => {
+        if (contestStartTime === null || contestEndTime === null) return;
+        
         var currentTime = Date.now();
         if (contestStartTime <= currentTime && currentTime < contestEndTime) {
             if (!contestIsRunning) setContestIsRunning(true);

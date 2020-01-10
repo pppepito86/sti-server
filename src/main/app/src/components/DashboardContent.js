@@ -18,10 +18,10 @@ const DashboardContent = () => {
         <div className="row">
           <div className="col-md-8">
             <Announcements />
-            {contestHasStarted && tasks.length > 0 && <TasksInfo tasks={tasks} />}
+            {tasks && tasks.length > 0 && <TasksInfo tasks={tasks} />}
           </div>
 
-        {contestHasStarted && tasks.length > 0 &&  <TasksPoints tasks={tasks} />}
+        {tasks && tasks.length > 0 &&  <TasksPoints tasks={tasks} />}
         </div>
       </section>
     </div>
