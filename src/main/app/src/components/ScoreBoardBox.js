@@ -12,7 +12,8 @@ function getColor(ratio) {
                   ratio > 0.2 ? '#D95700' :
                     ratio > 0.1 ? '#E23A00' :
                       ratio > 0 ? '#EB1D00' :
-                        '#F40000';
+                        ratio === 0 ? '#F40000' :
+                          '#FFFFFF';
 }
   
 function getImage(ratio) {
