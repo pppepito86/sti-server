@@ -61,7 +61,9 @@ public class RestService {
 	protected ObjectMapper mapper = new ObjectMapper();
 	
     @GetMapping("user")
-    public Map<String, Object> getUser() {
+    public Map<String, Object> getUser(HttpServletRequest request) {
+    	String ip = request.getRemoteAddr();
+    	repository.addLog(getUsername() + "_login", getUsername()+"_"+ip, "");
     	return repository.getUserDetails(getUsername()).orElse(null);
     }
     
