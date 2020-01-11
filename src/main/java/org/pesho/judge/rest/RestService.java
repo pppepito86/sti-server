@@ -344,7 +344,7 @@ public class RestService {
 	}
     
 	protected String fixVerdict(String verdict, TreeSet<Integer> feedback) {
-		if (feedback.size() == 0) return verdict;
+		if (feedback.size() == 0 || contestHasEnded()) return verdict;
 		
 		String[] split = verdict.split(",");
 		if (split.length < feedback.last()) return verdict;
@@ -435,7 +435,7 @@ public class RestService {
     	submissions.forEach(submission -> {
     		TreeSet<Integer> feedback = feedback(details.getFeedback());
 			submission.put("verdict", fixVerdict(submission.get("verdict").toString(), feedback));
-			if (feedback.size() != 0) submission.put("points", visibleScore(submission.get("verdict").toString(), feedback));
+			if (feedback.size() != 0 && !contestHasEnded()) submission.put("points", visibleScore(submission.get("verdict").toString(), feedback));
     	});
 		return submissions;
 	}
@@ -448,6 +448,11 @@ public class RestService {
 	boolean contestHasStarted() {
 		Timestamp startTime = (Timestamp) repository.getContest(getUsername()).get().get("start_time");
 		return startTime.getTime() <= System.currentTimeMillis();
+	}
+	
+	boolean contestHasEnded() {
+		Timestamp endTime = (Timestamp) repository.getContest(getUsername()).get().get("end_time");
+		return endTime.getTime() <= System.currentTimeMillis();
 	}
 	
 	private HashMap<String, Object> getTimes() {
